@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (C) 2012 Jason Gedge <http://www.gedge.ca>
+  
+  This file is part of the OpGraph project.
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+	                    http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>ca.gedge</groupId>
+	<artifactId>opgraph</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	
+	<packaging>pom</packaging>
+	
+	<!-- Project Info -->
+	
+	<name>OpGraph</name>
+	<description>
+		A framework for building complex operations from simpler ones. These
+		complex operations are represented as directed, acyclic graphs (DAGs).
+	</description>
+	<url>http://thegedge.github.com/opgraph</url>
+	<inceptionYear>2012</inceptionYear>
+	
+	<licenses>
+		<license>
+			<name>GNU GPL v3.0+</name>
+			<distribution>manual</distribution>
+			<url>http://www.gnu.org/copyleft/gpl.html</url>
+		</license>
+	</licenses>
+	
+	<!-- Organizational Info -->
+	
+	<organization>
+		<name>Jason Gedge</name>
+		<url>http://www.gedge.ca/</url>
+	</organization>
+	
+	<developers>
+		<developer>
+			<id>gedge</id>
+			<name>Jason Gedge</name>
+			<email>gedge@ualberta.ca</email>
+			<url>http://www.gedge.ca/</url>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-3.5</timezone>
+		</developer>
+	</developers>
+	
+	<contributors>
+		<contributor>
+			<name>Greg Hedlund</name>
+			<email>greg.hedlund@gmail.com</email>
+			<timezone>-3.5</timezone>
+			<organization>The Phon Project</organization>
+			<organizationUrl>http://www.phon.ca</organizationUrl>
+		</contributor>
+	</contributors>
+	
+	<!-- Project Management -->
+	
+	<issueManagement>
+		<url>https://github.com/thegedge/opgraph/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+
+	<scm>
+		<url>https://github.com/thegedge/opgraph</url>
+		<connection>scm:git:git://github.com/thegedge/opgraph.git</connection>
+		<developerConnection>scm:git:git@github.com:thegedge/opgraph.git</developerConnection>
+	</scm>
+
+	<repositories>
+		<!-- For Doxia code snippet macros -->
+		<repository>
+			<id>com.anasoft.os.repository.releases</id>
+			<name>ANASOFT OpenSource releases</name>
+			<url>http://anasoft-os-repo.googlecode.com/svn/repository/releases</url>
+		</repository>
+	</repositories>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
+		<!-- Properties for stylus-ext-skin -->
+		<m2st-syntaxHighlighter-urlBase>syntaxhighlighter</m2st-syntaxHighlighter-urlBase>
+		<m2st-syntaxHighlighter-brushFiles>shBrushPlain.js,shBrushXml.js,shBrushJava.js</m2st-syntaxHighlighter-brushFiles>
+		<m2st-syntaxHighlighter-themeCssFile>shThemeRDark.css</m2st-syntaxHighlighter-themeCssFile>
+		<m2st-syntaxHighlighter-config>config.clipboardSwf='%ROOT%/scripts/clipboard.swf'</m2st-syntaxHighlighter-config>
+	</properties>
+	
+	<!-- Modules and Build -->
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.8.2</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.antlr</groupId>
+				<artifactId>stringtemplate</artifactId>
+				<version>4.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr-runtime</artifactId>
+				<version>3.1.3</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<modules>
+		<module>core</module>
+		<module>app</module>
+		<module>common-nodes</module>
+		<module>library</module>
+		<module>xml-io</module>
+	</modules>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.0</version>
+					
+					<!-- For code snippet macro -->
+					<dependencies>
+						<dependency>
+							<groupId>com.anasoft.os</groupId>
+							<artifactId>m2st-doxia-macros</artifactId>
+							<version>2.0</version>
+						</dependency> 
+					</dependencies>
+					
+					<configuration>
+						<inputEncoding>UTF-8</inputEncoding>
+						<outputEncoding>UTF-8</outputEncoding>
+						<reportPlugins>
+							<!-- <plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-project-info-reports-plugin</artifactId>
+								<version>2.2</version>
+								<configuration>
+									<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
+									<dependencyLocationsEnabled>true</dependencyLocationsEnabled>
+								</configuration>
+							</plugin> -->
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-javadoc-plugin</artifactId>
+								<version>2.7</version>
+								<configuration>
+									<aggregate>true</aggregate>
+									<destDir>javadoc</destDir>
+									<excludePackageNames>
+										ca.gedge.opgraph.examples
+										:ca.gedge.opgraph.examples.*
+										:ca.gedge.opgraph.app.xml
+									</excludePackageNames>
+									<!-- <excludeFiles>
+										*MenuProvider.java
+										*XMLSerializer.java
+									</excludeFiles> -->
+								</configuration>
+								<reportSets>
+									<reportSet>
+										<id>html</id>
+										<reports>
+											<report>javadoc</report>
+										</reports>
+									</reportSet>
+								</reportSets>
+							</plugin>
+							<!-- <plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-surefire-report-plugin</artifactId>
+								<version>2.6</version>
+							</plugin> -->
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-checkstyle-plugin</artifactId>
+								<version>2.6</version>
+							</plugin>
+						</reportPlugins>
+					</configuration>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.12.1</version>
+				</plugin>
+				
+				<!-- Additional source directories -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>1.7</version>
+					<executions>
+						<execution>
+							<id>add-source-directories</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>add-source</goal>
+							</goals>
+							<configuration>
+								<sources>
+									<source>src/main/tools</source>
+								</sources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				
+				<!-- ANTLR grammar parsing -->
+				<plugin>
+					<groupId>org.antlr</groupId>
+					<artifactId>antlr3-maven-plugin</artifactId>
+					<version>3.1.3-1</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>antlr</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				
+				<!-- GitHub plugins -->
+				<plugin>
+					<groupId>com.github.github</groupId>
+					<artifactId>downloads-maven-plugin</artifactId>
+					<version>0.6</version>
+					<configuration>
+						<description>Official ${project.name} build of the ${project.version} release</description>
+						<override>true</override>
+						<includeAttached>true</includeAttached>
+						<server>github</server>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>upload</goal>
+							</goals>
+							<phase>install</phase>
+						</execution>
+					</executions>
+				</plugin>
+				
+				<plugin>
+					<groupId>com.github.github</groupId>
+					<artifactId>site-maven-plugin</artifactId>
+					<version>0.7</version>
+					<configuration>
+						<message>Building site for ${project.version}</message>
+						<server>github</server>
+						<noJekyll>true</noJekyll>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>site</goal>
+							</goals>
+							<phase>site</phase>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

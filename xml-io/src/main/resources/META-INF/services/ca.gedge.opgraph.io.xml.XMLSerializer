@@ -1,0 +1,5 @@
+ca.gedge.opgraph.io.xml.DefaultGraphXMLSerializer
+ca.gedge.opgraph.io.xml.DefaultNodeXMLSerializer
+ca.gedge.opgraph.io.xml.DefaultLinkXMLSerializer
+ca.gedge.opgraph.io.xml.DefaultFieldXMLSerializer
+ca.gedge.opgraph.io.xml.DefaultExtendableXMLSerializer

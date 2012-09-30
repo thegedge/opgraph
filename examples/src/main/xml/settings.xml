@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<opgraph xmlns="http://www.gedge.ca/ns/opgraph" xmlns:oga="http://www.gedge.ca/ns/opgraph-app">
+    <graph id="root">
+        <node id="1ad997f9" type="class:ca.gedge.opgraph.nodes.random.RandomIntegerNode">
+            <extensions>
+                <oga:meta x="82" y="220"/>
+            </extensions>
+        </node>
+        <node id="3b961a84" type="class:ca.gedge.opgraph.nodes.random.RandomIntegerNode">
+            <extensions>
+                <oga:meta x="81" y="45"/>
+            </extensions>
+        </node>
+        <node id="5631db04" type="class:ca.gedge.opgraph.nodes.math.MathExpressionNode">
+            <extensions>
+                <oga:settings>
+                    <oga:property key="significantDigits"><![CDATA[-1]]></oga:property>
+                    <oga:property key="expression"><![CDATA[x % y]]></oga:property>
+                </oga:settings>
+                <oga:meta x="430" y="158"/>
+            </extensions>
+        </node>
+        <link dest="5631db04" destField="y" source="1ad997f9" sourceField="value"/>
+        <link dest="5631db04" destField="x" source="3b961a84" sourceField="value"/>
+    </graph>
+</opgraph>

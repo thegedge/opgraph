@@ -1,0 +1,215 @@
+
+%{toc}
+
+Definitions
+
+  [OpGraph] This is the base (directed acyclic) graph structure which organizes the smaller
+  operations and the links between them. It makes sure its nodes and links are organized
+  such that nodes are processed in the right order. 
+
+  [OpNode] A node in an <<<OpGraph>>>. This is the starting point for creating the smaller
+  operations that will make up more complex operations. An operable node exposes a set
+  of input/output fields that allows <<<OpGraph>>> to move data.
+
+  [OpLink] A link between two nodes in an <<<OpGraph>>>. The link defines a connection
+  between the output on a source node and the input on a destination node.
+
+  [OpContext] A place where data is stored during the processing of an <<<OpGraph>>>.
+  These contexts are scoped, so nodes can store and remove data from their local
+  context without worry.
+
+  [ContextualItem] At its simplest, a key that can be used to fetch and store information from an
+  <<<OpContext>>>. Contextual items come in two major flavours:
+
+     *  <Input fields>; a description of an input link point for a given node
+        Input fields can be optional (no input required) and/or fixed (cannot
+        be removed). Input fields also have a type validation mechanism to
+  	    ensure that incoming data is of the required type.
+
+     *  <Output fields>; a description of an output link point for a given
+        node. Output fields can be fixed (cannot be removed). Output fields
+        also define the type of data they output.
+
+  [Processor] A context for the processing of a graph. The processing context offers fine
+  control over the execution of a graph, to better help one detect sources of error.
+
+
+Creating Your First Node
+
+  One's first step in working with OpGraph is to build a custom node. In this step-by step
+  guide, we will construct a node that takes a string as input and outputs a list of
+  strings, split by some delimeter.
+
+%{code-snippet|brush=java|file=src/site/snippets/quickstart/skeleton.java}
+
+  The above code shows the basic skeleton class for an operable node. We start by annotating
+  our class with <<<@OpNodeInfo>>> to describe the node. This consists of three fields:
+
+    [[1]] the name of the node,
+
+    [[2]] a short description of what the node does, and
+
+    [[3]] optionally, a category for the node.
+
+
+* Defining Fields
+
+  Our next step is to define the input/output fields for our node. In our string splitter node,
+  we will have three fields:
+
+    [[1]] an input field for the string,
+
+    [[2]] an optional input field for the delimeter, and
+
+    [[3]] an output field containing the split list.
+
+%{code-snippet|brush=java|file=src/site/snippets/quickstart/fields.java}
+
+  The above code shows how we initialize our input and output fields in the constructor. We
+  first create an input field for the string that we will split. The first parameter is a key for
+  the field. The second is a short description for the field. The third is a boolean value that
+  specifies the field is fixed (i.e., cannot be removed or overwritten). The fourth says that the
+  field is not optional. The last parameter specifies the type of input the field expects. In our
+  case, the input must be assignable to input to be assignable to <<<String.class>>>.
+
+  The second input field is very similar to the first, except we have specified it to be an optional
+  input field (i.e., fourth parameter is <<<true>>>).
+
+  The output field is much the same as input fields. We specify a key, short description, whether or
+  not it is a fixed field, and finally the type of output. In our case the type of output is a list
+  of strings, so we specify <<<List.class>>>. Java generics erases the parameterized type,
+  so we cannot specify <<<List<String>.class>>>. One possible way around this is to create
+  an empty container class that extends the generic type, e.g.: <<<class StringList extends
+  ArrayList<String>>>>. Another possibility is to use arrays (i.e., <<<String[].class>>>).
+
+
+* Defining The Operation
+
+  Our final step is to define the operation that this node performs. This is handled by the method
+  <<<public void operate(OpContext context)>>>. In our string splitting node, we need
+  to grab our input string, determine our delimeter, split the string, and output the split list.
+
+%{code-snippet|brush=java|file=src/site/snippets/quickstart/operation.java}
+
+  We first grab values from the <<<OpContext>>> structure. This structure behaves like scopes
+  in a programming language. It is probably a good idea to put keys in <<<static final>>>
+  variables, but for this example we just hardcode the keys. The string input is a required input,
+  so we can sure that a value will be there. The delimeter field is optional, so we need to first
+  check to see if it is in the context, and if so, we grab it. Finally, we split the list and put 
+  it back in the context under the key specified by the output field (see {{{defining_fields}Defining Fields}}).
+ 
+  That's it!
+
+
+* Final Class
+
+%{code-snippet|brush=java|file=src/site/snippets/quickstart/final.java}
+
+
+Constructing An Operable Graph
+
+  After designing the nodes, one needs to link them together to form some more complex operation.
+  This is as simple as adding nodes to an <<<OpGraph>>> structure, followed by the links between
+  them. Here is a simple example where we have two nodes that generate random integers, and another
+  that adds these two together:
+
+%{code-snippet|brush=java|file=src/site/snippets/quickstart/graph.java}
+
+  We simply create nodes, add them to the graph, and then connect these nodes with links. The
+  parameters to the <<<OpLink>>> constructor, in order, are:
+
+    [[1]] The source node, from which data will come from.
+
+    [[2]] The output field of the source node
+
+    [[3]] The destination node, to which data will flow to.
+
+    [[4]] The input field of the destination node
+
+  The constructor of <<<OpLink>>> can throw <<<ItemMissingException>>> if either specified
+  field is not a field in its respective node. Since <<<OpGraph>>>s are directed <acyclic>
+  graphs, adding a link can throw <<<CycleDetectedException>>> if adding the link to the graph
+  will create a cycle. If one does not want to handle these  exceptions, <<<OpGraph>>> contains
+  the helper method <<<connect>>> to simplify the process of constructing links.
+
+
+Executing An Operable Graph
+
+  Now that we have a graph, execution of the graph is taken care of by the <<<Processor>>>
+  class. This class encompasses execution of the graph, taking care of the flow of data, and
+  allowing you to step through the execution of the graph however you please. If any errors occur
+  during the execution of the graph, they will be thrown as a <<<ProcessingException>>>.
+
+%{code-snippet|brush=java|file=src/site/snippets/quickstart/processing.java}
+
+  As one can see, no errors are thrown from <<<Processor>>>, but rather one has to manually
+  check for errors after execution, via the <<<Processor.getError()>>>. The only
+  reason one might use a <<<Processor>>> directly is to step through the nodes of a graph
+  with a finer granularity. <<<Processor>>> comes with various stepping methods:
+
+    [stepAll] Steps through all nodes in the graph, halting only on error.
+
+    [step] Steps through a single node.
+
+    [stepToNextLevel] Steps through all nodes that have the same level as the current
+    node, halting only on error. The level of node <v>, <l(v)>, is defined as
+
+      * 0, if the node has no incoming links, or
+
+      * min <l(u)> + 1, where <u> is any node with an outgoing link connected to <v>.
+
+    [stepToNode(<v>)] Steps through all nodes until node <v> is processed, halting
+    only on error. 
+
+  To see if another node is available for processing, be sure to call
+  <<<Processor.hasNext()>>> and make sure it returns <<<true>>>.
+
+
+Opgraph I/O
+
+  The OpGraph project provides a simple serialization mechanism so that one can save/load
+  <<<OpGraph>>>s to/from disk.
+
+%{code-snippet|brush=java|file=src/site/snippets/quickstart/io.java}
+
+  As one can see, it is simply a manner of passing an input/output stream to either the read or
+  write method of <<<OpgraphSerializer>>>. To get a serializer, there are two options:
+
+    [getDefaultSerializer] Gets a default serializer. The default serializer is
+    discovered through several steps:
+
+      [[1]] If the system property <<<ca.gedge.defaultSerializer>>> is defined
+            and references a valid class, it will be the default serializer.
+
+      [[2]] If a valid <<<OpgraphSerializer>>> is defined via <<<META-INF/services>>>,
+            it will be used. If there are multiple <<<OpgraphSerializer>>> services,
+	        the first valid one is used.
+
+    [getSerializerByExtension] Gets a serializer by the file extension that the
+    serializer understands. For example, <<<getSerializerByExtension("xml")>>>
+    gets a serializer which can read and write <<<*.xml>>> files.  
+
+
+Extensions
+
+  Most of the API consists of <<<final>>> classes. This is to prevent anyone from extending the API
+  in ways that are not future-proof. Nevertheless, sometimes one may want to extend API structures
+  with custom functionality. Enter the extension mechanism. Many API classes have several methods to
+  attach and query custom extensions to them.
+
+  Currently the API itself makes use of two extensions:
+	
+    [CompositeNode] Any node with this extension identifies itself as being composed
+    of an <<<OpGraph>>> structure (e.g., macros). <<<Processor>>> uses this
+    extension for the special <<<stepInto>>> and <<<stepOutOf>>> methods.
+
+    [CustomProcessing] Any node that has custom processing requirements. Currently this
+    is only used by <<<Processor>>> to acquire custom processing requirements
+    when stepping into nodes which have the <<<CompositeNode>>> extension.
+
+    [Publishable] Generally for nodes with the <<<CompositeNode>>> extension, this
+    extension allows nodes to publish input/output fields from contained nodes as fields
+    of the parent node. For example, a macro node may contain a graph describing the
+    macro operation. To get data into and out of this graph, fields of the inner
+    nodes will be published to the macro node.
+

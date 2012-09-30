@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<opgraph xmlns="http://www.gedge.ca/ns/opgraph" xmlns:oga="http://www.gedge.ca/ns/opgraph-app" xmlns:ogcn="http://www.gedge.ca/ns/common-nodes">
+    <graph id="root">
+        <node id="12feba21" name="Range Length" type="class:ca.gedge.opgraph.nodes.random.RandomIntegerNode">
+            <extensions>
+                <oga:meta x="45" y="219">
+                    <oga:default for="min" type="java.lang.Long">1</oga:default>
+                    <oga:default for="max" type="java.lang.Long">20</oga:default>
+                </oga:meta>
+            </extensions>
+        </node>
+        <node id="64964f8e" name="Range Start" type="class:ca.gedge.opgraph.nodes.random.RandomIntegerNode">
+            <extensions>
+                <oga:meta x="52" y="59">
+                    <oga:default for="min" type="java.lang.Long">0</oga:default>
+                    <oga:default for="max" type="java.lang.Long">1000</oga:default>
+                </oga:meta>
+            </extensions>
+        </node>
+        <node id="7815bd8f" name="Range End" type="class:ca.gedge.opgraph.nodes.math.MathExpressionNode">
+            <extensions>
+                <oga:settings>
+                    <oga:property key="significantDigits"><![CDATA[-1]]></oga:property>
+                    <oga:property key="expression"><![CDATA[(x+y)        - 1]]></oga:property>
+                </oga:settings>
+                <oga:meta x="249" y="148"/>
+            </extensions>
+        </node>
+        <node id="6ef64f64" type="class:ca.gedge.opgraph.nodes.general.RangeNode">
+            <extensions>
+                <oga:meta x="449" y="39">
+                    <oga:default for="start" type="java.lang.Long">1</oga:default>
+                    <oga:default for="end" type="java.lang.Long">10</oga:default>
+                </oga:meta>
+            </extensions>
+        </node>
+        <ogcn:macro id="7fac4f3e" type="ca.gedge.opgraph.nodes.iteration.ForEachNode">
+            <graph id="4bb963c4">
+                <node id="1e4ad14c" type="class:ca.gedge.opgraph.nodes.iteration.CurrentIterationNode">
+                    <extensions>
+                        <oga:meta x="96" y="244"/>
+                    </extensions>
+                </node>
+                <node id="405084c6" type="class:ca.gedge.opgraph.nodes.math.MathExpressionNode">
+                    <extensions>
+                        <oga:settings>
+                            <oga:property key="significantDigits"><![CDATA[-1]]></oga:property>
+                            <oga:property key="expression"><![CDATA[x/(y+1)]]></oga:property>
+                        </oga:settings>
+                        <oga:meta x="384" y="164"/>
+                    </extensions>
+                </node>
+                <link dest="405084c6" destField="y" source="1e4ad14c" sourceField="value"/>
+            </graph>
+            <ogcn:published_input dest="405084c6" destField="x" key="x"/>
+            <ogcn:published_output key="result" source="405084c6" sourceField="result"/>
+            <extensions>
+                <oga:meta x="666" y="9"/>
+            </extensions>
+        </ogcn:macro>
+        <link dest="7815bd8f" destField="x" source="64964f8e" sourceField="value"/>
+        <link dest="6ef64f64" destField="start" source="64964f8e" sourceField="value"/>
+        <link dest="7fac4f3e" destField="x" source="6ef64f64" sourceField="range"/>
+        <link dest="6ef64f64" destField="end" source="7815bd8f" sourceField="result"/>
+        <link dest="7815bd8f" destField="y" source="12feba21" sourceField="value"/>
+    </graph>
+</opgraph>

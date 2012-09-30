@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<opgraph xmlns="http://www.gedge.ca/ns/opgraph" xmlns:oga="http://www.gedge.ca/ns/opgraph-app">
+    <graph id="root">
+        <node id="529801f4" type="class:ca.gedge.opgraph.nodes.random.RandomBooleanNode">
+            <extensions>
+                <oga:meta x="403" y="107"/>
+            </extensions>
+        </node>
+        <node id="7c5438e1" type="class:ca.gedge.opgraph.nodes.random.RandomIntegerNode">
+            <extensions>
+                <oga:meta x="142" y="173"/>
+            </extensions>
+        </node>
+        <node id="6e247d4a" type="class:ca.gedge.opgraph.nodes.general.RangeNode">
+            <extensions>
+                <oga:meta x="644" y="154">
+                    <oga:default for="start" type="java.lang.Long">0</oga:default>
+                </oga:meta>
+            </extensions>
+        </node>
+        <link dest="6e247d4a" destField="end" source="7c5438e1" sourceField="value"/>
+        <link dest="6e247d4a" destField="enabled" source="529801f4" sourceField="value"/>
+        <extensions>
+            <oga:notes>
+                <oga:note color="0xffff96" height="200" title="Test Note" width="700" x="120" y="80">A simple note, with a simple textual body</oga:note>
+            </oga:notes>
+        </extensions>
+    </graph>
+</opgraph>

@@ -1,0 +1,8 @@
+ca.gedge.opgraph.app.commands.core.CoreMenuProvider
+ca.gedge.opgraph.app.commands.edit.EditMenuProvider
+ca.gedge.opgraph.app.commands.graph.GraphMenuProvider
+ca.gedge.opgraph.app.commands.debug.DebugMenuProvider
+ca.gedge.opgraph.app.commands.notes.NotesMenuProvider
+ca.gedge.opgraph.app.commands.publish.PublishableMenuProvider
+
+ca.gedge.opgraph.app.components.library.NodeLibraryMenuProvider

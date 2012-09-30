@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<opgraph xmlns="http://www.gedge.ca/ns/opgraph" xmlns:oga="http://www.gedge.ca/ns/opgraph-app" xmlns:ogcn="http://www.gedge.ca/ns/common-nodes">
+    <graph id="root">
+        <node id="62a34b91" type="class:ca.gedge.opgraph.nodes.random.RandomBooleanNode">
+            <extensions>
+                <oga:meta x="67" y="87"/>
+            </extensions>
+        </node>
+        <ogcn:macro id="6e66da2c" type="ca.gedge.opgraph.nodes.general.MacroNode">
+            <graph id="6a301bf5">
+                <node id="10439d3b" type="class:ca.gedge.opgraph.nodes.random.RandomBooleanNode">
+                    <extensions>
+                        <oga:meta x="290" y="264"/>
+                    </extensions>
+                </node>
+                <node id="17510d96" type="class:ca.gedge.opgraph.nodes.logic.LogicalAndNode">
+                    <extensions>
+                        <oga:meta x="764" y="168"/>
+                    </extensions>
+                </node>
+                <link dest="17510d96" destField="y" source="10439d3b" sourceField="value"/>
+            </graph>
+            <ogcn:published_input dest="17510d96" destField="x" key="x"/>
+            <extensions>
+                <oga:meta x="405" y="183"/>
+            </extensions>
+        </ogcn:macro>
+        <node id="5b31fd9" type="class:ca.gedge.opgraph.nodes.random.RandomStringNode">
+            <extensions>
+                <oga:meta x="368" y="29">
+                    <oga:default for="length" type="java.lang.Long">5</oga:default>
+                </oga:meta>
+            </extensions>
+        </node>
+        <link dest="6e66da2c" destField="x" source="62a34b91" sourceField="value"/>
+        <link dest="5b31fd9" destField="enabled" source="62a34b91" sourceField="value"/>
+    </graph>
+</opgraph>
