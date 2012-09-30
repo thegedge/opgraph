@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+    <style type="text/css" media="all">
+      @import url("./css/maven-base.css");
+      @import url("./css/maven-theme.css");
+      @import url("./css/site.css");
+    </style>
+    <link rel="stylesheet" href="./css/print.css" type="text/css" media="print" />
+    <style type="text/css" media="all">
+    <!--
+      #rightColumn {
+        width: 220px;
+        border-bottom: 1px solid #CCCCCC;
+        border-left: 1px solid #CCCCCC;
+        border-top: 1px solid #CCCCCC;
+        margin: 10px 0 10px 0;
+        float: right;
+        overflow: auto;
+      }
+      #rightColumn .navcolumn {
+        padding: 8px;
+      }
+    -->
+    </style>
+          
+    <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCore.css" />
+    
+                <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shThemeRDark.css" />
+    
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
+    
+                  <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushPlain.js"></script>
+              <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.js"></script>
+              <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJava.js"></script>
+              
+    <script type="text/javascript">
+                        SyntaxHighlighter.config.clipboardSwf='syntaxhighlighter/scripts/clipboard.swf';
+                    
+      SyntaxHighlighter.all();
+    </script>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            </head>
+  <body class="composite">
+    <div id="banner">
+                    <span id="bannerLeft">
+    
+            OpGraph
+    
+            </span>
+                    <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    <div id="breadcrumbs">
+          
+  
+
+  
+    
+  
+  
+    
+            <div class="xleft">
+        Last Published: 2012-09-30
+                      </div>
+            <div class="xright">      
+  
+
+  
+    
+  
+  
+    
+  </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    <div id="leftColumn">
+      <div class="navcolumn">
+            
+  
+
+  
+    
+  
+  
+    
+                              <h5>Overview</h5>
+            <ul>
+              
+    <li class="none">
+                    <a href="index.html">Introduction</a>
+          </li>
+          </ul>
+              <h5>Documentation</h5>
+            <ul>
+              
+    <li class="none">
+              <strong>Quickstart</strong>
+        </li>
+              
+    <li class="none">
+                    <a href="javadoc/index.html">JavaDoc</a>
+          </li>
+          </ul>
+                  
+            
+                                    <a href="http://maven.apache.org/" title="Built by Maven" class="poweredBy">
+                  <img alt="Built by Maven" src="./images/logos/maven-feather.png"></img>
+                </a>
+                                              
+  
+
+  
+    
+  
+  
+    
+        </div>
+    </div>
+        <div id="bodyColumn">
+      <div id="contentBox">
+        <ul><li><a href="#Definitions">Definitions</a></li><li><a href="#Creating_Your_First_Node">Creating Your First Node</a><ul><li><a href="#Defining_Fields">Defining Fields</a></li><li><a href="#Defining_The_Operation">Defining The Operation</a></li><li><a href="#Final_Class">Final Class</a></li></ul></li><li><a href="#Constructing_An_Operable_Graph">Constructing An Operable Graph</a></li><li><a href="#Executing_An_Operable_Graph">Executing An Operable Graph</a></li><li><a href="#Opgraph_IO">Opgraph I/O</a></li><li><a href="#Extensions">Extensions</a></li></ul><div class="section"><h2>Definitions<a name="Definitions"></a></h2><dl><dt>OpGraph</dt><dd>This is the base (directed acyclic) graph structure which organizes the smaller operations and the links between them. It makes sure its nodes and links are organized such that nodes are processed in the right order. </dd><dt>OpNode</dt><dd>A node in an <tt>OpGraph</tt>. This is the starting point for creating the smaller operations that will make up more complex operations. An operable node exposes a set of input/output fields that allows <tt>OpGraph</tt> to move data.</dd><dt>OpLink</dt><dd>A link between two nodes in an <tt>OpGraph</tt>. The link defines a connection between the output on a source node and the input on a destination node.</dd><dt>OpContext</dt><dd>A place where data is stored during the processing of an <tt>OpGraph</tt>. These contexts are scoped, so nodes can store and remove data from their local context without worry.</dd><dt>ContextualItem</dt><dd>At its simplest, a key that can be used to fetch and store information from an <tt>OpContext</tt>. Contextual items come in two major flavours:<ul><li><i>Input fields</i>; a description of an input link point for a given node Input fields can be optional (no input required) and/or fixed (cannot be removed). Input fields also have a type validation mechanism to ensure that incoming data is of the required type.</li><li><i>Output fields</i>; a description of an output link point for a given node. Output fields can be fixed (cannot be removed). Output fields also define the type of data they output.</li></ul></dd><dt>Processor</dt><dd>A context for the processing of a graph. The processing context offers fine control over the execution of a graph, to better help one detect sources of error.</dd></dl></div><div class="section"><h2>Creating Your First Node<a name="Creating_Your_First_Node"></a></h2><p>One's first step in working with OpGraph is to build a custom node. In this step-by step guide, we will construct a node that takes a string as input and outputs a list of strings, split by some delimeter.</p><pre class="brush: java">@OpNodeInfo(
+	name=&quot;String Splitter&quot;,
+	description=&quot;Splits a string by whitespace or, if specified, a separator string.&quot;,
+	category=&quot;String&quot;
+)
+public class StringSplitter extends OpNode {
+	public StringSplitter() {
+		// TODO add default fields
+	}
+	
+	@Override
+	public void operate(OpContext context) throws ProcessingException {
+		// TODO implement operation
+	}
+}
+</pre><p>The above code shows the basic skeleton class for an operable node. We start by annotating our class with <tt>@OpNodeInfo</tt> to describe the node. This consists of three fields:</p><ol style="list-style-type: decimal"><li>the name of the node,</li><li>a short description of what the node does, and</li><li>optionally, a category for the node.</li></ol><div class="section"><h3>Defining Fields<a name="Defining_Fields"></a></h3><p>Our next step is to define the input/output fields for our node. In our string splitter node, we will have three fields:</p><ol style="list-style-type: decimal"><li>an input field for the string,</li><li>an optional input field for the delimeter, and</li><li>an output field containing the split list.</li></ol><pre class="brush: java">public StringSplitter() {
+	putField(new InputField(&quot;string&quot;, &quot;input string&quot;, true, false, String.class));
+	putField(new InputField(&quot;delimeter&quot;, &quot;split delimeter&quot;, true, true, String.class));
+	putField(new OutputField(&quot;split&quot;, &quot;split string list&quot;, true, List.class))
+}
+</pre><p>The above code shows how we initialize our input and output fields in the constructor. We first create an input field for the string that we will split. The first parameter is a key for the field. The second is a short description for the field. The third is a boolean value that specifies the field is fixed (i.e., cannot be removed or overwritten). The fourth says that the field is not optional. The last parameter specifies the type of input the field expects. In our case, the input must be assignable to input to be assignable to <tt>String.class</tt>.</p><p>The second input field is very similar to the first, except we have specified it to be an optional input field (i.e., fourth parameter is <tt>true</tt>).</p><p>The output field is much the same as input fields. We specify a key, short description, whether or not it is a fixed field, and finally the type of output. In our case the type of output is a list of strings, so we specify <tt>List.class</tt>. Java generics erases the parameterized type, so we cannot specify <tt>List&lt;String&gt;.class</tt>. One possible way around this is to create an empty container class that extends the generic type, e.g.: <tt>class StringList extends ArrayList&lt;String</tt>&gt;. Another possibility is to use arrays (i.e., <tt>String[].class</tt>).</p></div><div class="section"><h3>Defining The Operation<a name="Defining_The_Operation"></a></h3><p>Our final step is to define the operation that this node performs. This is handled by the method <tt>public void operate(OpContext context)</tt>. In our string splitting node, we need to grab our input string, determine our delimeter, split the string, and output the split list.</p><pre class="brush: java">@Override
+public void operate(OpContext context) throws ProcessingException {
+	final String str = (String)context.get(&quot;string&quot;);
+	
+	String delim = &quot;\\s&quot;;
+	if(context.containsKey(&quot;delimeter&quot;)
+		delim = (String)context.get(&quot;delimeter&quot;);
+	
+	context.put(&quot;split&quot;, Arrays.asList(str.split(delim)))
+}
+</pre><p>We first grab values from the <tt>OpContext</tt> structure. This structure behaves like scopes in a programming language. It is probably a good idea to put keys in <tt>static final</tt> variables, but for this example we just hardcode the keys. The string input is a required input, so we can sure that a value will be there. The delimeter field is optional, so we need to first check to see if it is in the context, and if so, we grab it. Finally, we split the list and put it back in the context under the key specified by the output field (see <a href="#defining_fields">Defining Fields</a>).</p><p>That's it!</p></div><div class="section"><h3>Final Class<a name="Final_Class"></a></h3><pre class="brush: java">@OpNodeInfo(
+	name=&quot;String Splitter&quot;,
+	description=&quot;Splits a string by whitespace or, if specified, a separator string.&quot;,
+	category=&quot;String&quot;
+)
+public class StringSplitter extends OpNode {
+	public StringSplitter() {
+		putField(new InputField(&quot;string&quot;, &quot;input string&quot;, true, false, String.class));
+		putField(new InputField(&quot;delimeter&quot;, &quot;split delimeter&quot;, true, true, String.class));
+		putField(new OutputField(&quot;split&quot;, &quot;split string list&quot;, true, List.class))
+	}
+	
+	@Override
+	public void operate(OpContext context) throws ProcessingException {
+		final String str = (String)context.get(&quot;string&quot;);
+		
+		String delim = &quot;\\s&quot;;
+		if(context.containsKey(&quot;delimeter&quot;)
+			delim = (String)context.get(&quot;delimeter&quot;);
+		
+		context.put(&quot;split&quot;, Arrays.asList(str.split(delim)))
+	}
+}
+</pre></div></div><div class="section"><h2>Constructing An Operable Graph<a name="Constructing_An_Operable_Graph"></a></h2><p>After designing the nodes, one needs to link them together to form some more complex operation. This is as simple as adding nodes to an <tt>OpGraph</tt> structure, followed by the links between them. Here is a simple example where we have two nodes that generate random integers, and another that adds these two together:</p><pre class="brush: java">final OpGraph graph = new OpGraph();
+
+final RandomInteger intA = new RandomInteger();
+final RandomInteger intB = new RandomInteger();
+final Adder adder = new Adder();
+
+graph.add(intA);
+graph.add(intB);
+graph.add(adder);
+
+try {
+	graph.add(new OpLink(intA, &quot;value&quot;, adder, &quot;x&quot;));	
+	graph.add(new OpLink(intB, &quot;value&quot;, adder, &quot;y&quot;));	
+} catch(CycleDetectedException exc) {
+	// If adding a link creates a cycle
+} catch(ItemMissingException exc) {
+	// If a field specified in the edge constructor does not exist
+	// in its corresponding node
+}
+</pre><p>We simply create nodes, add them to the graph, and then connect these nodes with links. The parameters to the <tt>OpLink</tt> constructor, in order, are:</p><ol style="list-style-type: decimal"><li>The source node, from which data will come from.</li><li>The output field of the source node</li><li>The destination node, to which data will flow to.</li><li>The input field of the destination node</li></ol><p>The constructor of <tt>OpLink</tt> can throw <tt>ItemMissingException</tt> if either specified field is not a field in its respective node. Since <tt>OpGraph</tt>s are directed <i>acyclic</i> graphs, adding a link can throw <tt>CycleDetectedException</tt> if adding the link to the graph will create a cycle. If one does not want to handle these exceptions, <tt>OpGraph</tt> contains the helper method <tt>connect</tt> to simplify the process of constructing links.</p></div><div class="section"><h2>Executing An Operable Graph<a name="Executing_An_Operable_Graph"></a></h2><p>Now that we have a graph, execution of the graph is taken care of by the <tt>Processor</tt> class. This class encompasses execution of the graph, taking care of the flow of data, and allowing you to step through the execution of the graph however you please. If any errors occur during the execution of the graph, they will be thrown as a <tt>ProcessingException</tt>.</p><pre class="brush: java">final OpContext context = new OpContext();
+final Processor processor = new Processor(graph);
+processor.reset(context);
+processor.stepAll();
+if(processor.getError() != null) {
+	// Handle this error
+} else {
+	// If necessary, grab results from context
+}
+</pre><p>As one can see, no errors are thrown from <tt>Processor</tt>, but rather one has to manually check for errors after execution, via the <tt>Processor.getError()</tt>. The only reason one might use a <tt>Processor</tt> directly is to step through the nodes of a graph with a finer granularity. <tt>Processor</tt> comes with various stepping methods:</p><dl><dt>stepAll</dt><dd>Steps through all nodes in the graph, halting only on error.</dd><dt>step</dt><dd>Steps through a single node.</dd><dt>stepToNextLevel</dt><dd>Steps through all nodes that have the same level as the current node, halting only on error. The level of node <i>v</i>, <i>l(v)</i>, is defined as<ul><li>0, if the node has no incoming links, or</li><li>min <i>l(u)</i> + 1, where <i>u</i> is any node with an outgoing link connected to <i>v</i>.</li></ul></dd><dt>stepToNode(<i>v</i>)</dt><dd>Steps through all nodes until node <i>v</i> is processed, halting only on error. </dd></dl><p>To see if another node is available for processing, be sure to call <tt>Processor.hasNext()</tt> and make sure it returns <tt>true</tt>.</p></div><div class="section"><h2>Opgraph I/O<a name="Opgraph_IO"></a></h2><p>The OpGraph project provides a simple serialization mechanism so that one can save/load <tt>OpGraph</tt>s to/from disk.</p><pre class="brush: java">// Get the default serializer
+final OpGraphSerializer serializer = OpGraphSerializerFactory.getDefaultSerializer();
+if(serializer == null)
+	; // Be sure to handle the case when no serialization mechanism is available
+
+// Write a graph to a stream
+try {
+	serializer.write(graph, System.out);
+} catch(IOException exc) {
+	// Handle the exception
+}
+
+// Read a graph from a stream
+OpGraph graph = null;
+try {
+	graph = serializer.read(System.in);
+} catch(IOException exc) {
+	// Handle the exception
+}
+</pre><p>As one can see, it is simply a manner of passing an input/output stream to either the read or write method of <tt>OpgraphSerializer</tt>. To get a serializer, there are two options:</p><dl><dt>getDefaultSerializer</dt><dd>Gets a default serializer. The default serializer is discovered through several steps:<ol style="list-style-type: decimal"><li>If the system property <tt>ca.gedge.defaultSerializer</tt> is defined and references a valid class, it will be the default serializer.</li><li>If a valid <tt>OpgraphSerializer</tt> is defined via <tt>META-INF/services</tt>, it will be used. If there are multiple <tt>OpgraphSerializer</tt> services, the first valid one is used.</li></ol></dd><dt>getSerializerByExtension</dt><dd>Gets a serializer by the file extension that the serializer understands. For example, <tt>getSerializerByExtension(&quot;xml&quot;)</tt> gets a serializer which can read and write <tt>*.xml</tt> files. </dd></dl></div><div class="section"><h2>Extensions<a name="Extensions"></a></h2><p>Most of the API consists of <tt>final</tt> classes. This is to prevent anyone from extending the API in ways that are not future-proof. Nevertheless, sometimes one may want to extend API structures with custom functionality. Enter the extension mechanism. Many API classes have several methods to attach and query custom extensions to them.</p><p>Currently the API itself makes use of two extensions:</p><dl><dt>CompositeNode</dt><dd>Any node with this extension identifies itself as being composed of an <tt>OpGraph</tt> structure (e.g., macros). <tt>Processor</tt> uses this extension for the special <tt>stepInto</tt> and <tt>stepOutOf</tt> methods.</dd><dt>CustomProcessing</dt><dd>Any node that has custom processing requirements. Currently this is only used by <tt>Processor</tt> to acquire custom processing requirements when stepping into nodes which have the <tt>CompositeNode</tt> extension.</dd><dt>Publishable</dt><dd>Generally for nodes with the <tt>CompositeNode</tt> extension, this extension allows nodes to publish input/output fields from contained nodes as fields of the parent node. For example, a macro node may contain a graph describing the macro operation. To get data into and out of this graph, fields of the inner nodes will be published to the macro node.</dd></dl></div>
+      </div>
+    </div>
+    <div class="clear">
+      <hr/>
+    </div>
+    <div id="footer">
+      <div class="xright">&#169;  
+          2012
+    
+                  <a href="http://www.gedge.ca/">Jason Gedge</a>
+                
+  
+
+  
+    
+  
+  
+    
+     </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+        </body>
+</html>
