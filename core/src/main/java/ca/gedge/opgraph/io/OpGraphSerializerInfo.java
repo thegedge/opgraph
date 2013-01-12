@@ -39,7 +39,7 @@ public @interface OpGraphSerializerInfo {
 	 * @return the extension
 	 */
 	public abstract String extension();
-	
+
 	/**
 	 * Gets a description of the data this serializer reads and writes. For
 	 * example, an XML serializer could return "XML Files".

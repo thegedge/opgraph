@@ -34,28 +34,28 @@ import ca.gedge.opgraph.Processor;
 public class ContextViewerPanel extends JEditorPane {
 	/** The processing context being debugged */
 	private Processor processor;
-	
+
 	/** The node currently being viewed */
 	private OpNode node;
-	
+
 	/**
 	 * Default constructor.
 	 */
 	public ContextViewerPanel() {
 		this.processor = null;
 		this.node = null;
-		
+
 		// Set up editor kit
 		final HTMLEditorKit kit = new HTMLEditorKit();
 		final StyleSheet style = kit.getStyleSheet();
 		style.addRule("body { padding: 5px; }");
 		style.addRule("ul { margin: 5px 15px; }");
 		style.addRule(".error { font-family: Courier,Courier New,Console,System; color: #ff0000; white-space: pre; }");
-		
+
 		// Initialize
 		setEditorKit(kit);
 		setEditable(false);
-		
+
 		updateDebugInfo();
 	}
 
@@ -118,10 +118,10 @@ public class ContextViewerPanel extends JEditorPane {
 					sb.append("<li><b>");
 					sb.append(field.getKey());
 					sb.append("</b>: ");
-					
+
 					final Object value = context.get(field);
 					sb.append(value == null ? "undefined" : value);
-					
+
 					sb.append("</li>");
 				}
 				sb.append("</ul>Outputs:<ul>");
@@ -129,19 +129,19 @@ public class ContextViewerPanel extends JEditorPane {
 					sb.append("<li><b>");
 					sb.append(field.getKey());
 					sb.append("</b>: ");
-					
+
 					final Object value = context.get(field);
 					sb.append(value == null ? "undefined" : value);
-					
+
 					sb.append("</li>");
 				}
 				sb.append("</ul>");
 				sb.append("</body></html>");
-				
+
 				text = sb.toString();
 			}
 		}
-		
+
 		setText(text);
 	}
 }

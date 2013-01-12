@@ -38,10 +38,10 @@ import ca.gedge.opgraph.app.extensions.Note;
 public class ResizeNoteEdit extends AbstractUndoableEdit {
 	/** The note's UI component */
 	private JComponent noteComp;
-	
+
 	/** Old note size */
 	private Dimension oldSize;
-	
+
 	/** New note size */
 	private Dimension newSize;
 
@@ -58,16 +58,16 @@ public class ResizeNoteEdit extends AbstractUndoableEdit {
 	public ResizeNoteEdit(Note note, Dimension size) {
 		if(note == null)
 			throw new NullPointerException();
-		
+
 		noteComp = note.getExtension(JComponent.class);
 		if(noteComp == null)
 			throw new NullPointerException();
-		
+
 		this.oldSize = noteComp.getPreferredSize();
 		this.newSize = size;
 		perform();
 	}
-	
+
 	/**
 	 * Constructs an edit that sets the size of a specified note, with a given
 	 * initial size.
@@ -83,18 +83,18 @@ public class ResizeNoteEdit extends AbstractUndoableEdit {
 	public ResizeNoteEdit(Note note, Dimension initialSize, Dimension size) {
 		if(note == null)
 			throw new NullPointerException();
-		
+
 		noteComp = note.getExtension(JComponent.class);
 		if(noteComp == null)
 			throw new NullPointerException();
-		
+
 		this.oldSize = initialSize;
 		this.newSize = size;
 		perform();
 	}
-	
+
 	// XXX assumes noteComp doesn't change for the note
-	
+
 	/**
 	 * Performs this edit.
 	 */
@@ -102,22 +102,22 @@ public class ResizeNoteEdit extends AbstractUndoableEdit {
 		noteComp.setPreferredSize(newSize);
 		noteComp.revalidate();
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
-	
+
 	@Override
 	public String getPresentationName() {
 		return "Resize Note";
 	}
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();

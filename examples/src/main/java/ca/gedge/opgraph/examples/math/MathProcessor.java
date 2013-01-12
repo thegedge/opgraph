@@ -47,25 +47,25 @@ public class MathProcessor {
 			System.out.println("usage: java MathProcessor x y z");
 			System.exit(1);
 		}
-		
+
 		// Parse input arguments
 		final double x = Double.parseDouble(args[0]);
 		final double y = Double.parseDouble(args[1]);
 		final double z = Double.parseDouble(args[2]);
-		
+
 		// Construct the nodes
 		final BinaryOperationNode xPlusY = new BinaryOperationNode(ADD);
 		final BinaryOperationNode xTimesY = new BinaryOperationNode(MULTIPLY);
 		final BinaryOperationNode addZ = new BinaryOperationNode(ADD);
 		final BinaryOperationNode divide = new BinaryOperationNode(DIVIDE);
-		
+
 		// Construct the graph
 		final OpGraph expression = new OpGraph();
 		expression.add(xPlusY);
 		expression.add(xTimesY);
 		expression.add(addZ);
 		expression.add(divide);
-		
+
 		// Connect nodes
 		try {
 			expression.add(new OpLink(xTimesY, xTimesY.RESULT, addZ, addZ.X));
@@ -73,8 +73,8 @@ public class MathProcessor {
 			expression.add(new OpLink(addZ, addZ.RESULT, divide, divide.Y));
 		} catch(CycleDetectedException exc) {
 		} catch(VertexNotFoundException exc) {
-        } catch(ItemMissingException exc) {}
-		
+		} catch(ItemMissingException exc) {}
+
 		// Inject constant values into appropriate contexts
 		final OpContext context = new OpContext();
 		context.getChildContext(xPlusY).put(xPlusY.X, x);
@@ -82,10 +82,10 @@ public class MathProcessor {
 		context.getChildContext(xTimesY).put(xPlusY.X, x);
 		context.getChildContext(xTimesY).put(xPlusY.Y, y);
 		context.getChildContext(addZ).put(xPlusY.Y, z);
-		
+
 		// Execute 
 		(new Processor(expression, context)).stepAll();
-		
+
 		// Output the result (note, we assume no errors during processing)
 		final double result = ((Number)context.getChildContext(divide).get(divide.RESULT)).doubleValue();
 		System.out.format("(x + y) / (x*y + z) = %.2f where {x, y, z} = {%.2f, %.2f, %.2f}", result, x, y, z);

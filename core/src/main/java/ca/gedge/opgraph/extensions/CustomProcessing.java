@@ -44,7 +44,7 @@ public interface CustomProcessing {
 		 * @param context  the context to initialize
 		 */
 		public abstract void initialize(OpContext context);
-		
+
 		/**
 		 * Terminates processing, updating the given context as necessary.
 		 * 
@@ -52,7 +52,7 @@ public interface CustomProcessing {
 		 */
 		public abstract void terminate(OpContext context);
 	}
-	
+
 	/**
 	 * Gets a custom processor for a node.
 	 * 

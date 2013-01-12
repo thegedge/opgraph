@@ -41,18 +41,18 @@ public class TestOpGraph {
 	static class ConstantNode extends OpNode {
 		private final double value;
 		public final static OutputField VALUE_FIELD = new OutputField("value", "", true, Double.class);
-		
+
 		public ConstantNode(double value) {
 			putField(VALUE_FIELD);
 			this.value = value;
 		}
-		
+
 		@Override
 		public void operate(OpContext context) {
 			context.put(VALUE_FIELD, value);
 		}
 	}
-	
+
 	/**
 	 * Test node that adds its two input values.
 	 */
@@ -60,14 +60,14 @@ public class TestOpGraph {
 		public final static InputField X_FIELD = new InputField("x", "", false, true, Double.class);
 		public final static InputField Y_FIELD = new InputField("y", "", false, true, Double.class);
 		public final static OutputField RESULT_FIELD = new OutputField("result", "", true, Double.class);
-		
+
 		public AddNode() {
 			super("Add", "Computes x + y");
 			putField(X_FIELD);
 			putField(Y_FIELD);
 			putField(RESULT_FIELD);
 		}
-		
+
 		@Override
 		public void operate(OpContext context) {
 			double x = (Double)context.get(X_FIELD);
@@ -75,7 +75,7 @@ public class TestOpGraph {
 			context.put(RESULT_FIELD, x + y);
 		}
 	}
-	
+
 	/**
 	 * Test node that multiplies its two input values.
 	 */
@@ -90,18 +90,18 @@ public class TestOpGraph {
 			putField(Y_FIELD);
 			putField(RESULT_FIELD);
 		}
-		
+
 		@Override
 		public void operate(OpContext context) {
 			double x = (Double)context.get(X_FIELD);
 			double y = 1.0;
 			if(context.containsKey(Y_FIELD))
 				y = (Double)context.get(Y_FIELD);
-			
+
 			context.put(RESULT_FIELD, x * y);
 		}
 	}
-	
+
 	/**
 	 * Test node that compares its two inputs values and outputs if input
 	 * X is less than input Y.
@@ -110,14 +110,14 @@ public class TestOpGraph {
 		public final static InputField X_FIELD = new InputField("x", "", false, true, Double.class);
 		public final static InputField Y_FIELD = new InputField("y", "", false, true, Double.class);
 		public final static OutputField RESULT_FIELD = new OutputField("result", "", true, Boolean.class);
-		
+
 		public LessThanNode() {
 			super("Less Than", "Computes x < y");
 			putField(X_FIELD);
 			putField(Y_FIELD);
 			putField(RESULT_FIELD);
 		}
-		
+
 		@Override
 		public void operate(OpContext context) {
 			double x = (Double)context.get(X_FIELD);
@@ -125,27 +125,27 @@ public class TestOpGraph {
 			context.put(RESULT_FIELD, x < y);
 		}
 	}
-	
+
 	/**
 	 * Test node that outputs the logical not of its boolean input.
 	 */
 	static class LogicalNotNode extends OpNode {
 		public final static InputField X_INPUT_FIELD = new InputField("x", "boolean input", false, true, Boolean.class);
 		public final static OutputField RESULT_OUTPUT_FIELD =  new OutputField("result", "not x", true, Boolean.class);
-		
+
 		public LogicalNotNode() {
 			super("Logical Not", "Computes NOT x");
 			putField(X_INPUT_FIELD);
 			putField(RESULT_OUTPUT_FIELD);
 		}
-		
+
 		@Override
 		public void operate(OpContext context) throws ProcessingException {
 			boolean x = (Boolean)context.get(X_INPUT_FIELD);
 			context.put(RESULT_OUTPUT_FIELD, !x);
 		}
 	}
-	
+
 	/**
 	 * Processes an operable graph.
 	 * 
@@ -164,10 +164,10 @@ public class TestOpGraph {
 		processor.stepAll();
 		if(processor.getError() != null)
 			throw processor.getError();
-		
+
 		return processor.getContext();
 	}
-	
+
 	/**
 	 * Gets a result from the execution of a graph.
 	 * 
@@ -190,7 +190,7 @@ public class TestOpGraph {
 	{
 		return cls.cast(process(graph, context).findChildContext(resultNode).get(resultField));
 	}
-	
+
 	/**
 	 * Tests basic operation of operable graph
 	 */
@@ -202,7 +202,7 @@ public class TestOpGraph {
 		final ConstantNode cv10 = new ConstantNode(10.0);
 		final AddNode av1 = new AddNode();
 		final MultiplyNode mv1 = new MultiplyNode();
-		
+
 		// Add nodes
 		dag.add(cv1);
 		dag.add(cv2);
@@ -215,7 +215,7 @@ public class TestOpGraph {
 		assertNotNull(dag.connect(cv2, ConstantNode.VALUE_FIELD, av1, AddNode.Y_FIELD));
 		assertNotNull(dag.connect(av1, AddNode.RESULT_FIELD, mv1, MultiplyNode.X_FIELD));
 		assertNotNull(dag.connect(cv10, ConstantNode.VALUE_FIELD, mv1, MultiplyNode.Y_FIELD));
-		
+
 		try {
 			double result = getResult(Double.class, dag, null, mv1, MultiplyNode.RESULT_FIELD);
 			assertEquals(30.0, result, 1e-10);
@@ -224,11 +224,11 @@ public class TestOpGraph {
 				exc.getCause().printStackTrace();
 			else
 				exc.printStackTrace();
-			
+
 			fail("Should be no errors when processing");
 		}
 	}
-	
+
 	/**
 	 * Tests optional and required inputs
 	 */
@@ -251,13 +251,13 @@ public class TestOpGraph {
 		// Add links to create expression (1 + 2)*10
 		final OpLink requiredLink = dag.connect(av1, AddNode.RESULT_FIELD, mv1, MultiplyNode.X_FIELD);
 		assertNotNull(requiredLink);
-		
+
 		final OpLink optionalLink = dag.connect(cv10, ConstantNode.VALUE_FIELD, mv1, MultiplyNode.Y_FIELD);
 		assertNotNull(optionalLink);
-		
+
 		assertNotNull(dag.connect(cv1, ConstantNode.VALUE_FIELD, av1, AddNode.X_FIELD));
 		assertNotNull(dag.connect(cv2, ConstantNode.VALUE_FIELD, av1, AddNode.Y_FIELD));
-		
+
 		// Everything should be good here
 		try {
 			double result = getResult(Double.class, dag, null, mv1, MultiplyNode.RESULT_FIELD);
@@ -267,10 +267,10 @@ public class TestOpGraph {
 				exc.getCause().printStackTrace();
 			else
 				exc.printStackTrace();
-			
+
 			fail("Should be no errors when processing");
 		}
-		
+
 		// Now remove an link on an optional input field
 		dag.remove(optionalLink);
 		try {
@@ -282,10 +282,10 @@ public class TestOpGraph {
 				exc.getCause().printStackTrace();
 			else
 				exc.printStackTrace();
-			
+
 			fail("Should be no errors when processing");
 		}
-		
+
 		// Now remove an link on a required input field
 		dag.remove(requiredLink);
 		try {
@@ -298,11 +298,11 @@ public class TestOpGraph {
 				exc.getCause().printStackTrace();
 			else
 				exc.printStackTrace();
-			
+
 			fail("Should be no errors when processing");
 		}
 	}
-	
+
 	/**
 	 * Tests data injection through a default context 
 	 */
@@ -311,11 +311,11 @@ public class TestOpGraph {
 		final OpGraph dag = new OpGraph();
 		final AddNode av1 = new AddNode();
 		final MultiplyNode mv1 = new MultiplyNode();
-		
+
 		// Add nodes
 		dag.add(av1);
 		dag.add(mv1);
-		
+
 		// Default context
 		final OpContext defaults = new OpContext();
 		defaults.getChildContext(av1).put(AddNode.X_FIELD, 1.0);
@@ -324,7 +324,7 @@ public class TestOpGraph {
 
 		// Add links to create the expression (1 + 2)*10
 		assertNotNull(dag.connect(av1, AddNode.RESULT_FIELD, mv1, MultiplyNode.X_FIELD));
-		
+
 		// Everything should be good here
 		try {
 			double result = getResult(Double.class, dag, defaults, mv1, MultiplyNode.RESULT_FIELD);
@@ -334,11 +334,11 @@ public class TestOpGraph {
 				exc.getCause().printStackTrace();
 			else
 				exc.printStackTrace();
-			
+
 			fail("Should be no errors when processing");
 		}
 	}
-	
+
 	/**
 	 * Tests the &quot;enabled&quot; field of nodes. 
 	 */
@@ -347,14 +347,14 @@ public class TestOpGraph {
 		final OpGraph dag = new OpGraph();
 		final AddNode av1 = new AddNode();
 		final MultiplyNode mv1 = new MultiplyNode();
-		
+
 		// Add nodes
 		dag.add(av1);
 		dag.add(mv1);
 
 		// Add links to create the expression (1 + 2)*10
 		assertNotNull(dag.connect(av1, AddNode.RESULT_FIELD, mv1, MultiplyNode.X_FIELD));
-		
+
 		try {
 			// First have everything enabled
 			{
@@ -362,12 +362,12 @@ public class TestOpGraph {
 				defaults.getChildContext(av1).put(AddNode.X_FIELD, 1.0);
 				defaults.getChildContext(av1).put(AddNode.Y_FIELD, 2.0);
 				defaults.getChildContext(mv1).put(MultiplyNode.Y_FIELD, 10.0);
-				
+
 				final OpContext context = process(dag, defaults);
 				assertTrue("Multiply result not available when it should be",
 				           context.getChildContext(mv1).containsKey(MultiplyNode.RESULT_FIELD));
 			}
-			
+
 			// Now disable multiply node
 			{
 				final OpContext defaults = new OpContext();
@@ -375,7 +375,7 @@ public class TestOpGraph {
 				defaults.getChildContext(av1).put(AddNode.Y_FIELD, 2.0);
 				defaults.getChildContext(mv1).put(MultiplyNode.Y_FIELD, 10.0);
 				defaults.getChildContext(mv1).put(OpNode.ENABLED_FIELD, false);
-				
+
 				final OpContext context = process(dag, defaults);
 				assertFalse("Multiply result available when it should not be",
 				           context.getChildContext(mv1).containsKey(MultiplyNode.RESULT_FIELD));
@@ -385,7 +385,7 @@ public class TestOpGraph {
 				exc.getCause().printStackTrace();
 			else
 				exc.printStackTrace();
-			
+
 			fail("Should be no errors when processing");
 		}
 	}

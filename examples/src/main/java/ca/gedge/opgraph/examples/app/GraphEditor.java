@@ -58,13 +58,13 @@ import ca.gedge.opgraph.app.components.canvas.GridLayer;
 public class GraphEditor extends JFrame {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(GraphEditor.class.getName());
-	
+
 	/** The graph editor model */
 	private GraphEditorModel model; 
-	
+
 	/** A reference to the menu bar */
 	private PathAddressableMenuImpl menuBar;
-	
+
 	/** Container component containing debug components */
 	private JComponent debugComponents;
 
@@ -77,18 +77,18 @@ public class GraphEditor extends JFrame {
 		// Initialize model and document
 		this.model = new GraphEditorModel();
 		GraphEditorModel.setActiveEditorModel(model);
-		
+
 		// Set up components
 		setupWindow();
-		
+
 		// Menu bar
 		final JMenuBar mb = new JMenuBar();
 		menuBar = new PathAddressableMenuImpl(mb);
 		for(MenuProvider menu : model.getMenuProviders())
 			menu.installItems(model, menuBar);
-		
+
 		setJMenuBar(mb);
-		
+
 		// Root pane state
 		final GraphDocument document = model.getCanvas().getDocument();
 		document.addPropertyChangeListener(GraphDocument.SOURCE, new PropertyChangeListener() {
@@ -98,14 +98,14 @@ public class GraphEditor extends JFrame {
 					getRootPane().putClientProperty("Window.documentFile", evt.getNewValue());
 			}
 		});
-		
+
 		document.addPropertyChangeListener(GraphDocument.UNDO_STATE, new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				getRootPane().putClientProperty("Window.documentModified", document.hasModifications());
 			}
 		});
-		
+
 		document.addPropertyChangeListener(GraphDocument.PROCESSING_CONTEXT, new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
@@ -113,7 +113,6 @@ public class GraphEditor extends JFrame {
 			}
 		});
 
-		
 		// 
 		setSize(1000, 650);
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -127,7 +126,6 @@ public class GraphEditor extends JFrame {
 		});
 	}
 
-
 	/**
 	 * Initializes the docking window.
 	 */
@@ -137,50 +135,50 @@ public class GraphEditor extends JFrame {
 		canvasScrollPane.setViewportView(model.getCanvas());
 		canvasScrollPane.setColumnHeaderView(model.getBreadcrumb());
 		canvasScrollPane.setBorder(null);
-		
+
 		canvasScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		canvasScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		
+
 		canvasScrollPane.getHorizontalScrollBar().setUnitIncrement(GridLayer.DEFAULT_GRID_SPACING / 10);
 		canvasScrollPane.getHorizontalScrollBar().setBlockIncrement(GridLayer.DEFAULT_GRID_SPACING);
 		canvasScrollPane.getVerticalScrollBar().setUnitIncrement(GridLayer.DEFAULT_GRID_SPACING / 10);
 		canvasScrollPane.getVerticalScrollBar().setBlockIncrement(GridLayer.DEFAULT_GRID_SPACING);
-		
+
 		// Scroll pane for console
 		final JScrollPane consolePane = new JScrollPane(model.getConsolePanel());
 		consolePane.setBorder(null);
-		
+
 		// Scroll pane for debug
 		final JScrollPane debugScrollPane = new JScrollPane(model.getDebugInfoPanel());
 		debugScrollPane.setBorder(null);
-		
+
 		// Tabbed pane for debug components
 		final JTabbedPane debugTabPane = new JTabbedPane();
 		debugTabPane.add("Debug", debugScrollPane);
 		debugTabPane.add("Console", consolePane);
 		debugTabPane.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.LIGHT_GRAY));
 		debugTabPane.setPreferredSize(new Dimension(300, 1));
-		
+
 		debugComponents = debugTabPane;
 		debugComponents.setVisible(false);
-		
+
 		// Tabbed pane for debug components
 		final JTabbedPane nodeTabPane = new JTabbedPane();
 		nodeTabPane.add("Defaults", model.getNodeDefaults());
 		nodeTabPane.add("Settings", model.getNodeSettings());
 		nodeTabPane.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.LIGHT_GRAY));
 		nodeTabPane.setPreferredSize(new Dimension(300, 1));
-		
+
 		// Node library, change border
 		final JComponent nodeLibrary = model.getNodeLibrary();
 		nodeLibrary.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.LIGHT_GRAY));
-		
+
 		// Layout top
 		final JPanel topPanel = new JPanel(new BorderLayout());
 		topPanel.add(nodeTabPane, BorderLayout.WEST);
 		topPanel.add(canvasScrollPane, BorderLayout.CENTER);
 		topPanel.add(debugTabPane, BorderLayout.EAST);
-		
+
 		// Main split pane for top elements and library viewer
 		final JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		mainSplitPane.setBorder(null);
@@ -188,15 +186,15 @@ public class GraphEditor extends JFrame {
 		mainSplitPane.setBottomComponent(nodeLibrary);
 		mainSplitPane.setDividerSize(3);
 		mainSplitPane.setDividerLocation(400);
-		
+
 		// Add to frame
 		add(mainSplitPane, BorderLayout.CENTER);
 	}
-	
+
 	//
 	// WindowAdapter
 	//
-	
+
 	private final WindowAdapter windowAdapter = new WindowAdapter() {
 		@Override
 		public void windowClosing(WindowEvent e) {
@@ -207,7 +205,7 @@ public class GraphEditor extends JFrame {
 			}
 		}
 	};
-	
+
 	/**
 	 * Program entry point.
 	 * 
@@ -229,7 +227,7 @@ public class GraphEditor extends JFrame {
 				} catch(UnsupportedLookAndFeelException exc) {
 					LOGGER.warning("Unable to set LaF");
 				}
-				
+
 				final JFrame frame = new GraphEditor();
 				frame.setLocationByPlatform(true);
 				frame.setVisible(true);

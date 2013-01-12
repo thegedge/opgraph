@@ -53,7 +53,7 @@ import ca.gedge.opgraph.exceptions.ItemMissingException;
 public class DuplicateCommand extends AbstractAction {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(DuplicateCommand.class.getName());
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -65,7 +65,7 @@ public class DuplicateCommand extends AbstractAction {
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();
@@ -76,7 +76,7 @@ public class DuplicateCommand extends AbstractAction {
 				final CompoundEdit cmpEdit = new CompoundEdit();
 				final OpGraph graph = document.getGraph();
 				final Map<String, String> nodeMap = new HashMap<String, String>();
-				
+
 				// Create a new node edit for each node in the contents
 				final Collection<OpNode> newNodes = new ArrayList<OpNode>();
 				for(OpNode node : selectedNodes) {
@@ -84,21 +84,21 @@ public class DuplicateCommand extends AbstractAction {
 					final OpNode newNode = GraphUtils.cloneNode(node);
 					newNodes.add(newNode);
 					nodeMap.put(node.getId(), newNode.getId());
-					
+
 					// Offset to avoid pasting on top of current nodes
 					final NodeMetadata metadata = newNode.getExtension(NodeMetadata.class);
 					if(metadata != null) {
 						metadata.setX(metadata.getX() + 50);
 						metadata.setY(metadata.getY() + 30);
 					}
-					
+
 					// Add an undoable edit for this node
 					cmpEdit.addEdit(new AddNodeEdit(graph, newNode));
 				}
-				
+
 				// Duplicated nodes become the selection
 				document.getSelectionModel().setSelectedNodes(newNodes);
-				
+
 				// For each selected node, copy outgoing links if they fully contained in the selection
 				for(OpNode selectedNode : selectedNodes) {
 					final Collection<OpLink> outgoingLinks = graph.getOutgoingEdges(selectedNode);
@@ -108,7 +108,7 @@ public class DuplicateCommand extends AbstractAction {
 							final OutputField srcField = srcNode.getOutputFieldWithKey(link.getSourceField().getKey());
 							final OpNode dstNode = graph.getNodeById(nodeMap.get(link.getDestination().getId()), false);
 							final InputField dstField = dstNode.getInputFieldWithKey(link.getDestinationField().getKey());
-							
+
 							try {
 								final OpLink newLink = new OpLink(srcNode, srcField, dstNode, dstField);
 								cmpEdit.addEdit(new AddLinkEdit(graph, newLink));
@@ -122,7 +122,7 @@ public class DuplicateCommand extends AbstractAction {
 						}
 					}
 				}
-				
+
 				// Add the compound edit to the undo manager
 				cmpEdit.end();
 				document.getUndoSupport().postEdit(cmpEdit);

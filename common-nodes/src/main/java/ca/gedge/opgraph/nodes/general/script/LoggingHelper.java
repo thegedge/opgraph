@@ -32,10 +32,10 @@ public class LoggingHelper {
 	@SuppressWarnings("unused")
 	private static class ScriptPrinter {
 		private final Logger LOGGER = Logger.getLogger(Processor.class.getName());
-		
+
 		/** The level for logged messages */
 		private Level level;
-		
+
 		/**
 		 * Constructs a script printer that logs message at the given level.
 		 * 
@@ -44,7 +44,7 @@ public class LoggingHelper {
 		public ScriptPrinter(Level level) {
 			this.level = level;
 		}
-		
+
 		/**
 		 * Prints a given message with a new line.
 		 * 
@@ -54,7 +54,7 @@ public class LoggingHelper {
 			String stringMessage = (message == null ? "null" : message.toString());
 			LOGGER.log(level, stringMessage + "\n");
 		}
-		
+
 		/**
 		 * Prints a given message.
 		 * 
@@ -64,7 +64,7 @@ public class LoggingHelper {
 			String stringMessage = (message == null ? "null" : message.toString());
 			LOGGER.log(level, stringMessage);
 		}
-		
+
 		/**
 		 * Formats a set of objects given a specified format string.
 		 * 
@@ -75,10 +75,10 @@ public class LoggingHelper {
 			LOGGER.log(level, String.format(format, args));
 		}
 	}
-	
+
 	/** STDOUT printer */
 	public final ScriptPrinter out = new ScriptPrinter(Level.INFO);
-	
+
 	/** STDERR printer */
 	public final ScriptPrinter err = new ScriptPrinter(Level.SEVERE);
 }

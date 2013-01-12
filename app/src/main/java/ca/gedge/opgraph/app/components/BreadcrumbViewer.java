@@ -47,22 +47,22 @@ import ca.gedge.opgraph.util.Pair;
 public class BreadcrumbViewer<S, V> extends JPanel {
 	/** The width of the right-hand side of a breadcrumb */ 
 	private static final int RIGHT_WIDTH = 10;
-	
+
 	private static class StateComponent<S, V> extends JLabel {
 		/** The state for this component */
 		public final S state;
-		
+
 		public StateComponent(S state, V value) {
 			super(value == null ? "" : value.toString());
-			
+
 			this.state = state;
-			
+
 			setOpaque(false);
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			if(state != null)
 				setBorder(new EmptyBorder(5, 0, 5, 2*RIGHT_WIDTH));
 		}
-		
+
 		@Override
 		protected void paintBorder(Graphics gfx) {
 			if(state == null) {
@@ -71,7 +71,7 @@ public class BreadcrumbViewer<S, V> extends JPanel {
 				Graphics2D g = (Graphics2D)gfx;
 				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 				//g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-				
+
 				final int x = (getWidth() - 1) - RIGHT_WIDTH;
 				final int y = getHeight() / 2;
 				g.setColor(Color.BLACK);
@@ -82,22 +82,22 @@ public class BreadcrumbViewer<S, V> extends JPanel {
 				g.drawLine(x - 1, 0, getWidth() - 2, y);
 			}
 		}
-		
+
 		@Override
 		protected void paintComponent(Graphics g) {
 			final Rectangle rect = GUIHelper.getInterior(this);
 			final Point p = GUIHelper.centerTextInRectangle(g, getText(), rect);
-			
+
 			g.setColor(Color.BLACK);
 			g.drawString(getText(), p.x + 1, p.y + 1);
 			g.setColor(Color.WHITE);
 			g.drawString(getText(), p.x, p.y);
 		}
 	}
-	
+
 	/** The breadcrumb this component is viewing */
 	private Breadcrumb<S, V> breadcrumb;
-	
+
 	/** The breadcrumb listener for this component */
 	private BreadcrumbListener<S, V> listener = new BreadcrumbListener<S, V>() {
 		@Override
@@ -106,7 +106,7 @@ public class BreadcrumbViewer<S, V> extends JPanel {
 			// all state components after it
 			synchronized(getTreeLock()) {
 				removeAll();
-				
+
 				for(Pair<S, V> statePair : breadcrumb) {
 					final S state = statePair.getFirst();
 					final StateComponent<S, V> comp = new StateComponent<S, V>(state, statePair.getSecond());
@@ -116,7 +116,7 @@ public class BreadcrumbViewer<S, V> extends JPanel {
 							breadcrumb.gotoState(state);
 						}
 					});
-					
+
 					add(comp, 0);
 				}
 			}
@@ -143,7 +143,7 @@ public class BreadcrumbViewer<S, V> extends JPanel {
 //			repaint();
 		}
 	};
-	
+
 	/**
 	 * Default constructor
 	 * 
@@ -151,15 +151,15 @@ public class BreadcrumbViewer<S, V> extends JPanel {
 	 */
 	public BreadcrumbViewer(Breadcrumb<S, V> breadcrumb) {
 		super(new FlowLayout(FlowLayout.LEFT, RIGHT_WIDTH, 0));
-		
+
 		add(new StateComponent<S, V>(null, null));
-		
+
 		setBreadcrumb(breadcrumb);
 		setOpaque(true);
 		setBackground(Color.DARK_GRAY);
 		setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
 	}
-	
+
 	/**
 	 * Gets the breadcrumb this component is viewing.
 	 * 
@@ -168,7 +168,7 @@ public class BreadcrumbViewer<S, V> extends JPanel {
 	public Breadcrumb<S, V> getBreadcrumb() {
 		return breadcrumb;
 	}
-	
+
 	/**
 	 * Sets the breadcrumb this component is viewing.
 	 * 
@@ -182,9 +182,9 @@ public class BreadcrumbViewer<S, V> extends JPanel {
 				while(getComponentCount() > 1)
 					remove(1);
 			}
-			
+
 			this.breadcrumb = breadcrumb;
-			
+
 			// Add new information
 			if(this.breadcrumb != null) {
 				this.breadcrumb.addBreadcrumbListener(listener);

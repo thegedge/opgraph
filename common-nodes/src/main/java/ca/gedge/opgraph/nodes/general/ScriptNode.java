@@ -73,19 +73,19 @@ public class ScriptNode
 	implements NodeSettings
 {
 	private static final Logger LOGGER = Logger.getLogger(ScriptNode.class.getName());
-	
+
 	/** The script engine manager being used */
 	private ScriptEngineManager manager;
-	
+
 	/** The script engine being used */
 	private ScriptEngine engine;
-	
+
 	/** The scripting language of this node */
 	private String language;
-	
+
 	/** The script source */
 	private String script;
-	
+
 	/**
 	 * Constructs a script node that uses Javascript as its language.
 	 */
@@ -104,7 +104,7 @@ public class ScriptNode
 		setScriptLanguage(language);
 		putExtension(NodeSettings.class, this);
 	}
-	
+
 	/**
 	 * Gets the scripting language of this node.
 	 * 
@@ -113,7 +113,7 @@ public class ScriptNode
 	public String getScriptLanguage() {
 		return language;
 	}
-	
+
 	/**
 	 * Sets the scripting language of this node.
 	 * 
@@ -124,18 +124,18 @@ public class ScriptNode
 		if(!language.equals(this.language)) {
 			this.language = language;
 			this.engine = manager.getEngineByName(language);
-			
+
 			// Only work with invocable script engines
 			if(this.engine == null || !(this.engine instanceof Invocable)) {
 				this.engine = null;
 			} else {
 				this.engine.put("Logging", new LoggingHelper());
 			}
-			
+
 			reloadFields();
 		}
 	}
-	
+
 	/**
 	 * Gets the script source used in this node.
 	 * 
@@ -144,7 +144,7 @@ public class ScriptNode
 	public String getScriptSource() {
 		return script;
 	}
-	
+
 	/**
 	 * Sets the script source used in this node.
 	 * 
@@ -189,7 +189,7 @@ public class ScriptNode
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 		if(engine != null) {
@@ -197,7 +197,7 @@ public class ScriptNode
 				// Creating bindings from context
 				for(String key : context.keySet())
 					engine.put(key, context.get(key));
-				
+
 				// provide logger for script as 'logger'
 				Logger logger = Logger.getLogger(Processor.class.getName());
 				engine.put("logger", logger);
@@ -235,7 +235,7 @@ public class ScriptNode
 		 */
 		public ScriptNodeSettings(final ScriptNode node) {
 			super(new GridBagLayout());
-			
+
 			// Script source components
 			final JEditorPane sourceEditor = new JEditorPane() {
 				@Override
@@ -285,26 +285,26 @@ public class ScriptNode
 						node.setScriptSource(sourceEditor.getText());
 					}
 				}
-				
+
 				@Override
 				public void focusGained(FocusEvent e) {}
 			});
-			
+
 			final JScrollPane sourcePane = new JScrollPane(sourceEditor);
 			sourcePane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 			sourcePane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-			
+
 			// Script language components
 			final Vector<ScriptEngineFactory> factories = new Vector<ScriptEngineFactory>();
 			final Vector<String> languageChoices = new Vector<String>();
-			
+
 			factories.add(null);
 			languageChoices.add("<no language>");
 			for(ScriptEngineFactory factory : (new ScriptEngineManager()).getEngineFactories()) {
 				factories.add(factory);
 				languageChoices.add(factory.getLanguageName());
 			}
-			
+
 			final JComboBox languageBox = new JComboBox(languageChoices);
 			languageBox.setEditable(false);
 			languageBox.addActionListener(new ActionListener() {
@@ -320,7 +320,7 @@ public class ScriptNode
 					} else {
 						node.setScriptLanguage(factory == null ? null : factory.getLanguageName());
 					}
-					
+
 					// Update editor kit
 					final int ss = sourceEditor.getSelectionStart();
 					final int se = sourceEditor.getSelectionEnd();
@@ -332,9 +332,9 @@ public class ScriptNode
 					sourceEditor.select(ss, se);
 				}
 			});
-			
+
 			languageBox.setSelectedItem(node.getScriptLanguage());
-			
+
 			// Add components
 			final GridBagConstraints gbc = new GridBagConstraints();
 			gbc.gridx = 0;
@@ -343,7 +343,7 @@ public class ScriptNode
 			gbc.fill = GridBagConstraints.NONE;
 			gbc.anchor = GridBagConstraints.EAST;
 			add(new JLabel("Script Language: "), gbc);
-			
+
 			gbc.gridx = 1;
 			gbc.gridy = 0;
 			gbc.weightx = 1;
@@ -390,7 +390,7 @@ public class ScriptNode
 	public void loadSettings(Properties properties) {
 		if(properties.containsKey(LANGUAGE_KEY))
 			setScriptLanguage(properties.getProperty(LANGUAGE_KEY));
-		
+
 		if(properties.containsKey(SCRIPT_KEY))
 			setScriptSource(properties.getProperty(SCRIPT_KEY));
 	}

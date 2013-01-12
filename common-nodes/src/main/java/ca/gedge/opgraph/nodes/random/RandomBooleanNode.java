@@ -35,18 +35,18 @@ import ca.gedge.opgraph.exceptions.ProcessingException;
 public class RandomBooleanNode extends OpNode {
 	/** Output field for the random boolean */
 	public final OutputField VALUE_OUTPUT = new OutputField("value", "random boolean", true, Boolean.class);
-	
+
 	/**
 	 * Default constructor
 	 */
 	public RandomBooleanNode() {
 		putField(VALUE_OUTPUT);
 	}
-	
+
 	//
 	// OpNode
 	//
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 		context.put(VALUE_OUTPUT, Math.random() < 0.5f);

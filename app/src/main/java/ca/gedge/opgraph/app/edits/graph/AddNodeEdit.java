@@ -33,13 +33,13 @@ import ca.gedge.opgraph.library.NodeData;
 public class AddNodeEdit extends AbstractUndoableEdit {
 	/** The graph to which this edit was applied  */
 	private OpGraph graph;
-	
+
 	/** The node information */
 	private NodeData info;
-	
+
 	/** The node that was added */
 	private OpNode node;
-	
+
 	/**
 	 * Constructs an edit that constructs a node described by a specified
 	 * {@link NodeData} and adds it to the given canvas.
@@ -56,7 +56,7 @@ public class AddNodeEdit extends AbstractUndoableEdit {
 	{
 		this(graph, info, 0, 0);
 	}
-	
+
 	/**
 	 * Constructs an edit that constructs a node described by a specified
 	 * {@link NodeData} and adds it to the given canvas at the given
@@ -80,7 +80,7 @@ public class AddNodeEdit extends AbstractUndoableEdit {
 		this.node.putExtension(NodeMetadata.class, new NodeMetadata(x, y));
 		perform();
 	}
-	
+
 	/**
 	 * Constructs an edit that adds a node to the given canvas at the given
 	 * initial location.
@@ -93,29 +93,29 @@ public class AddNodeEdit extends AbstractUndoableEdit {
 		this.node = node;
 		perform();
 	}
-	
+
 	/**
 	 * Performs this edit.
 	 */
 	private void perform() {
 		graph.add(node);
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
-	
+
 	@Override
 	public String getPresentationName() {
 		return "Add Node";
 	}
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();

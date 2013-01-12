@@ -34,10 +34,10 @@ public final class OpLink
 {
 	/** The connected output field in the source node's value map */
 	private final OutputField sourceField;
-	
+
 	/** The connected input field in the destination node's value map  */
 	private final InputField destinationField;
-	
+
 	/**
 	 * Create a link with the given source/destination nodes.
 	 * 
@@ -58,11 +58,11 @@ public final class OpLink
 		throws ItemMissingException
 	{
 		super(source, destination);
-		
+
 		sourceField = source.getOutputFieldWithKey(sourceFieldKey);
 		if(sourceField == null)
 			throw new ItemMissingException(sourceField);
-		
+
 		destinationField = destination.getInputFieldWithKey(destinationFieldKey);
 		if(destinationField == null)
 			throw new ItemMissingException(destinationField);
@@ -88,16 +88,16 @@ public final class OpLink
 		throws ItemMissingException
 	{
 		super(source, destination);
-		
+
 		if(sourceField == null || destinationField == null)
 			throw new NullPointerException("Source/destination fields cannot be null");
-		
+
 		if(!source.getOutputFields().contains(sourceField))
 			throw new ItemMissingException(sourceField);
-		
+
 		if(!destination.getInputFields().contains(destinationField))
 			throw new ItemMissingException(destinationField);
-		
+
 		this.sourceField = sourceField;
 		this.destinationField = destinationField;
 	}
@@ -110,7 +110,7 @@ public final class OpLink
 	public OutputField getSourceField() {
 		return sourceField;
 	}
-	
+
 	/**
 	 * Gets the output field.
 	 * 
@@ -119,7 +119,7 @@ public final class OpLink
 	public InputField getDestinationField() {
 		return destinationField;
 	}
-	
+
 	/**
 	 * Gets whether or not this link is valid. A link is valid whenever the
 	 * output type of the source field is accepted by the validator defined
@@ -131,23 +131,23 @@ public final class OpLink
 		final TypeValidator validator = destinationField.getValidator();
 		return (validator == null || validator.isAcceptable(sourceField.getOutputType()));
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public String toString() {
 		return String.format("{%s:%s --> %s:%s}",
 		                     source.getName(), sourceField.getKey(),
 		                     destination.getName(), destinationField.getKey());
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if(this == obj)
 			return true;
-		
+
 		boolean ret = false;
 		if(obj != null && (obj instanceof OpLink)) {
 			final OpLink link = (OpLink)obj;
@@ -158,7 +158,7 @@ public final class OpLink
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return (31 * source.hashCode()
@@ -172,17 +172,17 @@ public final class OpLink
 	//
 
 	private ExtendableSupport extendableSupport = new ExtendableSupport(OpGraph.class);
-	
+
 	@Override
 	public <T> T getExtension(Class<T> type) {
 		return extendableSupport.getExtension(type);
 	}
-	
+
 	@Override
 	public Collection<Class<?>> getExtensionClasses() {
 		return extendableSupport.getExtensionClasses();
 	}
-	
+
 	@Override
 	public <T> T putExtension(Class<T> type, T extension) {
 		return extendableSupport.putExtension(type, extension);

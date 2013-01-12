@@ -44,7 +44,7 @@ public final class OpGraph
 {
 	/** An id for the graph */
 	private String id;
-	
+
 	/** A mapping from node id to node */
 	private Map<String, OpNode> nodeMap;
 
@@ -55,7 +55,7 @@ public final class OpGraph
 		this.nodeMap = new HashMap<String, OpNode>();
 		setId(null);
 	}
-	
+
 	/**
 	 * Gets the id for this graph.
 	 * 
@@ -73,11 +73,11 @@ public final class OpGraph
 	public void setId(String id) {
 		this.id = (id == null ? Integer.toHexString(super.hashCode()) : id);
 	}
-	
+
 	//
 	// Helper methods
 	//
-	
+
 	/**
 	 * Gets a node by its id.
 	 * 
@@ -96,7 +96,7 @@ public final class OpGraph
 			return nodeMap.get(id);
 		}
 	}
-	
+
 	/**
 	 * Finds a node and its parent graph by id. This is a deep operation,
 	 * and hence will recursively search through macro nodes to find the
@@ -129,7 +129,7 @@ public final class OpGraph
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Connects the given source node/field pair to a given destination
 	 * node/field pair. This is a convenience method which catches
@@ -163,7 +163,7 @@ public final class OpGraph
 
 		return link;
 	}
-	
+
 	/**
 	 * Connects the given source node/field pair to a given destination node/field
 	 * pair. This is a convenience method which catches exceptions from the
@@ -193,14 +193,14 @@ public final class OpGraph
 		} catch(CycleDetectedException exc) {
 			link = null;
 		}
-		
+
 		return link;
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public void add(OpNode node) {
 		if(node != null && node.getId() != null) {
@@ -214,7 +214,7 @@ public final class OpGraph
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean remove(OpNode node) {
 		final boolean removed = super.remove(node);
@@ -240,32 +240,32 @@ public final class OpGraph
 			fireLinkRemoved(link);
 		return removed;
 	}
-	
+
 	//
 	// Extendable
 	//
 
 	private ExtendableSupport extendableSupport = new ExtendableSupport(OpLink.class);
-	
+
 	@Override
 	public <T> T getExtension(Class<T> type) {
 		return extendableSupport.getExtension(type);
 	}
-	
+
 	@Override
 	public Collection<Class<?>> getExtensionClasses() {
 		return extendableSupport.getExtensionClasses();
 	}
-	
+
 	@Override
 	public <T> T putExtension(Class<T> type, T extension) {
 		return extendableSupport.putExtension(type, extension);
 	}
-	
+
 	//
 	// OpNodeListener
 	//
-	
+
 	final OpNodeListener nodeListener = new OpNodeListener() {
 		@Override
 		public void fieldRemoved(OpNode node, OutputField field) {
@@ -276,7 +276,7 @@ public final class OpGraph
 				}
 			}
 		}
-		
+
 		@Override
 		public void fieldRemoved(OpNode node, InputField field) {
 			for(OpLink link : getIncomingEdges(node)) {
@@ -286,17 +286,17 @@ public final class OpGraph
 				}
 			}
 		}
-		
+
 		@Override
 		public void nodePropertyChanged(String propertyName, Object oldValue, Object newValue) {}
-		
+
 		@Override
 		public void fieldAdded(OpNode node, OutputField field) {}
-		
+
 		@Override
 		public void fieldAdded(OpNode node, InputField field) {}
 	};
-	
+
 	//
 	// Listeners
 	//

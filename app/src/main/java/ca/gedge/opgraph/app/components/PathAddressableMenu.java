@@ -48,7 +48,7 @@ public interface PathAddressableMenu {
 	 *         if no menu exists for the given path
 	 */
 	public abstract JMenu getMenu(String path);
-	
+
 	/**
 	 * Gets the menu item for a specified path.
 	 * 
@@ -68,7 +68,7 @@ public interface PathAddressableMenu {
 	 *         if no menu exists for the given path
 	 */
 	public abstract MenuElement getMenuElement(String path);
-	
+
 	/**
 	 * Adds a submenu to the menu at a specified path.
 	 * 
@@ -78,7 +78,7 @@ public interface PathAddressableMenu {
 	 * @return the newly created submenu
 	 */
 	public abstract JMenu addMenu(String path, String text);
-	
+
 	/**
 	 * Adds a menu item to the menu at a specified path.
 	 * 
@@ -88,7 +88,7 @@ public interface PathAddressableMenu {
 	 * @return the newly created menu item
 	 */
 	public abstract JMenuItem addMenuItem(String path, Action action);
-	
+
 	/**
 	 * Adds a component to the menu at a specified path.
 	 * 
@@ -98,7 +98,7 @@ public interface PathAddressableMenu {
 	 * @return the component
 	 */
 	public abstract Component addComponent(String path, Component component);
-	
+
 	/**
 	 * Adds a separator to the menu at a specified path.
 	 * 

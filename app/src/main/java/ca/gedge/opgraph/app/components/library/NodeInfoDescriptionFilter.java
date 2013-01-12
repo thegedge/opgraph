@@ -31,7 +31,7 @@ public class NodeInfoDescriptionFilter extends NodeInfoFilter {
 	public boolean isAccepted(NodeData info) {
 		if(filterPattern == null)
 			return true;
-		
+
 		return (info != null && info.description != null && filterPattern.matcher(info.description).find());
 	}
 }

@@ -75,7 +75,7 @@ public class MathExpressionNode
 {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(MathExpressionNode.class.getName());
-	
+
 	/** Output field for the expression result */
 	public final OutputField RESULT_OUTPUT_FIELD = new OutputField("result", "expression result", true, Number.class); 
 
@@ -87,10 +87,10 @@ public class MathExpressionNode
 
 	/** The parsed expression tree */
 	private Object expressionTree;
-	
+
 	/** The number of decimal places that are significant in the expression result */
 	private int significantDigits;
-	
+
 	/** The default number of decimal places that are significant the expression result */
 	private static final int DEFAULT_SIGNIFICANT_DIGITS = -1;
 
@@ -240,7 +240,7 @@ public class MathExpressionNode
 		// Evaluate, and round to the number of significant decimal places
 		try {
 			expressionEval.prog();
-			
+
 			final Number result = roundToSignificantDigits(expressionEval.getResult(), significantDigits);
 			context.put(RESULT_OUTPUT_FIELD, result);
 		} catch(RecognitionException exc) {
@@ -253,7 +253,7 @@ public class MathExpressionNode
 	//
 
 	private static final String EXPRESSION_KEY = "expression";
-	
+
 	private static final String SIGNIFICANT_DIGITS_KEY = "significantDigits";
 
 	/**
@@ -306,7 +306,7 @@ public class MathExpressionNode
 			// A text field for the mathematical expression
 			final JLabel expressionLabel = new JLabel("Expression: ");
 			expressionLabel.setToolTipText("The mathematical expression (e.g., x+y)");
-			
+
 			final JFormattedTextField expressionText = new JFormattedTextField(new MathExpressionFormatter());
 			expressionText.setValue(node.getExpression());
 			expressionText.addPropertyChangeListener("value", new PropertyChangeListener() {
@@ -320,11 +320,11 @@ public class MathExpressionNode
 					}
 				}
 			});
-			
+
 			// An integer spinner for the number of significant digits in the result
 			final JLabel significantDigitsLabel = new JLabel("Significant digits: ");
 			significantDigitsLabel.setToolTipText("The number of significant decimal places to maintain in the result. If zero, the result will always be an integer. If negative, all decimal places are significant.");
-			
+
 			final SpinnerModel spinnerModel = new SpinnerNumberModel(node.getSignificantDigits(), -1, 100, 1);
 			final JSpinner significantDigitsSpinner = new JSpinner(spinnerModel);
 			significantDigitsSpinner.addChangeListener(new ChangeListener() {
@@ -354,7 +354,7 @@ public class MathExpressionNode
 			gbc.anchor = GridBagConstraints.WEST;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			add(expressionText, gbc);
-			
+
 			gbc.gridx = 0;
 			gbc.gridy = 1;
 			gbc.weightx = 0;
@@ -392,7 +392,7 @@ public class MathExpressionNode
 	public void loadSettings(Properties properties) {
 		if(properties.containsKey(EXPRESSION_KEY))
 			setExpression(properties.getProperty(EXPRESSION_KEY));
-		
+
 		if(properties.containsKey(SIGNIFICANT_DIGITS_KEY))
 			setSignificantDigits(Integer.parseInt(properties.getProperty(SIGNIFICANT_DIGITS_KEY)));
 	}

@@ -35,15 +35,15 @@ public class TestGeneralNodes {
 	public void testRange() {
 		final RangeNode node = new RangeNode();
 		final OpContext context = new OpContext();
-		
+
 		for(int test = 0; test < 10; ++test) {
 			final int start = (int)((2*Math.random() - 1)*1000);
 			final int end = start + (int)(Math.random()*50);
-			
+
 			final TreeSet<Integer> expected = new TreeSet<Integer>();
 			for(int value = start; value <= end; ++value)
 				expected.add(value);
-			
+
 			context.put(node.START_INPUT_FIELD, start);
 			context.put(node.END_INPUT_FIELD, end);
 			node.operate(context);

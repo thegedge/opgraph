@@ -52,14 +52,14 @@ public class AutoLayoutEdit extends CompoundEdit {
 			if(node.getExtension(JComponent.class) == null)
 				throw new IllegalArgumentException("Not all npdes have JComponent extension");
 		}
-		
+
 		// Perform automatic layout
 		final List<OpNode> nodes = new ArrayList<OpNode>(graph.getVertices());
 		int x = 15;
 		for(int level = 0; !nodes.isEmpty(); ++level) {
 			int maxWidth = 0;
 			int y = 15;
-			
+
 			final Iterator<OpNode> iter = nodes.iterator();
 			while(iter.hasNext()) {
 				final OpNode v = iter.next();
@@ -68,7 +68,7 @@ public class AutoLayoutEdit extends CompoundEdit {
 				// because it shouldn't be processed at higher levels
 				if(graph.getLevel(v) != level)
 					continue;
-				
+
 				iter.remove();
 
 				// Place those nodes
@@ -81,11 +81,11 @@ public class AutoLayoutEdit extends CompoundEdit {
 					meta = new NodeMetadata(x, y);
 					v.putExtension(NodeMetadata.class, meta);
 				}
-					
+
 				// Post the undoable edit
 				final ArrayList<OpNode> nodeToMove = new ArrayList<OpNode>();
 				nodeToMove.add(v);
-				
+
 				final int deltaX = x - meta.getX();
 				final int deltaY = y - meta.getY();
 				if(deltaX != 0 || deltaY != 0)
@@ -96,27 +96,27 @@ public class AutoLayoutEdit extends CompoundEdit {
 				maxWidth = Math.max(maxWidth, pref.width);
 				y += pref.height + 15;
 			}
-				
+
 			x += maxWidth + 50;
 		}
-		
+
 		super.end();
 	}
-	
+
 	//
 	// CompoundEdit
 	//
-	
+
 	@Override
 	public String getUndoPresentationName() {
 	    return "Undo " + getPresentationName();
 	}
-	
+
 	@Override
 	public String getRedoPresentationName() {
 	    return "Redo " + getPresentationName();
 	}
-	
+
 	@Override
 	public String getPresentationName() {
 	    return "Auto Layout";

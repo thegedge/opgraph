@@ -31,7 +31,7 @@ import junit.framework.Assert;
  */
 public class CollectionsAssert extends Assert {
 	protected CollectionsAssert() {}
-	
+
 	/**
 	 * Assert if a collection of objects is equal to the given array. Order
 	 * is insignificant in this comparison.
@@ -46,7 +46,7 @@ public class CollectionsAssert extends Assert {
 		// Quick check to ensure sizes equal 
 		if(a.size() != b.length)
 			fail(message);
-		
+
 		// Go through all items in collection, and remove them from the list
 		final List<T> listB = new ArrayList<T>(Arrays.asList(b));
 		for(T value : a) {
@@ -56,7 +56,7 @@ public class CollectionsAssert extends Assert {
 				fail(message);
 		}
 	}
-	
+
 	/**
 	 * Assert if a collection of objects is equal to the given array. Order
 	 * is insignificant in this comparison. A default message is used.

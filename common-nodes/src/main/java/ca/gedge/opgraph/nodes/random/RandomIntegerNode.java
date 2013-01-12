@@ -36,13 +36,13 @@ import ca.gedge.opgraph.exceptions.ProcessingException;
 public class RandomIntegerNode extends OpNode {
 	/** Input field for the minimum possible value of the random integer */
 	public final InputField MIN_INPUT = new InputField("min", "smallest possible value (inclusive)", true, true, Number.class);
-	
+
 	/** Input field for the maximum possible value of the random integer */
 	public final InputField MAX_INPUT = new InputField("max", "largest possible value (inclusive)", true, true, Number.class);
-	
+
 	/** Output field for the random integer */
 	public final OutputField VALUE_OUTPUT = new OutputField("value", "random integer", true, Integer.class);
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -51,11 +51,11 @@ public class RandomIntegerNode extends OpNode {
 		putField(MAX_INPUT);
 		putField(VALUE_OUTPUT);
 	}
-	
+
 	//
 	// OpNode
 	//
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 		final int MIN = (context.containsKey(MIN_INPUT) ? ((Number)context.get(MIN_INPUT)).intValue() : Integer.MIN_VALUE);

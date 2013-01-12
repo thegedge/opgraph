@@ -32,17 +32,17 @@ import java.util.WeakHashMap;
 public final class OpContext extends HashMap<String, Object> {
 	/** The parent context */
 	private OpContext parent;
-	
+
 	/** The child contexts */
 	private WeakHashMap<OpNode, OpContext> childContexts;
-	
+
 	/**
 	 * Constructs a global context (i.e., no parent context).
 	 */
 	public OpContext() {
 		this(null);
 	}
-	
+
 	/**
 	 * Constructs a context with the given parent context.
 	 * 
@@ -51,7 +51,7 @@ public final class OpContext extends HashMap<String, Object> {
 	public OpContext(OpContext parent) {
 		this.parent = parent;
 	}
-	
+
 	/**
 	 * Gets the parent context for this context.
 	 * 
@@ -60,7 +60,7 @@ public final class OpContext extends HashMap<String, Object> {
 	public OpContext getParent() {
 		return parent;
 	}
-	
+
 	/**
 	 * Finds a context for the specified node. This is a deep operation which
 	 * will recursively search through all child contexts to find one for the
@@ -81,7 +81,7 @@ public final class OpContext extends HashMap<String, Object> {
 					break;
 				}
 			}
-			
+
 			// Didn't find one? Do a deep search
 			if(context == null) {
 				for(OpContext childContext : childContexts.values()) {
@@ -91,10 +91,10 @@ public final class OpContext extends HashMap<String, Object> {
 				}
 			}
 		}
-		
+
 		return context;
 	}
-	
+
 	/**
 	 * Gets all the child contexts of this context.
 	 * 
@@ -103,7 +103,7 @@ public final class OpContext extends HashMap<String, Object> {
 	public Map<OpNode, OpContext> getChildContexts() {
 		return Collections.unmodifiableMap(childContexts);
 	}
-	
+
 	/**
 	 * Gets a context for the specified node. If no child context currently 
 	 * exists for the given node, a new context will be constructed. The 
@@ -116,13 +116,13 @@ public final class OpContext extends HashMap<String, Object> {
 	public OpContext getChildContext(OpNode node) {
 		if(childContexts == null)
 			childContexts = new WeakHashMap<OpNode, OpContext>();
-		
+
 		if(!childContexts.containsKey(node))
 			childContexts.put(node, new OpContext(this));
-		
+
 		return childContexts.get(node);
 	}
-	
+
 	/**
 	 * Collects values of a given field from all child contexts.
 	 * 
@@ -134,14 +134,14 @@ public final class OpContext extends HashMap<String, Object> {
 	@SuppressWarnings("unchecked")
 	public <T> Map<OpNode, T> collectValues(ContextualItem field) {
 		Map<OpNode, T> results = new HashMap<OpNode, T>();
-		
+
 		if(containsKey(field)) {
 			final Object val = get(field);
 			try {
 				results.put(null, (T)val);
 			} catch(ClassCastException exc) { }
 		}
-		
+
 		for(Map.Entry<OpNode, OpContext> entry: childContexts.entrySet()) {
 			final OpContext context = entry.getValue();
 			if(context.containsKey(field)) {
@@ -151,21 +151,21 @@ public final class OpContext extends HashMap<String, Object> {
 				} catch(ClassCastException exc) { }
 			}
 		}
-		
+
 		return results;
 	}
-	
+
 	/**
 	 * Removes all child contexts in this context.
 	 */
 	public void clearChildContexts() {
 		childContexts.clear();
 	}
-	
+
 	//
 	// Sort-of overrides
 	//
-	
+
 	/**
 	 * Maps the key of a given contextual item to an object.
 	 * 
@@ -177,7 +177,7 @@ public final class OpContext extends HashMap<String, Object> {
 	public Object put(ContextualItem item, Object value) {
 		return (item == null ? null : put(item.getKey(), value));
 	}
-	
+
 	/**
 	 * Removes the value associated with the key of a given contextual item.
 	 * 
@@ -188,7 +188,7 @@ public final class OpContext extends HashMap<String, Object> {
 	public Object remove(ContextualItem item) {
 		return (item == null ? null : remove(item.getKey()));
 	}
-	
+
 	/**
 	 * Gets whether or not this context contains the key associated with a
 	 * given contextual item. 
@@ -200,7 +200,7 @@ public final class OpContext extends HashMap<String, Object> {
 	public boolean containsKey(ContextualItem item) {
 		return (item == null ? false : containsKey(item.getKey()));
 	}
-	
+
 	/**
 	 * Gets the object associated with the key of a specified contextual item.
 	 * 
@@ -211,7 +211,7 @@ public final class OpContext extends HashMap<String, Object> {
 	public Object get(ContextualItem item) {
 		return (item == null ? null : get(item.getKey()));
 	}
-	
+
 	//
 	// Overrides
 	//
@@ -246,24 +246,24 @@ public final class OpContext extends HashMap<String, Object> {
 		if(childContexts != null)
 			childContexts.clear();
 	}
-	
+
 	@Override
 	public Object put(String key, Object value) {
 	    return super.put(key, value);
 	}
-	
+
 	@Override
 	public Object remove(Object key) {
 	    return super.remove(key);
 	}
-	
+
 	@Override
 	public Object get(Object key) {
 		if(super.containsKey(key))
 			return super.get(key);
 		return (parent == null ? null : parent.get(key));
 	}
-	
+
 	@Override
 	public boolean containsKey(Object key) {
 		boolean ret = super.containsKey(key);
@@ -271,7 +271,7 @@ public final class OpContext extends HashMap<String, Object> {
 			ret = parent.containsKey(key);
 		return ret;
 	}
-	
+
 	@Override
 	public boolean containsValue(Object value) {
 		boolean ret = super.containsValue(value);

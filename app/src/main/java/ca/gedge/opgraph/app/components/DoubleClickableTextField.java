@@ -41,28 +41,28 @@ import javax.swing.text.JTextComponent;
 public class DoubleClickableTextField {
 	/** The property name for the editing property */
 	public static final String EDITING_PROPERTY = "editingValue";
-	
+
 	/** The property name for the text property */
 	public static final String TEXT_PROPERTY = "textValue";
-	
+
 	/** Property change support */
 	private final PropertyChangeSupport propertyChangeSupport;
-	
+
 	/** The text component we have attached to */
 	private final JTextComponent textComponent;
-	
+
 	/** The currently set highlighter */
 	private Highlighter highlighter;
-	
+
 	/** The currently set bg color */
 	private Color bgColor;
-	
+
 	/** The text before editing began */
 	private String oldText;
-	
+
 	/** Whether or not we are currently editing */
 	private boolean editing;
-	
+
 	/**
 	 * Constructs a double-clickable text field.
 	 * 
@@ -71,7 +71,7 @@ public class DoubleClickableTextField {
 	public DoubleClickableTextField(JTextComponent textComponent) {
 		this.editing = false;
 		this.propertyChangeSupport = new PropertyChangeSupport(this);
-		
+
 		this.textComponent = textComponent;
 		this.textComponent.setFocusable(false);
 		this.textComponent.setOpaque(false);
@@ -79,11 +79,11 @@ public class DoubleClickableTextField {
 		this.textComponent.addMouseListener(mouseAdapter);
 		this.textComponent.addKeyListener(keyAdapter);
 		this.textComponent.addFocusListener(focusAdapter);
-		
+
 		this.highlighter = textComponent.getHighlighter();
 		this.bgColor = textComponent.getBackground();
 	}
-	
+
 	/**
 	 * Gets whether or not we are currently editing.
 	 * 
@@ -101,26 +101,26 @@ public class DoubleClickableTextField {
 	public void setEditing(boolean editing) {
 		if(textComponent.isEditable() && this.editing != editing) {
 			this.editing = editing;
-			
+
 			if(editing)
 				oldText = textComponent.getText();
-			
+
 			textComponent.setFocusable(editing);
 			textComponent.setOpaque(editing);
 			textComponent.setBackground(editing ? bgColor : null);
 			textComponent.setHighlighter(editing ? highlighter : null);
-			
+
 			if(editing) {
 				textComponent.requestFocusInWindow();
 				textComponent.selectAll();
 			} else {
 				propertyChangeSupport.firePropertyChange(TEXT_PROPERTY, oldText, textComponent.getText());
 			}
-			
+
 			propertyChangeSupport.firePropertyChange(EDITING_PROPERTY, !editing, editing);
 		}
 	}
-	
+
 	//
 	// MouseAdapter
 	//
@@ -165,11 +165,11 @@ public class DoubleClickableTextField {
 			setEditing(false);
 		}
 	};
-	
+
 	//
 	// PropertyChange listener support
 	//
-	
+
 	/**
 	 * Adds a property change listener to this component.
 	 * 
@@ -178,7 +178,7 @@ public class DoubleClickableTextField {
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(listener);
 	}
-	
+
 	/**
 	 * Adds a property change listener for a specific property to this component.
 	 * 
@@ -188,7 +188,7 @@ public class DoubleClickableTextField {
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
 	}
-	
+
 	/**
 	 * Removes a property change listener from this component.
 	 * 
@@ -197,7 +197,7 @@ public class DoubleClickableTextField {
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
-	
+
 	/**
 	 * Removes a property change listener for a specific property from this component.
 	 * 

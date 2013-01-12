@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class CollectionListenerSupport<P, E> {
 	private ArrayList<CollectionListener<P, E>> listeners = new ArrayList<CollectionListener<P, E>>();
-	
+
 	/**
 	 * Adds a collection listener.
 	 * 
@@ -43,7 +43,7 @@ public class CollectionListenerSupport<P, E> {
 			listeners.add(listener);
 		}
 	}
-	
+
 	/**
 	 * Removes a collection listener.
 	 * 
@@ -54,7 +54,7 @@ public class CollectionListenerSupport<P, E> {
 			listeners.remove(listener);
 		}
 	}
-	
+
 	/**
 	 * Fires an {@link CollectionListener#elementAdded(Object, Object)} event to all listeners.
 	 * 
@@ -67,7 +67,7 @@ public class CollectionListenerSupport<P, E> {
 				listener.elementAdded(source ,element);
 		}
 	}
-	
+
 	/**
 	 * Fires an {@link CollectionListener#elementRemoved(Object, Object)} event to all listeners.
 	 * 

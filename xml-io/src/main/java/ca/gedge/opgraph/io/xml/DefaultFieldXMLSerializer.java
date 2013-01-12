@@ -50,49 +50,49 @@ public class DefaultFieldXMLSerializer implements XMLSerializer {
 	{
 		if(obj == null)
 			throw new IOException("Null object given to serializer");
-		
+
 		if(obj instanceof InputField) {
 			final InputField field = (InputField)obj;
-			
+
 			// Only write if field is non-fixed, or fixed but with extensions
 			if(!field.isFixed() || field.getExtensionClasses().size() > 0) {
 				final Element fieldElem = doc.createElementNS(INPUT_QNAME.getNamespaceURI(), INPUT_QNAME.getLocalPart());
 				fieldElem.setAttribute("key", field.getKey());
 				fieldElem.setAttribute("optional", Boolean.toString(field.isOptional()));
 				fieldElem.setTextContent(field.getDescription());
-				
+
 				// XXX Store type validators?
-				
+
 				// Extensions
 				if(field.getExtensionClasses().size() > 0) {
 					final XMLSerializer serializer = serializerFactory.getHandler(Extendable.class);
 					if(serializer == null)
 						throw new IOException("No XML serializer for extensions");
-					
+
 					serializer.write(serializerFactory, doc, fieldElem, field);
 				}
-				
+
 				parentElem.appendChild(fieldElem);
 			}
 		} else if(obj instanceof OutputField) {
 			final OutputField field = (OutputField)obj;
-			
+
 			// Only write if field is non-fixed, or fixed but with extensions
 			if(!field.isFixed() || field.getExtensionClasses().size() > 0) {
 				final Element fieldElem = doc.createElementNS(OUTPUT_QNAME.getNamespaceURI(), OUTPUT_QNAME.getLocalPart());
 				fieldElem.setAttribute("key", field.getKey());
 				fieldElem.setAttribute("type", field.getOutputType().getName());
 				fieldElem.setTextContent(field.getDescription());
-				
+
 				// Extensions
 				if(field.getExtensionClasses().size() > 0) {
 					final XMLSerializer serializer = serializerFactory.getHandler(Extendable.class);
 					if(serializer == null)
 						throw new IOException("No XML serializer for extensions");
-					
+
 					serializer.write(serializerFactory, doc, fieldElem, field);
 				}
-				
+
 				parentElem.appendChild(fieldElem);
 			}
 		} else {
@@ -110,12 +110,12 @@ public class DefaultFieldXMLSerializer implements XMLSerializer {
 			final String key = elem.getAttribute( "key");
 			final String description = elem.getTextContent();
 			final InputField field = new InputField(key, description);
-			
+
 			if(elem.hasAttribute("optional"))
 				field.setOptional(Boolean.parseBoolean(elem.getAttributeNS(DEFAULT_NAMESPACE, "optional")));
-			
+
 			// XXX Read type validator?
-			
+
 			// Read children
 			final NodeList children = elem.getChildNodes();
 			for(int childIndex = 0; childIndex < children.getLength(); ++childIndex) {
@@ -123,14 +123,14 @@ public class DefaultFieldXMLSerializer implements XMLSerializer {
 				if(node instanceof Element) {
 					final Element childElem = (Element)node;
 					final QName name = XMLSerializerFactory.getQName(childElem);
-					
+
 					// Get a handler for the element
 					final XMLSerializer serializer = serializerFactory.getHandler(name);
 					if(serializer == null)
 						throw new IOException("Could not get handler for element: " + name);
 				}
 			}
-			
+
 			item = field;
 		} else if(OUTPUT_QNAME.equals(XMLSerializerFactory.getQName(elem))) {
 			// Create
@@ -143,11 +143,11 @@ public class DefaultFieldXMLSerializer implements XMLSerializer {
 					throw new IOException("Unknown output type for field: " + outputTypeClassName);
 				}
 			}
-			
+
 			final String key = elem.getAttribute("key");
 			final String description = elem.getTextContent();
 			final OutputField field = new OutputField(key, description, false, outputType);
-			
+
 			// Read children
 			final NodeList children = elem.getChildNodes();
 			for(int childIndex = 0; childIndex < children.getLength(); ++childIndex) {
@@ -155,17 +155,17 @@ public class DefaultFieldXMLSerializer implements XMLSerializer {
 				if(node instanceof Element) {
 					final Element childElem = (Element)node;
 					final QName name = XMLSerializerFactory.getQName(childElem);
-					
+
 					// Get a handler for the element
 					final XMLSerializer serializer = serializerFactory.getHandler(name);
 					if(serializer == null)
 						throw new IOException("Could not get handler for element: " + name);
 				}
 			}
-			
+
 			item = field;
 		}
-			
+
 		return item;
 	}
 

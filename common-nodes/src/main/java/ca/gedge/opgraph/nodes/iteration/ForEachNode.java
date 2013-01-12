@@ -52,17 +52,17 @@ import ca.gedge.opgraph.validators.CollectionValidator;
 public class ForEachNode extends MacroNode {
 	/** {@link OpContext} key for the current iteration */
 	public static final String CURRENT_ITERATION_KEY = "currentIteration";
-	
+
 	/** {@link OpContext} key for the max number of iterations */
 	public static final String MAX_ITERATIONS_KEY = "maxIterations";
-	
+
 	/**
 	 * Constructs a new macro with no source file and a default graph.
 	 */
 	public ForEachNode() {
 		super(null, null);
 	}
-	
+
 	/**
 	 * Constructs a new macro with no source file and a specified graph.
 	 * 
@@ -73,7 +73,7 @@ public class ForEachNode extends MacroNode {
 	public ForEachNode(OpGraph graph) {
 		super(null, graph);
 	}
-	
+
 	/**
 	 * Constructs a macro node from the given source file and DAG.
 	 * 
@@ -83,7 +83,6 @@ public class ForEachNode extends MacroNode {
 	public ForEachNode(File source, OpGraph graph) {
 		super(source, graph);
 	}
-	
 
 	/**
 	 * Constructs a context mapping for this macro's published inputs. Inputs contained
@@ -96,7 +95,7 @@ public class ForEachNode extends MacroNode {
 	private void mapInputs(OpContext context, int iteration) {
 		// Put in information about the iteration
 		context.put(CURRENT_ITERATION_KEY, iteration);
-		
+
 		// Child contexts
 		for(PublishedInput publishedInput : publishedInputs) {
 			final OpContext local = context.getChildContext(publishedInput.destinationNode);
@@ -105,7 +104,7 @@ public class ForEachNode extends MacroNode {
 			local.put(publishedInput.nodeInputField, value);
 		}
 	}
-	
+
 	/**
 	 * Maps published outputs from a given context mapping to a given context.
 	 * 
@@ -130,11 +129,11 @@ public class ForEachNode extends MacroNode {
 			}
 		}
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public InputField publish(String key, OpNode destination, InputField field) {
 		final InputField published = super.publish(key, destination, field);
@@ -157,29 +156,29 @@ public class ForEachNode extends MacroNode {
 			final Collection<?> data = (Collection<?>)context.get(field);
 			maxIterations = Math.max(maxIterations, data.size());
 		}
-			
+
 		// Process
 		if(graph != null) {
 			final Processor processor = new Processor(graph);
-			
+
 			context.put(MAX_ITERATIONS_KEY, maxIterations);
 			for(int iteration = 0; iteration < maxIterations; ++iteration) {
 				processor.reset(context);
-				
+
 				// The reset call above could clear out the context, so map after
 				mapInputs(context, iteration);
-				
+
 				// Now run the graph
 				processor.stepAll();
 				if(processor.getError() != null)
 					throw processor.getError();
-				
+
 				// Map the published outputs from the child nodes back into context
 				mapOutputs(context, iteration);
 			}
 		}
 	}
-	
+
 	//
 	// CustomProcessing
 	//
@@ -197,44 +196,44 @@ public class ForEachNode extends MacroNode {
 			public void remove() {
 				throw new UnsupportedOperationException("remove not supported");
 			}
-			
+
 			@Override
 			public OpNode next() {
 				if(!hasNext())
 					throw new NoSuchElementException();
-				
+
 				final OpNode node = nextNode;
 				nextNode = null;
 				return node;
 			}
-			
+
 			@Override
 			public boolean hasNext() {
 				if(nextNode != null)
 					return true;
-				
+
 				if(!nodeIter.hasNext() && iteration < maxIterations) {
 					mapOutputs(context, iteration);
-					
+
 					++iteration;
 					if(iteration < maxIterations) {
 						nodeIter = graph.getVertices().iterator();
 						mapInputs(context, iteration);
 					}
 				}
-				
+
 				if(nodeIter.hasNext())
 					nextNode = nodeIter.next();
-				
+
 				return (nextNode != null);
 			}
-			
+
 			@Override
 			public void initialize(OpContext context) {
 				this.maxIterations = 0;
 				this.context = context;
 				this.nodeIter = graph.getVertices().iterator();
-				
+
 				// First, find the biggest list we have
 				for(PublishedInput field : getPublishedInputs()) {
 					if(context.containsKey(field)) {
@@ -242,9 +241,9 @@ public class ForEachNode extends MacroNode {
 						this.maxIterations = Math.max(this.maxIterations, data.size());
 					}
 				}
-				
+
 				context.put(MAX_ITERATIONS_KEY, maxIterations);
-				
+
 				mapInputs(context, 0);
 			}
 

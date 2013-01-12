@@ -56,11 +56,11 @@ public class CommonNodesMenuProvider implements MenuProvider {
 			public void propertyChange(PropertyChangeEvent e) {
 				if(e.getNewValue() == null) {
 					final Collection<OpNode> selected = model.getCanvas().getSelectionModel().getSelectedNodes();
-					
+
 					boolean canExplode = false;
 					if(selected.size() == 1)
 						canExplode = (selected.iterator().next() instanceof MacroNode);
-					
+
 					create.setEnabled(selected.size() > 0);
 					explode.setEnabled(canExplode);
 				} else { 

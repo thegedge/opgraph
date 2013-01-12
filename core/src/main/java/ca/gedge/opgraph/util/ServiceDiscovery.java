@@ -31,10 +31,10 @@ import java.util.logging.Logger;
 public abstract class ServiceDiscovery {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(ServiceDiscovery.class.getName());
-	
+
 	/** The provider instance */
 	private static ServiceDiscovery provider;
-	
+
 	/**
 	 * Gets an instance of a service discovery provider.
 	 * 
@@ -57,15 +57,15 @@ public abstract class ServiceDiscovery {
 					LOGGER.warning("Could not instantiate service discovery class '" + discoveryProviderName + "'. Using default provider.");
 				}
 			}
-			
+
 			// If still null, use the default provider
 			if(provider == null)
 				provider = new DefaultServiceDiscovery();
 		}
-		
+
 		return provider; 
 	}
-	
+
 	/**
 	 * Returns all providers of the requested interface.
 	 * 

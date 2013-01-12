@@ -40,31 +40,31 @@ public class TestDirectedAcyclicGraph {
 	 */
 	private static class SimpleVertex implements Vertex {
 		private String name;
-		
+
 		public SimpleVertex(String name) {
 			this.name = name;
 		}
-		
+
 		@Override
 		public String toString() {
 			return name;
 		}
 	}
-	
+
 	//
 	// Test data
 	//
-	
+
 	private HashMap<String, SimpleVertex> vertexMap = new HashMap<String, SimpleVertex>();
 	private HashMap<String, SimpleDirectedEdge<SimpleVertex>> edgeMap = new HashMap<String, SimpleDirectedEdge<SimpleVertex>>();
-	
+
 	@Before
 	public void setUp() {
 		char start = 'A';
 		char end = 'Z';
 		for(char s = start; s <= end; ++s)
 			vertexMap.put("" + s, new SimpleVertex("" + s));
-		
+
 		for(char u = start; u <= end; ++u) {
 			for(char v = (char)(u + 1); v <= end; ++v) {
 				SimpleVertex uV = vertexMap.get("" + u);
@@ -74,7 +74,7 @@ public class TestDirectedAcyclicGraph {
 			}
 		}
 	}
-	
+
 	/**
 	 * Tests the correctness of topological sorting in a DAG
 	 */
@@ -85,7 +85,7 @@ public class TestDirectedAcyclicGraph {
 		dag.add(vertexMap.get("B"));
 		dag.add(vertexMap.get("C"));
 		dag.add(vertexMap.get("D"));
-		
+
 		try {
 			dag.add(edgeMap.get("DC"));
 			dag.add(edgeMap.get("CA"));
@@ -96,11 +96,11 @@ public class TestDirectedAcyclicGraph {
 		} catch(CycleDetectedException exc) {
 			fail("Adding edge creates cycle, but this shouldn't happen");
 		}
-		
+
 		assertCollectionEqualsArray(dag.getVertices(), 
 		                            vertexMap.get("A"), vertexMap.get("B"), vertexMap.get("C"), vertexMap.get("D"));
 	}
-	
+
 	/**
 	 * Tests cycle detection in a DAG
 	 */
@@ -111,7 +111,7 @@ public class TestDirectedAcyclicGraph {
 		dag.add(vertexMap.get("B"));
 		dag.add(vertexMap.get("C"));
 		dag.add(vertexMap.get("D"));
-		
+
 		try {
 			dag.add(edgeMap.get("DC"));
 			dag.add(edgeMap.get("CA"));
@@ -122,7 +122,7 @@ public class TestDirectedAcyclicGraph {
 			fail("Vertex not found, but should be: " + exc.getVertex());
 		}
 	}
-	
+
 	/**
 	 * Tests incoming/outgoing edges in a DAG
 	 */
@@ -137,7 +137,7 @@ public class TestDirectedAcyclicGraph {
 		dag.add(vertexMap.get("E"));
 		dag.add(vertexMap.get("F"));
 		dag.add(vertexMap.get("G"));
-		
+
 		try {
 			dag.add(edgeMap.get("DC"));
 			dag.add(edgeMap.get("CA"));
@@ -150,25 +150,25 @@ public class TestDirectedAcyclicGraph {
 		} catch(VertexNotFoundException exc) {
 			fail("Vertex not found, but should be: " + exc.getVertex());
 		}
-		
+
 		assertCollectionEqualsArray(dag.getIncomingEdges(vertexMap.get("A")), edgeMap.get("CA"), edgeMap.get("DA"));
 		assertCollectionEqualsArray(dag.getOutgoingEdges(vertexMap.get("A")), edgeMap.get("AB"), edgeMap.get("AE"));
-		
+
 		assertCollectionEqualsArray(dag.getIncomingEdges(vertexMap.get("B")), edgeMap.get("AB"));
 		assertCollectionEqualsArray(dag.getOutgoingEdges(vertexMap.get("B")));
-		
+
 		assertCollectionEqualsArray(dag.getIncomingEdges(vertexMap.get("C")), edgeMap.get("DC"));
 		assertCollectionEqualsArray(dag.getOutgoingEdges(vertexMap.get("C")), edgeMap.get("CA"));
-		
+
 		assertCollectionEqualsArray(dag.getIncomingEdges(vertexMap.get("D")));
 		assertCollectionEqualsArray(dag.getOutgoingEdges(vertexMap.get("D")), edgeMap.get("DA"), edgeMap.get("DC"));
-		
+
 		assertCollectionEqualsArray(dag.getIncomingEdges(vertexMap.get("E")), edgeMap.get("AE"));
 		assertCollectionEqualsArray(dag.getOutgoingEdges(vertexMap.get("E")), edgeMap.get("EF"));
-		
+
 		assertCollectionEqualsArray(dag.getIncomingEdges(vertexMap.get("F")), edgeMap.get("EF"));
 		assertCollectionEqualsArray(dag.getOutgoingEdges(vertexMap.get("F")));
-		
+
 		assertCollectionEqualsArray(dag.getIncomingEdges(vertexMap.get("G")));
 		assertCollectionEqualsArray(dag.getOutgoingEdges(vertexMap.get("G")));
 	}

@@ -42,7 +42,7 @@ import ca.gedge.opgraph.dag.VertexNotFoundException;
 public class CopyCommand extends AbstractAction {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(CopyCommand.class.getName());
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -50,24 +50,24 @@ public class CopyCommand extends AbstractAction {
 		super("Copy");
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(GraphicsEnvironment.isHeadless())
 			return;
-		
+
 		final GraphDocument document = GraphEditorModel.getActiveDocument();
 		if(document != null) {
 			// If a selection exists, create a copy of the selection
 			final Collection<OpNode> selectedNodes = document.getSelectionModel().getSelectedNodes();
 			if(selectedNodes.size() > 0) {
 				final OpGraph graph = document.getGraph();
-				
+
 				// Copy selected nodes
 				final OpGraph selectedGraph = new OpGraph();
 				for(OpNode node : selectedNodes)
 					selectedGraph.add(node);
-				
+
 				// For each selected node, copy outgoing links if they are fully contained in the selection
 				for(OpNode selectedNode : selectedNodes) {
 					final Collection<OpLink> outgoingLinks = graph.getOutgoingEdges(selectedNode);
@@ -83,7 +83,7 @@ public class CopyCommand extends AbstractAction {
 						}
 					}
 				}
-				
+
 				// Add to system clipboard
 				final SubgraphClipboardContents clipboardContents = new SubgraphClipboardContents(document, selectedGraph);
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(clipboardContents, document.getCanvas());

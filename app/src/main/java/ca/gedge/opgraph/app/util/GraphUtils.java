@@ -52,7 +52,7 @@ import ca.gedge.opgraph.extensions.Publishable.PublishedOutput;
 public class GraphUtils {
 	/** Logger */
 	private final static Logger LOGGER = Logger.getLogger(GraphUtils.class.getName());
-	
+
 	/**
 	 * Clone a node along with {@link NodeSettings}, {@link NodeMetadata},
 	 * {@link CompositeNode}, and {@link Publishable} extensions cloned.
@@ -66,26 +66,26 @@ public class GraphUtils {
 	public static OpNode cloneNode(OpNode node) {
 		if(node == null)
 			throw new NullPointerException();
-		
+
 		final Class<? extends OpNode> nodeClass = node.getClass();
 		try {
 			final OpNode newNode = nodeClass.newInstance();
 			newNode.setName(node.getName());
-			
+
 			// copy node settings (if available)
 			final NodeSettings nodeSettings = node.getExtension(NodeSettings.class);
 			final NodeSettings newNodeSettings = newNode.getExtension(NodeSettings.class);
 			if(nodeSettings != null && newNodeSettings != null) {
 				newNodeSettings.loadSettings(nodeSettings.getSettings());
 			}
-			
+
 			// copy meta data (if available)
 			final NodeMetadata metaData = node.getExtension(NodeMetadata.class);
 			if(metaData != null) {
 				final NodeMetadata newMetaData = new NodeMetadata(metaData.getX(), metaData.getY());
 				newNode.putExtension(NodeMetadata.class, newMetaData);
 			}
-			
+
 			// if a composite node, clone graph
 			final CompositeNode compositeNode = node.getExtension(CompositeNode.class);
 			final CompositeNode newCompositeNode = newNode.getExtension(CompositeNode.class);
@@ -94,7 +94,7 @@ public class GraphUtils {
 				final OpGraph graph = compositeNode.getGraph();
 				final OpGraph newGraph = cloneGraph(graph, null, nodeMap);
 				newCompositeNode.setGraph(newGraph);
-				
+
 				// setup published fields (if available)
 				final Publishable publishable = node.getExtension(Publishable.class);
 				final Publishable newPublishable = newNode.getExtension(Publishable.class);
@@ -106,7 +106,7 @@ public class GraphUtils {
 							newPublishable.publish(pubInput.getKey(), destNode, destField);
 						}
 					}
-					
+
 					for(PublishedOutput pubOutput:publishable.getPublishedOutputs()) {
 						final OpNode srcNode = newGraph.getNodeById(nodeMap.get(pubOutput.sourceNode.getId()), false);
 						if(srcNode != null) {
@@ -118,14 +118,14 @@ public class GraphUtils {
 			}
 
 			// XXX Other extensions. See note attached to class javadoc.
-			
+
 			return newNode;
 		} catch (InstantiationException e) {
 			LOGGER.severe(e.getMessage());
 		} catch (IllegalAccessException e) {
 			LOGGER.severe(e.getMessage());
 		}
-		
+
 		return null;
 	}
 
@@ -144,14 +144,14 @@ public class GraphUtils {
 	 */
 	public static OpGraph cloneGraph(OpGraph graph, OpGraph newGraph, Map<String, String> nodeMap) {
 		final OpGraph retVal = (newGraph != null ? newGraph : new OpGraph());
-		
+
 		// Clone nodes
 		for(OpNode node : graph.getVertices()) {
 			final OpNode clonedNode = cloneNode(node);
 			nodeMap.put(node.getId(), clonedNode.getId());
 			retVal.add(clonedNode);
 		}
-		
+
 		// Clone links
 		for(OpLink link : graph.getEdges()) {
 			final OpNode origSource = link.getSource();
@@ -160,7 +160,7 @@ public class GraphUtils {
 			final OpNode origDest = link.getDestination();
 			final OpNode newDest = retVal.getNodeById(nodeMap.get(origDest.getId()), false);
 			final InputField destField = newDest.getInputFieldWithKey(link.getDestinationField().getKey());
-			
+
 			try {
 				final OpLink newLink = new OpLink(newSource, sourceField.getKey(), newDest, destField.getKey());
 				retVal.add(newLink);
@@ -172,25 +172,25 @@ public class GraphUtils {
 				LOGGER.severe(e.getMessage());
 			}
 		}
-		
+
 		// Clone notes
 		final Notes notes = graph.getExtension(Notes.class);
 		if(notes != null) {
 			final Notes newNotes = new Notes();
-			
+
 			for(Note note:notes) {
 				final Note newNote = cloneNote(note);
 				newNotes.add(newNote);
 			}
-			
+
 			retVal.putExtension(Notes.class, newNotes);
 		}
-		
+
 		// XXX Other extensions. See note attached to class javadoc.
-		
+
 		return retVal;
 	}
-	
+
 	/**
 	 * Clones the given graph.
 	 * 
@@ -201,7 +201,7 @@ public class GraphUtils {
 	public static OpGraph cloneGraph(OpGraph graph) {
 		return cloneGraph(graph, null, new HashMap<String, String>());
 	}
-	
+
 	/**
 	 * Clone a graph note.
 	 * 
@@ -218,7 +218,7 @@ public class GraphUtils {
 			newComp.setLocation(oldComp.getLocation());
 			newComp.setPreferredSize(newComp.getPreferredSize());
 		}
-		
+
 		return retVal;
 	}
 }

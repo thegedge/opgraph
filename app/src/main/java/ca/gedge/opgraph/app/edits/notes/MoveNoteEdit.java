@@ -36,10 +36,10 @@ import ca.gedge.opgraph.app.extensions.Note;
 public class MoveNoteEdit extends AbstractUndoableEdit {
 	/** The note's UI component */
 	private JComponent noteComp;
-	
+
 	/** The distance along the x-axis to move the node */
 	private int deltaX;
-	
+
 	/** The distance along the y-axis to move the node */
 	private int deltaY;
 
@@ -57,29 +57,29 @@ public class MoveNoteEdit extends AbstractUndoableEdit {
 	public MoveNoteEdit(Note note, int deltaX, int deltaY) {
 		if(note == null)
 			throw new NullPointerException();
-		
+
 		noteComp = note.getExtension(JComponent.class);
 		if(noteComp == null)
 			throw new NullPointerException();
-		
+
 		this.deltaX = deltaX;
 		this.deltaY = deltaY;
 		perform();
 	}
-	
+
 	// XXX assumes noteComp doesn't change for the note
-	
+
 	/**
 	 * Performs this edit.
 	 */
 	private void perform() {
 		noteComp.setLocation(noteComp.getX() + deltaX, noteComp.getY() + deltaY);
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
-	
+
 	@Override
 	public boolean replaceEdit(UndoableEdit anEdit) {
 		if(anEdit instanceof MoveNoteEdit) {
@@ -95,31 +95,31 @@ public class MoveNoteEdit extends AbstractUndoableEdit {
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public String getPresentationName() {
 		final String prefix = "Move Note";
 		final String suffix = MoveNodeCommand.getMoveString(deltaX, deltaY);
 		if(suffix.length() == 0)
 			return prefix;
-		
+
 		return prefix + " " + suffix;
 	}
-	
+
 	@Override
 	public boolean isSignificant() {
 		return (deltaX != 0 || deltaY != 0);
 	}
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();

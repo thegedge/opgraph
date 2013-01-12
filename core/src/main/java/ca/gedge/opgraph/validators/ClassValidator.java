@@ -22,14 +22,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 /**
  * A validator that uses {@link Class} instances for validation.
  */
 public class ClassValidator implements TypeValidator {
 	/** The accepted classes */
 	private List<Class<?>> classes;
-	
+
 	/**
 	 * Constructs a validator that accepts the given classes.
 	 * 
@@ -42,7 +41,7 @@ public class ClassValidator implements TypeValidator {
 				this.classes.add(clz);
 		}
 	}
-	
+
 	/**
 	 * Gets the list of classes which this validator accepts.
 	 * 
@@ -51,11 +50,11 @@ public class ClassValidator implements TypeValidator {
 	public List<Class<?>> getClasses() {
 		return Collections.unmodifiableList(classes);
 	}
-	
+
 	//
 	// TypeValidator
 	//
-	
+
 	@Override
 	public boolean isAcceptable(Object obj) {
 		if(obj == null) return true;
@@ -66,7 +65,7 @@ public class ClassValidator implements TypeValidator {
 	public boolean isAcceptable(Class<?> cls) {
 		if(cls == null)
 			throw new NullPointerException("cls cannot be null");
-		
+
 		boolean ret = false;
 		for(Class<?> acceptedClass : classes) {
 			if(acceptedClass.isAssignableFrom(cls)) {
@@ -74,7 +73,7 @@ public class ClassValidator implements TypeValidator {
 				break;
 			}
 		}
-		
+
 		return ret;
 	}
 }

@@ -57,13 +57,13 @@ import ca.gedge.opgraph.library.instantiators.ClassInstantiator;
 public class NodeLibrary implements Iterable<NodeData> {
 	/** Logger **/
 	private static final Logger LOGGER = Logger.getLogger(NodeLibrary.class.getName());
-	
+
 	/** The registered map of nodes */
 	private Map<URI, NodeData> nodeMap;
-	
+
 	/** The list of uri handlers this library uses */
 	private List< URIHandler<List<NodeData>> > uriHandlers;
-	
+
 	/**
 	 * Default constructor. 
 	 */
@@ -71,7 +71,7 @@ public class NodeLibrary implements Iterable<NodeData> {
 		this.nodeMap = new TreeMap<URI, NodeData>();
 		this.uriHandlers = new ArrayList<URIHandler<List<NodeData>>>();
 	}
-	
+
 	/**
 	 * Attempts to load the node specified by the given type. Type is parsed
 	 * as per the class' specification. If the type is a macro, and its source
@@ -103,11 +103,11 @@ public class NodeLibrary implements Iterable<NodeData> {
 					}
 				}
 			}
-			
+
 			if(nodeInfo == null)
 				throw new IllegalArgumentException("The URI '" + uri + "' is not handled by this library");
 		}
-		
+
 		return get(uri);
 	}
 
@@ -131,7 +131,7 @@ public class NodeLibrary implements Iterable<NodeData> {
 			}
 		}
 	}
-	
+
 	/**
 	 * Unregisters a URI from this library.
 	 * 
@@ -146,7 +146,7 @@ public class NodeLibrary implements Iterable<NodeData> {
 			fireNodeUnregistered(info);
 		return info;
 	}
-	
+
 	/**
 	 * Adds a specific node type to this library.
 	 * 
@@ -161,10 +161,10 @@ public class NodeLibrary implements Iterable<NodeData> {
 	public void put(NodeData info) {
 		if(info == null)
 			throw new NullPointerException("Node info cannot be null");
-		
+
 		if(info.uri == null || info.name == null || info.description == null || info.instantiator == null)
 			throw new NullPointerException("Members of node info cannot be null");
-		
+
 		// Check to make sure we have a handler for the given URI
 		boolean handled = false;
 		for(URIHandler<?> handler : uriHandlers) {
@@ -173,10 +173,10 @@ public class NodeLibrary implements Iterable<NodeData> {
 				break;
 			}
 		}
-		
+
 		if(!handled)
 			throw new IllegalArgumentException("No handler exists for the uri: " + info.uri);
-		
+
 		nodeMap.put(info.uri, info);
 		fireNodeRegistered(info);
 	}
@@ -190,7 +190,7 @@ public class NodeLibrary implements Iterable<NodeData> {
 		List<NodeData> list = new ArrayList<NodeData>(nodeMap.values());
 		return Collections.unmodifiableList(list);
 	}
-	
+
 	/**
 	 * Gets node information associated with a specified type.
 	 * 
@@ -204,7 +204,7 @@ public class NodeLibrary implements Iterable<NodeData> {
 	public NodeData get(URI uri) {
 		return nodeMap.get(uri);
 	}
-	
+
 	/**
 	 * Get's the URI associated with a node.
 	 * 
@@ -227,7 +227,7 @@ public class NodeLibrary implements Iterable<NodeData> {
 			return new URI("class", node.getClass().getName(), null);
 //		}
 	}
-	
+
 	/**
 	 * Adds the given handler to the list of handlers this library uses.
 	 * 
@@ -237,7 +237,7 @@ public class NodeLibrary implements Iterable<NodeData> {
 		if(handler != null)
 			uriHandlers.add(handler);
 	}
-	
+
 	/**
 	 * Removes the given handler from the list of handlers this library uses.
 	 * 
@@ -246,7 +246,7 @@ public class NodeLibrary implements Iterable<NodeData> {
 	public void removeURIHandler(URIHandler<List<NodeData>> handler) {
 		uriHandlers.remove(handler);
 	}
-	
+
 	/**
 	 * Gets a mapping from category name to all the nodes having that category.
 	 * 
@@ -270,11 +270,11 @@ public class NodeLibrary implements Iterable<NodeData> {
 
 		return categoryMap;
 	}
-	
+
 	//
 	// Listeners
 	//
-	
+
 	private ArrayList<NodeLibraryListener> listeners = new ArrayList<NodeLibraryListener>();
 
 	/**
@@ -306,18 +306,18 @@ public class NodeLibrary implements Iterable<NodeData> {
 				listener.nodeRegistered(info);
 		}
 	}
-	
+
 	protected void fireNodeUnregistered(NodeData info) {
 		synchronized(listeners) {
 			for(NodeLibraryListener listener : listeners)
 				listener.nodeUnregistered(info);
 		}
 	}
-	
+
 	//
 	// Iterable
 	//
-	
+
 	@Override
 	public Iterator<NodeData> iterator() {
 		return Collections.unmodifiableCollection(nodeMap.values()).iterator();

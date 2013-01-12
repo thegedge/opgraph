@@ -35,22 +35,22 @@ import ca.gedge.opgraph.extensions.Publishable;
 public class PublishFieldEdit extends AbstractUndoableEdit {
 	/** The graph to which this edit was applied  */
 	private OpGraph graph;
-	
+
 	/** The publishable node */
 	private Publishable publishable;
-	
+
 	/** The node owning the field to publish */
 	private OpNode node;
-	
+
 	/** The published key */
 	private String key;
-	
+
 	/** The field to publish */
 	private ContextualItem field;
-	
+
 	/** Whether or not we are publishing or unpublishing */
 	private boolean isPublishing;
-	
+
 	/**
 	 * Constructs a field publishing edit that publishes or unpublishes a
 	 * given field for a node in a given publishable extension.
@@ -72,18 +72,18 @@ public class PublishFieldEdit extends AbstractUndoableEdit {
 		this.node = node;
 		this.field = field;
 		this.isPublishing = (key != null);
-		
+
 		if(key == null) {
 			ContextualItem item = null;
 			if(field instanceof InputField)
 				item = publishable.getPublishedInput(node, (InputField)field);
 			else if(field instanceof OutputField)
 				item = publishable.getPublishedOutput(node, (OutputField)field);
-			
+
 			key = (item == null ? field.getKey() : item.getKey());
 		} else {
 			final OpNode publishNode = ((publishable instanceof OpNode) ? (OpNode)publishable : null);
-			
+
 			// Find a key that isn't already taken
 			if(field instanceof InputField) {
 				int val = 1;
@@ -107,12 +107,12 @@ public class PublishFieldEdit extends AbstractUndoableEdit {
 				key = keyToUse;
 			}
 		}
-		
+
 		this.key = key;
-		
+
 		perform();
 	}
-	
+
 	/**
 	 * Performs this edit.
 	 */
@@ -122,7 +122,7 @@ public class PublishFieldEdit extends AbstractUndoableEdit {
 		else
 			unpublish();
 	}
-	
+
 	/**
 	 * Publishes a field of a node.
 	 * 
@@ -142,7 +142,7 @@ public class PublishFieldEdit extends AbstractUndoableEdit {
 				publishable.publish(key, node, output);
 		}
 	}
-	
+
 	/**
 	 * Unpublishes a field from a node.
 	 */
@@ -159,17 +159,17 @@ public class PublishFieldEdit extends AbstractUndoableEdit {
 				publishable.unpublish(node, output);
 		}
 	}
-	
+
 	//
 	// AbstractEdit overrides
 	//
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();
@@ -178,7 +178,7 @@ public class PublishFieldEdit extends AbstractUndoableEdit {
 		else
 			publish();
 	}
-	
+
 	@Override
 	public String getPresentationName() {
 		final StringBuilder builder = new StringBuilder();
@@ -193,7 +193,7 @@ public class PublishFieldEdit extends AbstractUndoableEdit {
 		}
 		return builder.toString();
 	}
-	
+
 	@Override
 	public boolean isSignificant() {
 		if(publishable != null && node != null && field != null && graph.contains(node)) {

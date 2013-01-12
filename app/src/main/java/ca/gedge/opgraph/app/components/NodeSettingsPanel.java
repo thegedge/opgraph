@@ -40,7 +40,7 @@ import ca.gedge.opgraph.app.extensions.NodeSettings;
 public class NodeSettingsPanel extends JPanel {
 	/** The node currently being viewed */
 	private OpNode node;
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -67,10 +67,10 @@ public class NodeSettingsPanel extends JPanel {
 	public void setNode(OpNode node) {
 		if(this.node != node || getComponentCount() == 0) {
 			this.node = node;
-			
+
 			// Clear all current components and add in new ones
 			removeAll();
-			
+
 			// Get the settings component
 			Component settingsComp = null;
 			if(node == null) {
@@ -81,16 +81,16 @@ public class NodeSettingsPanel extends JPanel {
 				final NodeSettings settings = node.getExtension(NodeSettings.class);
 				if(settings != null)
 					settingsComp = settings.getComponent(GraphEditorModel.getActiveDocument());
-				
+
 				if(settingsComp == null) {
 					final JLabel label = new JLabel("No settings available", SwingConstants.CENTER);
 					label.setFont(label.getFont().deriveFont(Font.ITALIC));
 					settingsComp = label;
 				}
 			}
-			
+
 			add(settingsComp, BorderLayout.CENTER);
-			
+
 			revalidate();
 			repaint();
 		}

@@ -45,13 +45,13 @@ import ca.gedge.opgraph.extensions.Publishable;
 class PublishFieldCommand extends AbstractAction {
 	/** The publishable object */
 	private Publishable publishable;
-	
+
 	/** The node with a field to be published */
 	private OpNode node;
-	
+
 	/** The field to publish */
 	private ContextualItem field;
-	
+
 	/**
 	 * Constructs a command that publishes a field of a given node.
 	 * 
@@ -61,15 +61,15 @@ class PublishFieldCommand extends AbstractAction {
 	 */
 	public PublishFieldCommand(Publishable publishable, OpNode node, ContextualItem field) {
 		super(field.getKey());
-		
+
 		this.publishable = publishable;
 		this.node = node;
 		this.field = field;
-		
+
 		putValue(SHORT_DESCRIPTION, field.getDescription());
 		putValue(LONG_DESCRIPTION, field.getDescription());
 	}
-	
+
 	/**
 	 * If currently editing , publish the given field of the selected node.
 	 * 
@@ -82,7 +82,7 @@ class PublishFieldCommand extends AbstractAction {
 			document.getCanvas().updateAnchorFillStates(node);
 		}
 	}
-	
+
 	/**
 	 * If currently editing a macro, unpublish the given field of the selected node.
 	 * 
@@ -93,7 +93,7 @@ class PublishFieldCommand extends AbstractAction {
 			final GraphDocument document = GraphEditorModel.getActiveDocument();
 			final OpGraph graphOfMacroParent = document.getBreadcrumb().peekState(1);
 			final OpNode publishNode = ((publishable instanceof OpNode) ? (OpNode)publishable : null);
-			
+
 			// If there is a parent graph, then check to see which links will
 			// be removed if this field is unpublished
 			final Collection<OpLink> linksToRemove = new ArrayList<OpLink>();
@@ -113,7 +113,7 @@ class PublishFieldCommand extends AbstractAction {
 					}
 				}
 			}
-			
+
 			// Compound edit if there are links to remove
 			if(linksToRemove.size() == 0) {
 				document.getUndoSupport().postEdit(new PublishFieldEdit(document.getGraph(), publishable, node, null, field));
@@ -124,15 +124,15 @@ class PublishFieldCommand extends AbstractAction {
 				document.getUndoSupport().postEdit(new PublishFieldEdit(document.getGraph(), publishable, node, null, field));
 				document.getUndoSupport().endUpdate();
 			}
-			
+
 			document.getCanvas().updateAnchorFillStates(node);
 		}
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		boolean isPublishing = true;
@@ -140,7 +140,7 @@ class PublishFieldCommand extends AbstractAction {
 			isPublishing = false;
 		else if((field instanceof OutputField) && publishable.getPublishedOutput(node, (OutputField)field) != null)
 			isPublishing = false;
-		
+
 		if(isPublishing)
 			publishFieldOfSelected(field);
 		else

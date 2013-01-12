@@ -28,10 +28,10 @@ import ca.gedge.opgraph.extensions.ExtendableSupport;
 public class SimpleItem implements ContextualItem, Extendable {
 	/** The key for this field */
 	private String key;
-	
+
 	/** The description for this field */
 	private String description;
-	
+
 	/**
 	 * Constructs a field with a key and empty description.
 	 * 
@@ -40,7 +40,7 @@ public class SimpleItem implements ContextualItem, Extendable {
 	public SimpleItem(String key) {
 		this(key, "");
 	}
-	
+
 	/**
 	 * Constructs a field with a key and empty description.
 	 * 
@@ -51,31 +51,31 @@ public class SimpleItem implements ContextualItem, Extendable {
 		setKey(key);
 		setDescription(description);
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == this) return true;
 		if(obj == null) return false;
-		
+
 		if(getClass() == obj.getClass())
 			return key.equals( ((ContextualItem)obj).getKey() );
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return key.hashCode();
 	}
-	
+
 	//
 	// ContextualItem
 	//
-	
+
 	@Override
 	public String getKey() {
 		return key;
@@ -85,12 +85,12 @@ public class SimpleItem implements ContextualItem, Extendable {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	@Override
 	public void setKey(String key) {
 		this.key = (key == null ? "" : key);
 	}
-	
+
 	@Override
 	public void setDescription(String description) {
 		this.description = (description == null ? "" : description);
@@ -99,19 +99,19 @@ public class SimpleItem implements ContextualItem, Extendable {
 	//
 	// Extendable
 	//
-	
+
 	private ExtendableSupport extendableSupport = new ExtendableSupport(SimpleItem.class);
-	
+
 	@Override
 	public <T> T getExtension(Class<T> type) {
 		return extendableSupport.getExtension(type);
 	}
-	
+
 	@Override
 	public Collection<Class<?>> getExtensionClasses() {
 		return extendableSupport.getExtensionClasses();
 	}
-	
+
 	@Override
 	public <T> T putExtension(Class<T> type, T extension) {
 		return extendableSupport.putExtension(type, extension);

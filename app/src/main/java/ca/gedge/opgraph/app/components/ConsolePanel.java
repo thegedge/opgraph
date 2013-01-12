@@ -41,23 +41,23 @@ import ca.gedge.opgraph.Processor;
 public class ConsolePanel extends JEditorPane {
 	/** Strong reference to processing context's logger */
 	private static final Logger processingContextLogger = Logger.getLogger(Processor.class.getName());
-	
+
 	/**
 	 * A writer that outputs data to an HTML document.
 	 */
 	private static class HTMLDocumentWriter extends Writer {
 		/** The HTML document to write to */
 		private HTMLDocument document;
-		
+
 		/** The HTML class used for this writer */
 		private String cssClass;
-		
+
 		/** The UL element storing lines */
 		private Element linesElement;
-		
+
 		/** The string buffer used to store lines */
 		private StringBuffer buffer;
-		
+
 		/**
 		 * Constructs a writer that writes to a document.
 		 * 
@@ -109,10 +109,10 @@ public class ConsolePanel extends JEditorPane {
 
 	/** Regular output stream */
 	private PrintWriter out;
-	
+
 	/** Error output stream */
 	private PrintWriter err;
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -125,7 +125,7 @@ public class ConsolePanel extends JEditorPane {
 		style.addRule("li { padding: 2px 5px; }");
 		style.addRule(".out { font-family: Courier,Courier New,Console,System; white-space: pre; }");
 		style.addRule(".err { font-family: Courier,Courier New,Console,System; color: #ff0000; background: #ffeeee; white-space: pre; }");
-		
+
 		// Initialize
 		setEditorKit(kit);
 		setEditable(false);
@@ -135,11 +135,11 @@ public class ConsolePanel extends JEditorPane {
 		final HTMLDocument document = (HTMLDocument)getDocument();
 		this.out = new PrintWriter(new HTMLDocumentWriter(document, "out"));
 		this.err = new PrintWriter(new HTMLDocumentWriter(document, "err"));
-		
+
 		//
 		processingContextLogger.addHandler(consoleHandler);
 	}
-	
+
 	/**
 	 * Attaches this component to the given logger.
 	 * 
@@ -148,7 +148,7 @@ public class ConsolePanel extends JEditorPane {
 	public void attachLogger(Logger logger) {
 		logger.addHandler(consoleHandler);
 	}
-	
+
 	/**
 	 * Attaches this component to the given logger.
 	 * 
@@ -157,11 +157,11 @@ public class ConsolePanel extends JEditorPane {
 	public void detachLogger(Logger logger) {
 		logger.removeHandler(consoleHandler);
 	}
-	
+
 	//
 	// Logging handler
 	//
-	
+
 	private final Handler consoleHandler = new Handler() {
 		@Override
 		public void publish(LogRecord record) {
@@ -171,17 +171,17 @@ public class ConsolePanel extends JEditorPane {
 				out.println(record.getMessage());
 			}
 		}
-		
+
 		@Override
 		public void flush() {
 			out.flush();
 			err.flush();
 		}
-		
+
 		@Override
 		public void close() throws SecurityException {}
 	};
-	
+
 	//
 	// Overrides
 	//

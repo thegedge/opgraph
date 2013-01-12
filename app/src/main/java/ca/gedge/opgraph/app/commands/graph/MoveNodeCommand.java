@@ -62,7 +62,7 @@ public class MoveNodeCommand extends AbstractAction {
 			ret = "Left";
 		return ret;
 	}
-	
+
 	/**
 	 * Get a keystroke for the given deltas. More specifically:
 	 * <ul>
@@ -90,13 +90,13 @@ public class MoveNodeCommand extends AbstractAction {
 			ret = KeyStroke.getKeyStroke("shift LEFT");
 		return ret;
 	}
-	
+
 	/** The distance along the x-axis to move the node */
 	private int deltaX;
-	
+
 	/** The distance along the y-axis to move the node */
 	private int deltaY;
-	
+
 	/**
 	 * Constructs a move command that moves the current node selection in the
 	 * given graph canvas, with this edit posted in the given undo manager.
@@ -107,19 +107,19 @@ public class MoveNodeCommand extends AbstractAction {
 	public MoveNodeCommand(int deltaX, int deltaY) {
 		this.deltaX = deltaX;
 		this.deltaY = deltaY;
-		
+
 		final KeyStroke keystroke = getMoveKeystroke(deltaX, deltaY);
 		if(keystroke != null)
 			putValue(ACCELERATOR_KEY, keystroke);
-		
+
 		final String suffix = getMoveString(deltaX, deltaY);
 		if(suffix.length() == 0)
 			putValue(NAME, "Move");
 		else
 			putValue(NAME, "Move " + suffix);
-		
+
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();

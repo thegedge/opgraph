@@ -31,7 +31,7 @@ public class NodeInfoNameFilter extends NodeInfoFilter {
 	public boolean isAccepted(NodeData info) {
 		if(filterPattern == null)
 			return true;
-		
+
 		return (info != null && info.name != null && filterPattern.matcher(info.name).find());
 	}
 }

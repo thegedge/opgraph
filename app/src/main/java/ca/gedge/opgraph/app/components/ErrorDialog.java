@@ -59,7 +59,7 @@ public class ErrorDialog extends JDialog {
 	public static void showError(Throwable thrown) {
 		showError(thrown, null);
 	}
-	
+
 	/**
 	 * Displays a modal {@link ErrorDialog} with a given message.
 	 *  
@@ -70,7 +70,7 @@ public class ErrorDialog extends JDialog {
 	public static void showError(String message) {
 		showError(null, message);
 	}
-	
+
 	/**
 	 * Displays a modal {@link ErrorDialog} for the given {@link Throwable}
 	 * and with a given message.
@@ -87,13 +87,13 @@ public class ErrorDialog extends JDialog {
 		dialog.setModal(true);
 		dialog.setVisible(true);
 	}
-	
+
 	/** The {@link Throwable} this dialog is displaying */
 	private Throwable thrown;
-	
+
 	/** The error message to display */
 	private String message;
-	
+
 	/**
 	 * Constructs an exception dialog from the given {@link Throwable} and
 	 * with a default error message.

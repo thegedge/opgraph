@@ -36,13 +36,13 @@ import ca.gedge.opgraph.exceptions.ProcessingException;
 public class RandomDecimalNode extends OpNode {
 	/** Input field for the minimum possible value of the random decimal */
 	public final InputField MIN_INPUT = new InputField("min", "smallest possible value (inclusive)", true, true, Number.class);
-	
+
 	/** Input field for the maximum possible value of the random decimal */
 	public final InputField MAX_INPUT = new InputField("max", "largest possible value (inclusive)", true, true, Number.class);
-	
+
 	/** Output field for the random decimal */
 	public final OutputField VALUE_OUTPUT = new OutputField("value", "random decimal number", true, Double.class);
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -51,11 +51,11 @@ public class RandomDecimalNode extends OpNode {
 		putField(MAX_INPUT);
 		putField(VALUE_OUTPUT);
 	}
-	
+
 	//
 	// OpNode
 	//
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 		final double MIN = (context.containsKey(MIN_INPUT) ? ((Number)context.get(MIN_INPUT)).doubleValue() : -Double.MAX_VALUE);

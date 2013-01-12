@@ -40,7 +40,7 @@ public interface OpGraphSerializer {
 	 * @throws IOException  if any I/O errors occur
 	 */
 	public abstract void write(OpGraph graph, OutputStream stream) throws IOException;
-	
+
 	/**
 	 * Reads a graph from a given stream.
 	 * 

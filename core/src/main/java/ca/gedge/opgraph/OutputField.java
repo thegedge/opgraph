@@ -28,10 +28,10 @@ package ca.gedge.opgraph;
 public class OutputField extends SimpleItem {
 	/** If an output field, the type of object this field outputs. */
 	private Class<?> outputType; // XXX Maybe create a type system that can alleviate type erasure
-	
+
 	/** Whether or not this field is a fixed field. Fixed fields cannot be removed. */
 	private boolean fixed;
-	
+
 	/**
 	 * Constructs an output descriptor with a key, output type, and description.
 	 * 
@@ -45,7 +45,7 @@ public class OutputField extends SimpleItem {
 		this.fixed = isFixed;
 		this.outputType = outputType;
 	}
-	
+
 	/**
 	 * Gets the type of output for this field.
 	 * 
@@ -54,7 +54,7 @@ public class OutputField extends SimpleItem {
 	public Class<?> getOutputType() {
 		return outputType;
 	}
-	
+
 	/**
 	 * Sets the type of output for this field.
 	 * 
@@ -63,7 +63,7 @@ public class OutputField extends SimpleItem {
 	public void setOutputType(Class<?> outputType) {
 		this.outputType = outputType;
 	}
-	
+
 	/**
 	 * Gets whether or not this is a fixed field. Fixed fields cannot be removed.
 	 * 
@@ -81,7 +81,7 @@ public class OutputField extends SimpleItem {
 	public void setFixed(boolean fixed) {
 		this.fixed = fixed;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getKey();

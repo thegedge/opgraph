@@ -42,15 +42,15 @@ public class ExplodeMacroCommand extends AbstractAction {
 	 */
 	public ExplodeMacroCommand() {
 		super("Explode Selected Macro");
-		
+
 		final int CTRL = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_E, CTRL));
 	}
-	
+
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();

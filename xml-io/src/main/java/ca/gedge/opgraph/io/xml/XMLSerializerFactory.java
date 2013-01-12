@@ -59,22 +59,22 @@ import ca.gedge.opgraph.util.ServiceDiscovery;
 public final class XMLSerializerFactory implements OpGraphSerializer {
 	/** The default namespace */
 	static final String DEFAULT_NAMESPACE = "http://www.gedge.ca/ns/opgraph";
-	
+
 	/** The default prefix used for writing */
 	static final String DEFAULT_PREFIX = "og";
-	
+
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(XMLSerializerFactory.class.getName());
-	
+
 	/** The serializers to use */
 	private Collection<XMLSerializer> serializers;
-	
+
 	/**
 	 * Default constructor.
 	 */
 	public XMLSerializerFactory() {
 		this.serializers = new ArrayList<XMLSerializer>();
-		
+
 		for(Class<? extends XMLSerializer> provider : ServiceDiscovery.getInstance().findProviders(XMLSerializer.class)) {
 			try {
 				serializers.add( provider.newInstance() );
@@ -85,9 +85,9 @@ public final class XMLSerializerFactory implements OpGraphSerializer {
 			}
 		}
 	}
-	
+
 	/**
-	 * Gets the qualified name of an element. 
+	 * Gets the qualified name of an element.
 	 * 
 	 * @param elem  the element
 	 * 
@@ -98,7 +98,7 @@ public final class XMLSerializerFactory implements OpGraphSerializer {
 		String prefix = (elem.getPrefix() == null ? XMLConstants.DEFAULT_NS_PREFIX : elem.getPrefix());
 		return new QName(elem.getNamespaceURI(), localName, prefix);
 	}
-	
+
 	/**
 	 * Writes an element's extensions to a parent element.
 	 * 
@@ -117,13 +117,13 @@ public final class XMLSerializerFactory implements OpGraphSerializer {
 			else
 				serializer.write(this, doc, extensionsElem, ext.getExtension(extension));
 		}
-		
+
 		if(extensionsElem.getChildNodes().getLength() > 0)
 			parent.appendChild(extensionsElem);
 	}
-	
+
 	/**
-	 * Gets the handler for a specified qualified name. 
+	 * Gets the handler for a specified qualified name.
 	 * 
 	 * @param name  qualified name for which a serializer is needed
 	 * 
@@ -137,7 +137,7 @@ public final class XMLSerializerFactory implements OpGraphSerializer {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the handler for a specified class. Ascends the inheritance chain
 	 * of the given class to see if there is a handler for a super class.
@@ -153,12 +153,12 @@ public final class XMLSerializerFactory implements OpGraphSerializer {
 				if(serializer.handles(cls))
 					return serializer;
 			}
-			
+
 			cls = cls.getSuperclass();
 		}
 		return null;
 	}
-	
+
 	//
 	// Overrides
 	//
@@ -193,9 +193,9 @@ public final class XMLSerializerFactory implements OpGraphSerializer {
 		final XMLSerializer serializer = getHandler(graph.getClass());
 		if(serializer != null)
 			serializer.write(this, doc, root, graph);
-		
+
 		doc.normalize();
-		
+
 		// Write to stream
 		try {
 			final Source source = new DOMSource(doc);

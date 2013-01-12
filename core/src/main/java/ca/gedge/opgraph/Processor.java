@@ -35,7 +35,7 @@ import ca.gedge.opgraph.validators.TypeValidator;
 public class Processor {
 	/** The graph this processor is operating on */
 	private OpGraph graph;
-	
+
 	/** Custom processing needs of the given graph */
 	private CustomProcessor customProcessor;
 
@@ -50,10 +50,10 @@ public class Processor {
 
 	/** The context map used for processing */
 	private OpContext globalContext;
-	
+
 	/** The error that happened in the last step, or <code>null</code> if no error */
 	private ProcessingException currentError;
-	
+
 	/** If we stepped into a macro, the processing context for that macro */
 	private Processor currentMacro;
 
@@ -67,7 +67,7 @@ public class Processor {
 	public Processor(OpGraph graph) {
 		this(graph, null, null);
 	}
-	
+
 	/**
 	 * Constructs a processing context for a given graph and a preset operating context.
 	 * 
@@ -80,7 +80,7 @@ public class Processor {
 	public Processor(OpGraph graph, OpContext context) {
 		this(graph, null, context);
 	}
-	
+
 	/**
 	 * Constructs a processing context for a given graph.
 	 * 
@@ -95,13 +95,13 @@ public class Processor {
 	public Processor(OpGraph graph, CustomProcessor customProcessor, OpContext context) {
 		if(graph == null)
 			throw new NullPointerException("Graph cannot be null");
-		
+
 		this.graph = graph;
 		this.customProcessor = customProcessor;
-		
+
 		reset(context);
 	}
-	
+
 	/**
 	 * Resets this context so that further processing will start from the
 	 * beginning.
@@ -109,7 +109,7 @@ public class Processor {
 	public void reset() {
 		reset(globalContext == null ? null : globalContext);
 	}
-	
+
 	/**
 	 * Resets this context so that further processing will start from the
 	 * beginning.
@@ -121,27 +121,27 @@ public class Processor {
 		currentMacro = null;
 		currentError = null;
 		currentNode = null;
-		
+
 		// Set up node iteration
 		nodeIter = null;
 		if(customProcessor != null)
 			nodeIter = customProcessor;
-			
+
 		if(nodeIter == null)
 			nodeIter = graph.getVertices().iterator();
-		
+
 		// Set up context
 		if(globalContext != null && globalContext == context)
 			globalContext.clearChildContexts();
-		
+
 		globalContext = context;
 		if(globalContext == null)
 			globalContext = new OpContext();
-		
+
 		if(customProcessor != null)
 			customProcessor.initialize(globalContext);
 	}
-	
+
 	/**
 	 * Gets the graph that is currently being operated on.
 	 * 
@@ -152,7 +152,7 @@ public class Processor {
 			return currentMacro.getGraph();
 		return graph;
 	}
-	
+
 	/**
 	 * Gets the graph this processing context is operating on.
 	 * 
@@ -161,7 +161,7 @@ public class Processor {
 	public OpGraph getGraphOfContext() {
 		return graph;
 	}
-	
+
 	/**
 	 * Gets the context used for processing. 
 	 * 
@@ -170,7 +170,7 @@ public class Processor {
 	public OpContext getContext() {
 		return globalContext;
 	}
-	
+
 	/**
 	 * Gets the error that was thrown since the last reset.
 	 * 
@@ -182,7 +182,7 @@ public class Processor {
 			error = currentMacro.getError();
 		return error;
 	}
-	
+
 	/**
 	 * Gets the context that spawned the error returned by {@link #getError()}.
 	 * 
@@ -194,7 +194,7 @@ public class Processor {
 			return this;
 		return (currentMacro == null ? null : currentMacro.getErrorContext());
 	}
-	
+
 	/**
 	 * Gets the node that was most recently processed.
 	 * 
@@ -206,7 +206,7 @@ public class Processor {
 			return currentMacro.getCurrentNode();
 		return currentNode;
 	}
-	
+
 	/**
 	 * Gets the node that was most recently processed in this context.
 	 * 
@@ -216,7 +216,7 @@ public class Processor {
 	public OpNode getCurrentNodeOfContext() {
 		return currentNode;
 	}
-	
+
 	/**
 	 * Gets the processing context for the last macro that was stepped into.
 	 * 
@@ -226,7 +226,7 @@ public class Processor {
 	public Processor getMacroContext() {
 		return currentMacro;
 	}
-	
+
 	/**
 	 * Gets whether or not there are any more nodes to process.
 	 * 
@@ -236,7 +236,7 @@ public class Processor {
 	public boolean hasNext() {
 		return (currentMacro != null || (nodeIter != null && nodeIter.hasNext()));
 	}
-	
+
 	/**
 	 * Moves the processing forward. If in a macro and the last node in that
 	 * macro was already processed, the step will step out of the macro and
@@ -269,11 +269,11 @@ public class Processor {
 		try {
 			final OpContext localContext = globalContext.getChildContext(currentNode);
 			setupInputs(currentNode, localContext);
-			
+
 			Boolean enabled = (Boolean)localContext.get(OpNode.ENABLED_FIELD);
 			if(enabled == null || enabled == Boolean.TRUE)
 				currentNode.operate(localContext);
-			
+
 			if(!hasNext() && customProcessor != null)
 				customProcessor.terminate(globalContext);
 		} catch(ProcessingException exc) {
@@ -286,7 +286,7 @@ public class Processor {
 			nodeIter = null; // prevent further processing
 		}
 	}
-	
+
 	/**
 	 * Processes the graph until we reach the next node level.
 	 */
@@ -302,7 +302,7 @@ public class Processor {
 				step();
 		}
 	}
-	
+
 	/**
 	 * Processes the graph until we hit the specified node. This method
 	 * will step through the current macro (if one was stepped into), but
@@ -318,21 +318,21 @@ public class Processor {
 		if(currentMacro != null) {
 			if(currentMacro.hasNext())
 				found = currentMacro.stepToNode(node);
-			
+
 			if(!found && !currentMacro.hasNext())
 				stepOutOf();
 		}
-		
+
 		if(!found) {
 			while(hasNext() && currentNode != node)
 				step();
-			
+
 			found = (currentNode == node);
 		}
-		
+
 		return found;
 	}
-	
+
 	/**
 	 * Step into a macro. If the current node isn't a macro, this
 	 * function behaves exactly like {@link #step()}.
@@ -347,13 +347,13 @@ public class Processor {
 				stepOutOf();
 		} else {
 			currentNode = nodeIter.next();
-			
+
 			final CompositeNode composite = currentNode.getExtension(CompositeNode.class);
 			if(composite != null) {
 				try {
 					final OpContext context = globalContext.getChildContext(currentNode);
 					setupInputs(currentNode, context);
-					
+
 					final CustomProcessing customProcessing = currentNode.getExtension(CustomProcessing.class);
 					final CustomProcessor customProcessor = (customProcessing == null ? null : customProcessing.getCustomProcessor());
 					currentMacro = new Processor(composite.getGraph(), customProcessor, context);
@@ -367,7 +367,7 @@ public class Processor {
 			}
 		}
 	}
-	
+
 	/**
 	 * Steps out of the current macro, if one was previously stepped into. Any
 	 * unprocessed nodes in the macro will be processed. If there was no macro
@@ -384,7 +384,7 @@ public class Processor {
 			}
 		}
 	}
-	
+
 	/**
 	 * Processes the graph to completion.
 	 */
@@ -392,7 +392,7 @@ public class Processor {
 		while(hasNext())
 			step();
 	}
-	
+
 	/**
 	 * Adds inputs from incoming links to a given node's context.  
 	 * 
@@ -407,7 +407,7 @@ public class Processor {
 	{
 		// Check required inputs
 		checkInputs(node, context);
-		
+
 		// Now set up the inputs
 		for(OpLink link : graph.getIncomingEdges(node)) {
 			final OpContext srcContext = globalContext.findChildContext(link.getSource());
@@ -418,7 +418,7 @@ public class Processor {
 			}
 		}
 	}
-	
+
 	/**
 	 * Check field optionalities and make sure all required fields have input.
 	 * When input exists, make sure the input is of a valid type, as determined
@@ -438,7 +438,7 @@ public class Processor {
 			// Working context already has value, no need to check links
 			if(context.containsKey(field))
 				continue;
-			
+
 			if(!field.isOptional()) {
 				boolean linkFound = false;
 				for(OpLink link : graph.getIncomingEdges(node)) {
@@ -448,17 +448,17 @@ public class Processor {
 						if(sourceContext != null && sourceContext.containsKey(link.getSourceField())) {
 							final Object val = sourceContext.get(link.getSourceField());
 							linkFound = true;
-							
+
 							// Make sure value type is accepted at the destination field
 							final TypeValidator validator = field.getValidator();
 							if(validator != null && !validator.isAcceptable(val))
 								throw new InvalidTypeException(link.getDestinationField(), val);
-							
+
 							break;
 						}
 					}
 				}
-				
+
 				// No link for required input; throw exception!
 				if(!linkFound)
 					throw new RequiredInputException(node, field);

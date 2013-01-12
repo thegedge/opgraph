@@ -48,41 +48,41 @@ public class NodeMetadataXMLSerializer implements XMLSerializer {
 	static final String NAMESPACE = "http://www.gedge.ca/ns/opgraph-app";
 	static final String PREFIX = "oga";
 	static final QName META_QNAME = new QName(NAMESPACE, "meta", PREFIX);
-	
+
 	@Override
 	public void write(XMLSerializerFactory serializerFactory, Document doc, Element parentElem, Object obj)
 		throws IOException
 	{
 		if(obj == null)
 			throw new IOException("Null object given to serializer");
-		
+
 		if(!(obj instanceof NodeMetadata))
 			throw new IOException(NodeMetadataXMLSerializer.class.getName() + " cannot write objects of type " + obj.getClass().getName());
-		
+
 		// setup namespace for document
 		final Element rootEle = doc.getDocumentElement();
 		rootEle.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, 
 				XMLConstants.XMLNS_ATTRIBUTE + ":" + PREFIX, NAMESPACE);
-		
+
 		// Create metadata element
 		final NodeMetadata meta = (NodeMetadata)obj;
 		final Element metaElem = doc.createElementNS(NAMESPACE, PREFIX + ":" + META_QNAME.getLocalPart());
 		metaElem.setAttribute("x", Integer.toString(meta.getX()));
 		metaElem.setAttribute("y", Integer.toString(meta.getY()));
-		
+
 		// Create elements for default values
 		for(Map.Entry<InputField, Object> entry : meta.getDefaults().entrySet()) {
 			final InputField field = entry.getKey();
 			final Object value = entry.getValue();
-			
+
 			final Element defaultElem = doc.createElementNS(NAMESPACE, PREFIX + ":default");
 			defaultElem.setAttribute("for", field.getKey());
 			defaultElem.setAttribute("type", value.getClass().getName());
 			defaultElem.setTextContent(value.toString());
-			
+
 			metaElem.appendChild(defaultElem);
 		}
-		
+
 		parentElem.appendChild(metaElem);
 	}
 

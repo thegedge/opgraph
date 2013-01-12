@@ -7,7 +7,7 @@ public class StringSplitter extends OpNode {
 	public StringSplitter() {
 		// TODO add default fields
 	}
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 		// TODO implement operation

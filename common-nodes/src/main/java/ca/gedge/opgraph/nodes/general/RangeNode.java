@@ -37,10 +37,10 @@ import ca.gedge.opgraph.OutputField;
 public class RangeNode extends OpNode {
 	/** Input field for the start of the output range */
 	public final InputField START_INPUT_FIELD = new InputField("start", "Start value of range", false, true, Number.class);
-	
+
 	/** Input field for the end of the output range */
 	public final InputField END_INPUT_FIELD = new InputField("end", "End value of range", false, true, Number.class);
-	
+
 	/** Output field for the range */
 	public final OutputField RANGE_OUTPUT_FIELD = new OutputField("range", "Range list", true, List.class);
 
@@ -52,7 +52,7 @@ public class RangeNode extends OpNode {
 		putField(END_INPUT_FIELD);
 		putField(RANGE_OUTPUT_FIELD);
 	}
-	
+
 	@Override
 	public void operate(OpContext context) {
 		final int start = ((Number)context.get(START_INPUT_FIELD)).intValue();

@@ -48,13 +48,13 @@ public class OpenCommand extends AbstractAction {
 
 	/** File chooser */
 	private final JFileChooser chooser = new JFileChooser();
-	
+
 	/**
 	 * Constructs an open command.
 	 */
 	public OpenCommand() {
 		super("Open...");
-		
+
 		final int CTRL = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, CTRL));
 	}
@@ -69,24 +69,24 @@ public class OpenCommand extends AbstractAction {
 			ErrorDialog.showError(null, message);
 			return;
 		}
-		
+
 		// Get the serializer's info
 		String description = "Opgraph Files";
 		String extension = "";
-		
+
 		final OpGraphSerializerInfo info = serializer.getClass().getAnnotation(OpGraphSerializerInfo.class);
 		if(info != null) {
 			description = info.description();
 			extension = info.extension();
 		}
-		
+
 		// Save the graph
 		final GraphDocument document = GraphEditorModel.getActiveDocument();
 		if(document != null) {
 			chooser.setAcceptAllFileFilterUsed(false);
 			chooser.setFileFilter(new FileNameExtensionFilter(description, extension));
 			chooser.setDialogTitle("Open Graph");
-			
+
 			final int retVal = chooser.showOpenDialog(null);
 			if(retVal == JFileChooser.APPROVE_OPTION) {
 				try {

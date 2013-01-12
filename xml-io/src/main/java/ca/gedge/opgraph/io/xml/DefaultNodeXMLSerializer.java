@@ -50,56 +50,56 @@ public class DefaultNodeXMLSerializer implements XMLSerializer {
 	{
 		if(obj == null)
 			throw new IOException("Null object given to serializer");
-		
+
 		if(!(obj instanceof OpNode))
 			throw new IOException(DefaultNodeXMLSerializer.class.getName() + " cannot write objects of type " + obj.getClass().getName());
-		
+
 		// Create node element
 		final OpNode node = (OpNode)obj;
 		final Element nodeElem = doc.createElementNS(NODE_QNAME.getNamespaceURI(), NODE_QNAME.getLocalPart());
-		
+
 		nodeElem.setAttribute("id", node.getId());
 		nodeElem.setAttribute("type", "class:" + node.getClass().getName());
-		
+
 		if(!node.getName().equals(node.getDefaultName()))
 			nodeElem.setAttribute("name", node.getName());
-			
+
 		if(!node.getCategory().equals(node.getDefaultCategory()))
 			nodeElem.setAttribute("category", node.getCategory());
-		
+
 		if(!node.getDescription().equals(node.getDefaultDescription())) {
 			final Element descriptionElem = doc.createElementNS(DESCRIPTION_QNAME.getNamespaceURI(), DESCRIPTION_QNAME.getLocalPart());
 			descriptionElem.setTextContent(node.getDescription());
 			nodeElem.appendChild(descriptionElem);
 		}
-		
+
 		// Input fields
 		for(InputField field : node.getInputFields()) {
 			final XMLSerializer serializer = serializerFactory.getHandler(field.getClass());
 			if(serializer == null)
 				throw new IOException("Cannot get handler for input field: " + field.getClass().getName());
-			
+
 			serializer.write(serializerFactory, doc, nodeElem, field);
 		}
-		
+
 		// Output fields
 		for(OutputField field : node.getOutputFields()) {
 			final XMLSerializer serializer = serializerFactory.getHandler(field.getClass());
 			if(serializer == null)
 				throw new IOException("Cannot get handler for output field: " + field.getClass().getName());
-			
+
 			serializer.write(serializerFactory, doc, nodeElem, field);
 		}
-		
+
 		// Extensions last
 		if(node.getExtensionClasses().size() > 0) {
 			final XMLSerializer serializer = serializerFactory.getHandler(Extendable.class);
 			if(serializer == null)
 				throw new IOException("No XML serializer for extensions");
-			
+
 			serializer.write(serializerFactory, doc, nodeElem, node);
 		}
-		
+
 		//
 		parentElem.appendChild(nodeElem);
 	}
@@ -115,7 +115,7 @@ public class DefaultNodeXMLSerializer implements XMLSerializer {
 			final URI uri = URI.create(type);
 			if(uri == null || !"class".equals(uri.getScheme()))
 				throw new IOException("Node has unknown type: " + type);
-			
+
 			try {
 				node = (OpNode)Class.forName(uri.getSchemeSpecificPart()).newInstance();
 			} catch(InstantiationException exc) {
@@ -131,13 +131,13 @@ public class DefaultNodeXMLSerializer implements XMLSerializer {
 			// Set attributes
 			if(elem.hasAttribute("id"))
 				node.setId(elem.getAttribute("id"));
-			
+
 			if(elem.hasAttribute("name"))
 				node.setName(elem.getAttribute("name"));
-			
+
 			if(elem.hasAttribute("category"))
 				node.setName(elem.getAttribute("category"));
-			
+
 			// Read children
 			final NodeList children = elem.getChildNodes();
 			for(int childIndex = 0; childIndex < children.getLength(); ++childIndex) {
@@ -152,7 +152,7 @@ public class DefaultNodeXMLSerializer implements XMLSerializer {
 						final XMLSerializer serializer = serializerFactory.getHandler(name);
 						if(serializer == null)
 							throw new IOException("Could not get handler for element: " + name);
-						
+
 						// Determine what kind of element was read. If the element represented a
 						// input/output field, add it to the node. Otherwise, the only element should
 						// be the <extensions> element, and its serializer handles adding extensions.
@@ -169,7 +169,7 @@ public class DefaultNodeXMLSerializer implements XMLSerializer {
 				}
 			}
 		}
-			
+
 		return node;
 	}
 

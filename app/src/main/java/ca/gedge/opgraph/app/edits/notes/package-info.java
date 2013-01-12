@@ -21,4 +21,3 @@
  */
 package ca.gedge.opgraph.app.edits.notes;
 import ca.gedge.opgraph.app.extensions.Note;
-

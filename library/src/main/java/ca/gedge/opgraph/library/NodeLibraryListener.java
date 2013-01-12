@@ -28,7 +28,7 @@ public interface NodeLibraryListener {
 	 * @param info  the info for the registered node
 	 */
 	public abstract void nodeRegistered(NodeData info);
-	
+
 	/**
 	 * Called whenever a node is first registered with a node library.
 	 * 

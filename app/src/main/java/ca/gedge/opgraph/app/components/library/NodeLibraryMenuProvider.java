@@ -47,7 +47,7 @@ import ca.gedge.opgraph.library.NodeLibrary;
 public class NodeLibraryMenuProvider implements MenuProvider {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(NodeLibraryMenuProvider.class.getName());
-	
+
 	/**
 	 * Returns a menu which reflects a given {@link NodeLibrary}.
 	 * 
@@ -61,7 +61,7 @@ public class NodeLibraryMenuProvider implements MenuProvider {
 			final Map<String, List<NodeData>> categoryMap = library.getCategoryMap();
 			for(Map.Entry<String, List<NodeData>> entry : categoryMap.entrySet()) {
 				final JMenu categoryMenu = new JMenu(entry.getKey());
-				
+
 				// For each NodeData in this category, create a menu item that will
 				// instantiate that node into the document
 				for(final NodeData info : entry.getValue()) {
@@ -79,13 +79,13 @@ public class NodeLibraryMenuProvider implements MenuProvider {
 						}
 					});
 				}
-				
+
 				// Now add it to the parent menu
 				menu.add(categoryMenu);
 			}
 		}
 	}
-	
+
 	//
 	// MenuProvider implementation
 	//

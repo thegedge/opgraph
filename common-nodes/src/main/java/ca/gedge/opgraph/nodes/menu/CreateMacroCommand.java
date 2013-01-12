@@ -42,15 +42,15 @@ public class CreateMacroCommand extends AbstractAction {
 	 */
 	public CreateMacroCommand() {
 		super("Create Macro From Selected Nodes");
-		
+
 		final int CTRL = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, CTRL));
 	}
-	
+
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();

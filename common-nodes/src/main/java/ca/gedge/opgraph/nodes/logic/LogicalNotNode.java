@@ -36,10 +36,10 @@ import ca.gedge.opgraph.exceptions.ProcessingException;
 public class LogicalNotNode extends OpNode {
 	/** Input field for one of the two boolean values */
 	public final static InputField X_INPUT_FIELD = new InputField("x", "boolean input", false, true, Boolean.class);
-	
+
 	/** Output field for the logical NOT of the input */
 	public final static OutputField RESULT_OUTPUT_FIELD =  new OutputField("result", "not x", true, Boolean.class);
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -47,7 +47,7 @@ public class LogicalNotNode extends OpNode {
 		putField(X_INPUT_FIELD);
 		putField(RESULT_OUTPUT_FIELD);
 	}
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 		boolean x = (Boolean)context.get(X_INPUT_FIELD);

@@ -40,7 +40,7 @@ public class QuitCommand extends AbstractAction {
 	 */
 	public QuitCommand() {
 		super("Quit");
-		
+
 		final int CTRL = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, CTRL));
 	}

@@ -29,7 +29,7 @@ public class CycleDetectedException extends Exception {
 	public CycleDetectedException() {
 		this("A cycle was detected");
 	}
-	
+
 	/**
 	 * Constructs this exception with a given detail message.
 	 * 

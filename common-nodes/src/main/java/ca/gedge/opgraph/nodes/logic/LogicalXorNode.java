@@ -36,13 +36,13 @@ import ca.gedge.opgraph.exceptions.ProcessingException;
 public class LogicalXorNode extends OpNode {
 	/** Input field for one of the two boolean values */
 	public final static InputField X_INPUT_FIELD = new InputField("x", "boolean input", false, true, Boolean.class);
-	
+
 	/** Input field for one of the two boolean values */
 	public final static InputField Y_INPUT_FIELD = new InputField("y", "boolean input", false, true, Boolean.class);
-	
+
 	/** Output field for the logical XOR of the two inputs */
 	public final static OutputField RESULT_OUTPUT_FIELD =  new OutputField("result", "x XOR y", true, Boolean.class);
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -51,7 +51,7 @@ public class LogicalXorNode extends OpNode {
 		putField(Y_INPUT_FIELD);
 		putField(RESULT_OUTPUT_FIELD);
 	}
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 		boolean x = (Boolean)context.get(X_INPUT_FIELD);

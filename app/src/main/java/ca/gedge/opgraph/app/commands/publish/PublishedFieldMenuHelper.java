@@ -18,7 +18,6 @@
  */
 package ca.gedge.opgraph.app.commands.publish;
 
-
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;

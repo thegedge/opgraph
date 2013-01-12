@@ -45,26 +45,26 @@ public class NodeSettingsXMLSerializer implements XMLSerializer {
 	static final String NAMESPACE = "http://www.gedge.ca/ns/opgraph-app";
 	static final String PREFIX = "oga";
 	static final QName SETTINGS_QNAME = new QName(NAMESPACE, "settings", PREFIX);
-	
+
 	@Override
 	public void write(XMLSerializerFactory serializerFactory, Document doc, Element parentElem, Object obj)
 		throws IOException
 	{
 		if(obj == null)
 			throw new IOException("Null object given to serializer");
-		
+
 		if(!(obj instanceof NodeSettings))
 			throw new IOException(NodeSettingsXMLSerializer.class.getName() + " cannot write objects of type " + obj.getClass().getName());
-		
+
 		// setup namespace for document
 		final Element rootEle = doc.getDocumentElement();
 		rootEle.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, 
 				XMLConstants.XMLNS_ATTRIBUTE + ":" + PREFIX, NAMESPACE);
-				
+
 		// Create metadata element
 		final Properties props = ((NodeSettings)obj).getSettings();
 		final Element settingsElem = doc.createElementNS(NAMESPACE, PREFIX + ":" + SETTINGS_QNAME.getLocalPart());
-		
+
 		// Create elements for default values
 		for(Map.Entry<Object, Object> entry : props.entrySet()) {
 			if(entry.getKey() != null) {
@@ -72,11 +72,11 @@ public class NodeSettingsXMLSerializer implements XMLSerializer {
 				propertyElem.setAttribute("key", entry.getKey().toString());
 				if(entry.getValue() != null)
 					propertyElem.appendChild( doc.createCDATASection(entry.getValue().toString()) );
-				
+
 				settingsElem.appendChild(propertyElem);
 			}
 		}
-		
+
 		parentElem.appendChild(settingsElem);
 	}
 
@@ -102,19 +102,19 @@ public class NodeSettingsXMLSerializer implements XMLSerializer {
 				if(defaultNode instanceof Element) {
 					final Element propertyElem = (Element)defaultNode;
 					final String key = propertyElem.getAttribute("key");
-					
+
 					final String value = (propertyElem.getChildNodes().getLength() == 0
 					                      ? null
 					                      : propertyElem.getTextContent());
-					
+
 					if(value != null)
 						properties.setProperty(key, value);
 				}
 			}
-			
+
 			settings.loadSettings(properties);
 		}
-		
+
 		return null;
 	}
 

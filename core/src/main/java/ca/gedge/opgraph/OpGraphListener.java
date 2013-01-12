@@ -32,7 +32,7 @@ public interface OpGraphListener {
 	 * @param node  the node that was added
 	 */
 	public abstract void nodeAdded(OpGraph graph, OpNode node);
-	
+
 	/**
 	 * Called when a node was removed from a graph.
 	 * 
@@ -40,7 +40,7 @@ public interface OpGraphListener {
 	 * @param node  the node that was removed
 	 */
 	public abstract void nodeRemoved(OpGraph graph, OpNode node);
-	
+
 	/**
 	 * Called when an link was added to a graph.
 	 *  
@@ -48,7 +48,7 @@ public interface OpGraphListener {
 	 * @param link  the link that was added
 	 */
 	public abstract void linkAdded(OpGraph graph, OpLink link);
-	
+
 	/**
 	 * Called when an link was removed from a graph.
 	 * 

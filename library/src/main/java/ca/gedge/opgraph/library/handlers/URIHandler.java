@@ -38,7 +38,7 @@ public interface URIHandler<T> {
 	 *         <code>false</code> otherwise
 	 */
 	public abstract boolean handlesURI(URI uri);
-	
+
 	/**
 	 * Loads node information from a given {@link URI}.
 	 * 

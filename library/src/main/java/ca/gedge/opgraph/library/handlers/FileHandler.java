@@ -38,7 +38,7 @@ public class FileHandler implements URIHandler<List<NodeData>> {
 	//
 	// URIHandler<List<NodeData>>
 	//
-	
+
 	@Override
 	public boolean handlesURI(URI uri) {
 		return (uri != null && "file".equals(uri.getScheme()));
@@ -49,15 +49,15 @@ public class FileHandler implements URIHandler<List<NodeData>> {
 		// Make sure we can handle URI
 		if(!handlesURI(uri))
 			throw new IllegalArgumentException("Cannot handle uri '" + uri + "'");
-		
+
 		// Make sure file exists
 		final File source = new File(uri.getPath());
 		if(!source.exists())
 			throw new IOException("File '" + source.getPath() + "' does not exist");
-		
+
 		// If no fragment, load all macros, otherwise load specific macro
 		final ArrayList<NodeData> ret = new ArrayList<NodeData>();
-		
+
 		// FIXME since maven
 //		final InputStream stream = new FileInputStream(source);
 //		if(uri.getFragment() == null) {

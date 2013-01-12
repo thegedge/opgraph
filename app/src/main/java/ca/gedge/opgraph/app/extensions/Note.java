@@ -36,22 +36,22 @@ import ca.gedge.opgraph.extensions.ExtendableSupport;
 public class Note implements Extendable {
 	/** The title string */
 	private String title;
-	
+
 	/** The body string */
 	private String body;
-	
-    /**
-     * Constructs a note with a given title, body, and color.
-     * 
-     *  @param title  the title
-     *  @param body  the body
-     */
-    public Note(String title, String body) {
-        this.title = title;
-        this.body = body;
-        this.extendableSupport.putExtension(JComponent.class, new NoteComponent(this));
-    }
-	
+
+	/**
+	 * Constructs a note with a given title, body, and color.
+	 * 
+	 * @param title  the title
+	 * @param body  the body
+	 */
+	public Note(String title, String body) {
+		this.title = title;
+		this.body = body;
+		this.extendableSupport.putExtension(JComponent.class, new NoteComponent(this));
+	}
+
 	/**
 	 * Gets the note's title.
 	 * 
@@ -87,25 +87,25 @@ public class Note implements Extendable {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	
+
 	//
 	// Extendable
 	//
-	
+
 	private final ExtendableSupport extendableSupport = new ExtendableSupport(Note.class);
 
 	@Override
-    public <T> T getExtension(Class<T> type) {
-        return extendableSupport.getExtension(type);
-    }
+	public <T> T getExtension(Class<T> type) {
+		return extendableSupport.getExtension(type);
+	}
 
 	@Override
-    public Collection<Class<?>> getExtensionClasses() {
+	public Collection<Class<?>> getExtensionClasses() {
 		return extendableSupport.getExtensionClasses();
-    }
+	}
 
 	@Override
-    public <T> T putExtension(Class<T> type, T extension) {
+	public <T> T putExtension(Class<T> type, T extension) {
 		return extendableSupport.putExtension(type, extension);
-    }
+	}
 }

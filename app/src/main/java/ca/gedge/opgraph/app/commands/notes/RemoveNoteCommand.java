@@ -33,7 +33,7 @@ import ca.gedge.opgraph.app.extensions.Notes;
 public class RemoveNoteCommand extends AbstractAction {
 	/** The note to remove */
 	private final Note note;
-	
+
 	/**
 	 * Constructs a command that removes a given note.
 	 * 
@@ -43,11 +43,11 @@ public class RemoveNoteCommand extends AbstractAction {
 		super("Remove Note");
 		this.note = note;
 	}
-	
+
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();

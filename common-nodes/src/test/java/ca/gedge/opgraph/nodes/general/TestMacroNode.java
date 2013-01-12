@@ -42,14 +42,14 @@ public class TestMacroNode {
 		public final static InputField X_FIELD = new InputField("x", "", false, true, Double.class);
 		public final static InputField Y_FIELD = new InputField("y", "", false, true, Double.class);
 		public final static OutputField RESULT_FIELD = new OutputField("result", "", true, Double.class);
-		
+
 		public AddNode() {
 			super("Add", "Computes x + y");
 			putField(X_FIELD);
 			putField(Y_FIELD);
 			putField(RESULT_FIELD);
 		}
-		
+
 		@Override
 		public void operate(OpContext context) {
 			double x = (Double)context.get(X_FIELD);
@@ -57,7 +57,7 @@ public class TestMacroNode {
 			context.put(RESULT_FIELD, x + y);
 		}
 	}
-	
+
 	static class MultiplyNode extends OpNode {
 		public final static InputField X_FIELD = new InputField("x", "", false, true, Double.class);
 		public final static InputField Y_FIELD = new InputField("y", "", true, true, Double.class);
@@ -69,30 +69,30 @@ public class TestMacroNode {
 			putField(Y_FIELD);
 			putField(RESULT_FIELD);
 		}
-		
+
 		@Override
 		public void operate(OpContext context) {
 			double x = (Double)context.get(X_FIELD);
 			double y = 1.0;
 			if(context.containsKey(Y_FIELD))
 				y = (Double)context.get(Y_FIELD);
-			
+
 			context.put(RESULT_FIELD, x * y);
 		}
 	}
-	
+
 	static class LessThanNode extends OpNode {
 		public final static InputField X_FIELD = new InputField("x", "", false, true, Double.class);
 		public final static InputField Y_FIELD = new InputField("y", "", false, true, Double.class);
 		public final static OutputField RESULT_FIELD = new OutputField("result", "", true, Boolean.class);
-		
+
 		public LessThanNode() {
 			super("Less Than", "Computes x < y");
 			putField(X_FIELD);
 			putField(Y_FIELD);
 			putField(RESULT_FIELD);
 		}
-		
+
 		@Override
 		public void operate(OpContext context) {
 			double x = (Double)context.get(X_FIELD);
@@ -100,7 +100,6 @@ public class TestMacroNode {
 			context.put(RESULT_FIELD, x < y);
 		}
 	}
-	
 
 	/**
 	 * Processes an operable graph.
@@ -120,10 +119,10 @@ public class TestMacroNode {
 		processor.stepAll();
 		if(processor.getError() != null)
 			throw processor.getError();
-		
+
 		return processor.getContext();
 	}
-	
+
 	/**
 	 * Gets a result from the execution of a graph.
 	 * 
@@ -146,7 +145,7 @@ public class TestMacroNode {
 	{
 		return cls.cast(process(graph, context).findChildContext(resultNode).get(resultField));
 	}
-	
+
 	/**
 	 * Constructs an operable graph that computes the minimum of two values.
 	 * 
@@ -168,15 +167,15 @@ public class TestMacroNode {
 		final PassThroughNode pt1_2 = new PassThroughNode();
 		final PassThroughNode pt2_2 = new PassThroughNode();
 		final PassThroughNode ov1 = new PassThroughNode();
-		
+
 		final LessThanNode lv1 = new LessThanNode();
 		final LogicalNotNode nv1 = new LogicalNotNode();
-		
+
 		// Return values
 		inputs[0] = pt1_1;
 		inputs[1] = pt2_1;
 		outputs[0] = ov1;
-		
+
 		// Add nodes
 		minDAG.add(pt1_1);
 		minDAG.add(pt1_2);
@@ -189,61 +188,61 @@ public class TestMacroNode {
 		// Add link
 		assertNotNull(minDAG.connect(pt1_1, PassThroughNode.OUTPUT, lv1, LessThanNode.X_FIELD));
 		assertNotNull(minDAG.connect(pt2_1, PassThroughNode.OUTPUT, lv1, LessThanNode.Y_FIELD));
-		
+
 		assertNotNull(minDAG.connect(pt1_1, PassThroughNode.OUTPUT, pt1_2, PassThroughNode.INPUT));
 		assertNotNull(minDAG.connect(pt2_1, PassThroughNode.OUTPUT, pt2_2, PassThroughNode.INPUT));
-		
+
 		assertNotNull(minDAG.connect(lv1, LessThanNode.RESULT_FIELD, pt1_2, OpNode.ENABLED_FIELD));
 		assertNotNull(minDAG.connect(lv1, LessThanNode.RESULT_FIELD, nv1, LogicalNotNode.X_INPUT_FIELD));
 		assertNotNull(minDAG.connect(nv1, LogicalNotNode.RESULT_OUTPUT_FIELD, pt2_2, OpNode.ENABLED_FIELD));
-		
+
 		assertNotNull(minDAG.connect(pt1_2, PassThroughNode.OUTPUT, ov1, PassThroughNode.INPUT));
 		assertNotNull(minDAG.connect(pt2_2, PassThroughNode.OUTPUT, ov1, PassThroughNode.INPUT));
-		
+
 		return minDAG;
 	}
-	
+
 	/** Tests the correctness of a macro */
 	@Test
 	public void testMacro() {
 		PassThroughNode [] inputs1 = new PassThroughNode[2];
 		PassThroughNode [] outputs1 = new PassThroughNode[1];
-		
+
 		PassThroughNode [] inputs2 = new PassThroughNode[2];
 		PassThroughNode [] outputs2 = new PassThroughNode[1];
-		
+
 		OpGraph dag = new OpGraph();
 		OpGraph minDAG1 = createMinDAG(inputs1, outputs1);
 		OpGraph minDAG2 = createMinDAG(inputs2, outputs2);
-		
+
 		ConstantValueNode cv1 = new ConstantValueNode(1.0);
 		ConstantValueNode cv2 = new ConstantValueNode(2.0);
 		ConstantValueNode cv3 = new ConstantValueNode(3.0);
-		
+
 		MacroNode min1 = new MacroNode(minDAG1);
 		MacroNode min2 = new MacroNode(minDAG2);
-		
+
 		dag.add(cv1);
 		dag.add(cv2);
 		dag.add(cv3);
 		dag.add(min1);
 		dag.add(min2);
-		
+
 		// Publish inputs/outputs from macros
 		InputField min1_in1 = min1.publish("x", inputs1[0], PassThroughNode.INPUT);
 		InputField min1_in2 = min1.publish("y", inputs1[1], PassThroughNode.INPUT);
 		OutputField min1_out1 = min1.publish("result", outputs1[0], PassThroughNode.OUTPUT);
-		
+
 		InputField min2_in1 = min2.publish("x", inputs2[0], PassThroughNode.INPUT);
 		InputField min2_in2 = min2.publish("y", inputs2[1], PassThroughNode.INPUT);
 		OutputField min2_out1 = min2.publish("result", outputs2[0], PassThroughNode.OUTPUT);
-		
+
 		try {			
 			assertNotNull(dag.connect(cv1, cv1.VALUE_OUTPUT_FIELD, min1, min1_in1));
 			assertNotNull(dag.connect(cv2, cv2.VALUE_OUTPUT_FIELD, min1, min1_in2));
 			assertNotNull(dag.connect(min1, min1_out1, min2, min2_in1));
 			assertNotNull(dag.connect(cv3, cv3.VALUE_OUTPUT_FIELD, min2, min2_in2));
-			
+
 			for(int i = 0; i < 5; ++i) {
 				for(int j = 0; j < 5; ++j) {
 					for(int k = 0; k < 5; ++k) {
@@ -251,7 +250,7 @@ public class TestMacroNode {
 						cv1.setValue(1.0*i);
 						cv2.setValue(1.0*j);
 						cv3.setValue(1.0*k);
-						
+
 						double result = getResult(Double.class, dag, null, min2, min2_out1);
 						assertEquals(minVal, result, 1e-10);
 					}
@@ -262,7 +261,7 @@ public class TestMacroNode {
 				exc.getCause().printStackTrace();
 			else
 				exc.printStackTrace();
-			
+
 			fail("Should be no errors when processing");
 		}
 	}

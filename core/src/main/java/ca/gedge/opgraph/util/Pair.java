@@ -27,17 +27,17 @@ package ca.gedge.opgraph.util;
 public class Pair<F, S> implements Comparable<Pair<? extends F, ? extends S>> {
 	/** The first element */
 	private F first;
-	
+
 	/** The second element */
 	private S second;
-	
+
 	/**
 	 * Constructs a pair with <code>null</code> elements.
 	 */
 	public Pair() {
 		this(null, null);
 	}
-	
+
 	/**
 	 * Constructs a pair with a specified first/second object.
 	 * 
@@ -48,7 +48,7 @@ public class Pair<F, S> implements Comparable<Pair<? extends F, ? extends S>> {
 		this.first = first;
 		this.second = second;
 	}
-	
+
 	/**
 	 * Gets the first element.
 	 * 
@@ -57,7 +57,7 @@ public class Pair<F, S> implements Comparable<Pair<? extends F, ? extends S>> {
 	public F getFirst() {
 		return first;
 	}
-	
+
 	/**
 	 * Sets the first element.
 	 * 
@@ -66,7 +66,7 @@ public class Pair<F, S> implements Comparable<Pair<? extends F, ? extends S>> {
 	public void setFirst(F first) {
 		this.first = first;
 	}
-	
+
 	/**
 	 * Gets the second element.
 	 * 
@@ -75,7 +75,7 @@ public class Pair<F, S> implements Comparable<Pair<? extends F, ? extends S>> {
 	public S getSecond() {
 		return second;
 	}
-	
+
 	/**
 	 * Sets the second element.
 	 * 
@@ -84,7 +84,7 @@ public class Pair<F, S> implements Comparable<Pair<? extends F, ? extends S>> {
 	public void setSecond(S second) {
 		this.second = second;
 	}
-	
+
 	/**
 	 * Gets whether or not two objects are both <code>null</code>, or if they
 	 * are equal, as defined by their implementation of {@link Object#equals(Object)}.
@@ -102,20 +102,20 @@ public class Pair<F, S> implements Comparable<Pair<? extends F, ? extends S>> {
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if(o == this) return true;
 		if(o == null) return false;
-		
+
 		if(o instanceof Pair) {
 			final Pair<?, ?> b = (Pair<?, ?>)o;
 			return objectsEqual(first, b.first) && objectsEqual(second, b.second);
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int hash1 = (first == null ? 0 : first.hashCode());
@@ -126,16 +126,16 @@ public class Pair<F, S> implements Comparable<Pair<? extends F, ? extends S>> {
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
-		
+
 		builder.append('(');
 		builder.append(String.valueOf(first));
 		builder.append(", ");
 		builder.append(String.valueOf(second));
 		builder.append(')');
-		
+
 		return builder.toString();
 	}
-	
+
 	//
 	// Comparable
 	//
@@ -148,10 +148,10 @@ public class Pair<F, S> implements Comparable<Pair<? extends F, ? extends S>> {
 
 		if(a instanceof Comparable)
 			return ((Comparable<T>)a).compareTo(b);
-		
+
 		return (a.equals(b) ? 0 : 1); 
 	}
-	
+
 	@Override
 	public int compareTo(Pair<? extends F, ? extends S> o) {
 		final int firstComp = compare(first, o.first);

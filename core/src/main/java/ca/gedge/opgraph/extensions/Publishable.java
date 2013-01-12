@@ -38,7 +38,7 @@ public interface Publishable {
 	public static class PublishedInput extends InputField {
 		/** The node whose input field is published */
 		public final OpNode destinationNode;
-		
+
 		/** The input field being published */
 		public final InputField nodeInputField;
 
@@ -51,10 +51,10 @@ public interface Publishable {
 		 */
 		public PublishedInput(String key, OpNode destinationNode, InputField nodeInputField) {
 			super(key, nodeInputField.getDescription(), nodeInputField.isOptional(), true);
-			
+
 			this.destinationNode = destinationNode;
 			this.nodeInputField = nodeInputField;
-			
+
 			setValidator(nodeInputField.getValidator());
 		}
 	}
@@ -66,7 +66,7 @@ public interface Publishable {
 	public static class PublishedOutput extends OutputField {
 		/** The node whose output field is published */
 		public final OpNode sourceNode;
-		
+
 		/** The output field being published */
 		public final OutputField nodeOutputField;
 

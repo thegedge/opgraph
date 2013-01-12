@@ -39,7 +39,7 @@ import ca.gedge.opgraph.extensions.Extendable;
 public class DefaultExtendableXMLSerializer implements XMLSerializer {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(DefaultExtendableXMLSerializer.class.getName());
-	
+
 	// qualified names
 	static final QName EXTENDABLE_QNAME = new QName(DEFAULT_NAMESPACE, "extensions", XMLConstants.DEFAULT_NS_PREFIX);
 
@@ -49,10 +49,10 @@ public class DefaultExtendableXMLSerializer implements XMLSerializer {
 	{
 		if(obj == null)
 			throw new IOException("Null object given to serializer");
-		
+
 		if(!(obj instanceof Extendable))
 			throw new IOException(DefaultExtendableXMLSerializer.class.getName() + " cannot write objects of type " + obj.getClass().getName());
-		
+
 		// Create extensions element
 		final Extendable ext = (Extendable)obj;
 		final Element extensionsElem = doc.createElementNS(EXTENDABLE_QNAME.getNamespaceURI(), EXTENDABLE_QNAME.getLocalPart());
@@ -64,7 +64,7 @@ public class DefaultExtendableXMLSerializer implements XMLSerializer {
 				serializer.write(serializerFactory, doc, extensionsElem, ext.getExtension(extension));
 			}
 		}
-		
+
 		// Only add extensions element if necessary
 		if(extensionsElem.getChildNodes().getLength() > 0)
 			parentElem.appendChild(extensionsElem);
@@ -77,7 +77,7 @@ public class DefaultExtendableXMLSerializer implements XMLSerializer {
 		if(EXTENDABLE_QNAME.equals(XMLSerializerFactory.getQName(elem))) {
 			if(!(parent instanceof Extendable))
 				throw new IOException("Reading extensions from a parent that is not Extendable");
-			
+
 			final Extendable ext = (Extendable)parent;
 			final NodeList children = elem.getChildNodes();
 			for(int childIndex = 0; childIndex < children.getLength(); ++childIndex) {
@@ -87,7 +87,7 @@ public class DefaultExtendableXMLSerializer implements XMLSerializer {
 					final Element childElem = (Element)childNode;
 					final QName qname = XMLSerializerFactory.getQName(childElem);
 					final XMLSerializer serializer = serializerFactory.getHandler(qname);
-					
+
 					// If no serializer, we'll just issue a warning
 					if(serializer == null) {
 						// TODO perhaps allow errors to be added to the serializer factory
@@ -104,7 +104,7 @@ public class DefaultExtendableXMLSerializer implements XMLSerializer {
 				}
 			}
 		}
-		
+
 		return null;
 	}
 

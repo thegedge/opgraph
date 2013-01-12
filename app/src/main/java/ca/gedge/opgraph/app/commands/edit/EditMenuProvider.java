@@ -51,32 +51,32 @@ public class EditMenuProvider implements MenuProvider {
 	@Override
 	public void installItems(final GraphEditorModel model, PathAddressableMenu menu) {
 		final JMenu edit = menu.addMenu("edit", "Edit");
-		
+
 		final UndoCommand undo = new UndoCommand(model.getDocument().getUndoManager());
 		final RedoCommand redo = new RedoCommand(model.getDocument().getUndoManager());
-		
+
 		final CopyCommand copy = new CopyCommand();
 		final PasteCommand paste = new PasteCommand();
 		final DuplicateCommand duplicate = new DuplicateCommand();
-		
+
 		menu.addMenuItem("edit/copy", copy);
 		menu.addMenuItem("edit/paste", paste);
 		menu.addMenuItem("edit/duplicate", duplicate);
 		menu.addSeparator("edit");
-		
+
 		menu.addMenuItem("edit/undo", undo);
 		menu.addMenuItem("edit/redo", redo);
 		menu.addSeparator("edit");
 		final JMenuItem delete = menu.addMenuItem("edit/delete", new DeleteCommand());
 		menu.addMenuItem("edit/select all", new SelectAllCommand());
-		
+
 		// Setup backspace keybinding for delete
 		final KeyStroke bsKs = KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0);
 		final InputMap inputMap = delete.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		inputMap.put(bsKs, inputMap.get(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0)));
 
 		delete.setEnabled(false);
-		
+
 		// Listen to property changes and update menu items to reflect new state
 		model.getDocument().addPropertyChangeListener(GraphDocument.UNDO_STATE, new PropertyChangeListener() {
 			@Override
@@ -85,14 +85,14 @@ public class EditMenuProvider implements MenuProvider {
 				redo.update();
 			}
 		});
-		
+
 		model.getDocument().addPropertyChangeListener(GraphDocument.PROCESSING_CONTEXT, new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				edit.setEnabled(evt.getNewValue() == null);
 			}
 		});
-		
+
 		model.getCanvas().getSelectionModel().addSelectionListener(new GraphCanvasSelectionListener() {
 			@Override
 			public void nodeSelectionChanged(Collection<OpNode> old, Collection<OpNode> selected) {
@@ -109,7 +109,7 @@ public class EditMenuProvider implements MenuProvider {
 			// Add copy command if selection is available
 			if(model.getDocument().getSelectionModel().getSelectedNodes().size() > 0)
 				menu.addMenuItem("copy", new CopyCommand());
-			
+
 			// Check clipboard
 			if(!GraphicsEnvironment.isHeadless()) {
 				final Transferable clipboardContents = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(model.getCanvas());
@@ -118,7 +118,7 @@ public class EditMenuProvider implements MenuProvider {
 					menu.addMenuItem("paste", new PasteCommand());
 				}
 			}
-			
+
 			// Add duplicate command if selection is available
 			if(model.getDocument().getSelectionModel().getSelectedNodes().size() > 0)
 				menu.addMenuItem("duplicate", new DuplicateCommand());

@@ -45,23 +45,22 @@ import ca.gedge.opgraph.nodes.general.MacroNode;
  */
 public class CreateMacroEdit extends AbstractUndoableEdit {
 	private static final Logger LOGGER = Logger.getLogger(CreateMacroEdit.class.getName());
-	
+
 	/** The graph to which this edit was applied  */
 	private OpGraph graph;
-	
+
 	/** The constructed macro node */
 	private MacroNode macro;
-	
+
 	/** Metadata for the newly created macro */
 	private NodeMetadata macroMeta;
-	
+
 	/** Links that existed before the macro */
 	private Set<OpLink> oldLinks;
-	
+
 	/** Links attached to the newly created macro */
 	private Set<OpLink> newLinks;
-	
-	
+
 	/**
 	 * Constructs a macro-creation edit which will automatically create a
 	 * macro from a given collection of nodes.
@@ -73,17 +72,17 @@ public class CreateMacroEdit extends AbstractUndoableEdit {
 		this.graph = graph;
 		this.oldLinks = new TreeSet<OpLink>();
 		this.newLinks = new TreeSet<OpLink>();
-		
+
 		// Construct the macro node
 		final OpGraph macroGraph = new OpGraph();
 		final Set<OpLink> links = new TreeSet<OpLink>();
-		
+
 		this.macroMeta = new NodeMetadata();
 		this.macro = new MacroNode(macroGraph);
 		this.macro.putExtension(NodeMetadata.class, this.macroMeta);
-		
+
 		macroGraph.setId("macro" + macro.getId());
-		
+
 		// First add all the nodes
 		int numNodes = 0;
 		for(OpNode node : nodes) {
@@ -92,22 +91,22 @@ public class CreateMacroEdit extends AbstractUndoableEdit {
 				LOGGER.warning("node not in graph modeled by the given graph canvas");
 				continue;
 			}
-			
+
 			// Add the node
 			macroGraph.add(node);
-			
+
 			final NodeMetadata nodeMeta = node.getExtension(NodeMetadata.class);
 			if(nodeMeta != null) {
 				macroMeta.setX(macroMeta.getX() + nodeMeta.getX());
 				macroMeta.setY(macroMeta.getY() + nodeMeta.getY());
 				++numNodes;
 			}
-			
+
 			// Extend the link set
 			links.addAll(graph.getIncomingEdges(node));
 			links.addAll(graph.getOutgoingEdges(node));
 		}
-		
+
 		// Macro's initial location is the centroid
 		if(numNodes > 0) {
 			macroMeta.setX(macroMeta.getX() / numNodes);
@@ -119,7 +118,7 @@ public class CreateMacroEdit extends AbstractUndoableEdit {
 		//
 		final Map<String, Integer> publishedInputsMap = new HashMap<String, Integer>();
 		final Map<String, Integer> publishedOutputsMap = new HashMap<String, Integer>();
-		
+
 		// Given all of the incoming/outgoing links, find which are internal
 		// and which are external. If an links is external, publish the
 		// appropriate field
@@ -127,7 +126,7 @@ public class CreateMacroEdit extends AbstractUndoableEdit {
 		for(OpLink link : links) {
 			if(!nodes.contains(link.getSource())) {
 				oldLinks.add(link);
-				
+
 				// Make sure no duplicate keys
 				String name = link.getDestinationField().getKey();
 				if(publishedInputsMap.containsKey(name)) {
@@ -137,7 +136,7 @@ public class CreateMacroEdit extends AbstractUndoableEdit {
 				} else {
 					publishedInputsMap.put(name, 1);
 				}
-				
+
 				// Publish input
 				final InputField input = macro.publish(name, link.getDestination(), link.getDestinationField());
 				try {
@@ -147,7 +146,7 @@ public class CreateMacroEdit extends AbstractUndoableEdit {
 				}
 			} else if(!nodes.contains(link.getDestination())) {
 				oldLinks.add(link);
-				
+
 				// Make sure no duplicate keys
 				String name = link.getSourceField().getKey();
 				if(publishedOutputsMap.containsKey(name)) {
@@ -157,7 +156,7 @@ public class CreateMacroEdit extends AbstractUndoableEdit {
 				} else {
 					publishedOutputsMap.put(name, 1);
 				}
-				
+
 				// Publish output
 				final OutputField output = macro.publish(name, link.getSource(), link.getSourceField());
 				try {
@@ -176,10 +175,9 @@ public class CreateMacroEdit extends AbstractUndoableEdit {
 				}
 			}
 		}
-		
+
 		perform();
 	}
-	
 
 	/**
 	 * Performs this edit.
@@ -188,7 +186,7 @@ public class CreateMacroEdit extends AbstractUndoableEdit {
 		// Remove all nodes, in turn removing all associated links
 		for(OpNode node : macro.getGraph().getVertices())
 			graph.remove(node);
-		
+
 		// Add macro node, and new external links attached to this macro node
 		graph.add(macro);
 		for(OpLink link : newLinks) {
@@ -201,11 +199,11 @@ public class CreateMacroEdit extends AbstractUndoableEdit {
 			}
 		}
 	}
-	
+
 	//
 	// AbstractEdit overrides
 	//
-	
+
 	@Override
 	public String getPresentationName() {
 		return "Create Macro";
@@ -216,18 +214,18 @@ public class CreateMacroEdit extends AbstractUndoableEdit {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();
-		
+
 		// Remove macro 
 		graph.remove(macro);
-		
+
 		// Add back original nodes and links
 		for(OpNode node : macro.getGraph().getVertices())
 			graph.add(node);
-		
+
 		for(OpLink link : oldLinks) {
 			try {
 				graph.add(link);

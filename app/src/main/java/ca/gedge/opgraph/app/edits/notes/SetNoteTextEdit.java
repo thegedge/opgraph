@@ -33,16 +33,16 @@ import ca.gedge.opgraph.app.extensions.Note;
 public class SetNoteTextEdit extends AbstractUndoableEdit {
 	/** The note whose color will be set */
 	private Note note;
-	
+
 	/** Old note title */
 	private String oldTitle;
-	
+
 	/** New note title */
 	private String newTitle;
-	
+
 	/** Old note body */
 	private String oldBody;
-	
+
 	/** New note body */
 	private String newBody;
 
@@ -58,7 +58,7 @@ public class SetNoteTextEdit extends AbstractUndoableEdit {
 	public SetNoteTextEdit(Note note, String title, String body) {
 		if(note == null)
 			throw new NullPointerException();
-		
+
 		this.note = note;
 		this.oldTitle = note.getTitle();
 		this.oldBody = note.getBody();
@@ -66,7 +66,7 @@ public class SetNoteTextEdit extends AbstractUndoableEdit {
 		this.newBody = body;
 		perform();
 	}
-	
+
 	/**
 	 * Performs this edit.
 	 */
@@ -74,22 +74,22 @@ public class SetNoteTextEdit extends AbstractUndoableEdit {
 		note.setTitle(newTitle);
 		note.setBody(newBody);
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
-	
+
 	@Override
 	public String getPresentationName() {
 		return "Set Note Title/Body";
 	}
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();

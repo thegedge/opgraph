@@ -34,7 +34,7 @@ import ca.gedge.opgraph.OutputField;
 public class ConstantValueNode extends OpNode {
 	/** Output field for the constant value */
 	public final OutputField VALUE_OUTPUT_FIELD = new OutputField("value", "Constant value", true, Object.class);
-	
+
 	/** The value of this node */
 	private Object value;
 
@@ -54,7 +54,7 @@ public class ConstantValueNode extends OpNode {
 		putField(VALUE_OUTPUT_FIELD);
 		this.value = value;
 	}
-	
+
 	/**
 	 * Sets the value in this node.
 	 * 
@@ -64,11 +64,11 @@ public class ConstantValueNode extends OpNode {
 		this.value = value;
 		VALUE_OUTPUT_FIELD.setOutputType(value == null ? Object.class : value.getClass());
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public void operate(OpContext context) {
 		context.put(VALUE_OUTPUT_FIELD, value);

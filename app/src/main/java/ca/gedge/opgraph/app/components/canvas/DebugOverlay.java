@@ -46,17 +46,17 @@ import ca.gedge.opgraph.app.util.GUIHelper;
 class DebugOverlay extends JComponent {
 	/** Dark mask for shaded nodes */
 	static final Paint DARK_MASK;
-	
+
 	/** Light mask for shaded nodes */
 	static final Paint LIGHT_MASK;
-	
+
 	/** Mask for error node */
 	static final Paint ERROR_MASK;
-	
+
 	static {
 		final int W = 4;
 		final int H = 4;
-		
+
 		// Creates a crosshatch texture
 		final BufferedImage texture = new BufferedImage(W, H, BufferedImage.TYPE_INT_ARGB);
 		{
@@ -65,12 +65,12 @@ class DebugOverlay extends JComponent {
 			g.drawLine(0, 0, W - 1, H - 1);
 			g.drawLine(0, H - 1, W - 1, 0);
 		}
-		
+
 		DARK_MASK = new TexturePaint(texture, new Rectangle2D.Double(0, 0, W, H));
 		LIGHT_MASK = new Color(0, 0, 0, 127);
 		ERROR_MASK = new Color(255, 0, 0, 50);
 	}
-	
+
 	/** The parent canvas */
 	private final GraphCanvas canvas;
 
@@ -81,16 +81,16 @@ class DebugOverlay extends JComponent {
 	 */
 	public DebugOverlay(GraphCanvas canvas) {
 		this.canvas = canvas;
-		
+
 		setOpaque(false);
 		setBackground(null);
 	}
-	
+
 	@Override
 	public Dimension getPreferredSize() {
 		return null;
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics gfx) {
 		final Processor context = canvas.getDocument().getProcessingContext();
@@ -107,26 +107,26 @@ class DebugOverlay extends JComponent {
 				final Graphics2D g = (Graphics2D)gfx;
 				final IdentityHashMap<CanvasNode, Boolean> connectedNodes = new IdentityHashMap<CanvasNode, Boolean>();
 				final OpNode currentNode = activeContext.getCurrentNodeOfContext();
-				
+
 				if(currentNode != null) {
 					for(OpLink link : canvas.getDocument().getGraph().getIncomingEdges(currentNode))
 						connectedNodes.put( canvas.getNode(link.getSource()), true );
-					
+
 					for(OpLink link : canvas.getDocument().getGraph().getOutgoingEdges(currentNode))
 						connectedNodes.put( canvas.getNode(link.getDestination()), true );
 				}
-				
+
 				// Draw masks over nodes
 				final Paint oldPaint = g.getPaint();
 				for(OpNode node : canvas.getDocument().getGraph().getVertices()) {
 					final CanvasNode canvasNode = canvas.getNode(node);
 					final Rectangle bounds = SwingUtilities.convertRectangle(canvasNode, GUIHelper.getInterior(canvasNode), this);
-					
+
 					--bounds.x;
 					--bounds.y;
 					bounds.width += 2;
 					bounds.height += 2;
-					
+
 					if(node == currentNode) {
 						if(context.getError() != null) {
 							g.setPaint(ERROR_MASK);
@@ -141,7 +141,7 @@ class DebugOverlay extends JComponent {
 						}
 					}
 				}
-				
+
 				g.setPaint(oldPaint);
 			}
 		}

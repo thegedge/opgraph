@@ -39,7 +39,7 @@ public class DebugMenuProvider implements MenuProvider {
 	@Override
 	public void installItems(final GraphEditorModel model, PathAddressableMenu menu) {
 		menu.addMenu("debug", "Debug");
-		
+
 		menu.addMenuItem("debug/run", new RunCommand());
 		final JMenuItem stop = menu.addMenuItem("debug/stop", new StopCommand());
 		menu.addSeparator("debug");
@@ -49,7 +49,7 @@ public class DebugMenuProvider implements MenuProvider {
 		menu.addMenuItem("debug/step out of", new StepOutOfCommand());
 
 		stop.setEnabled(false);
-		
+
 		model.getDocument().addPropertyChangeListener(GraphDocument.PROCESSING_CONTEXT, new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {

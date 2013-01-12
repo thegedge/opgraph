@@ -54,42 +54,42 @@ public class CanvasOverlay extends JComponent {
 	 */
 	public CanvasOverlay(GraphCanvas canvas) {
 		this.canvas = canvas;
-		
+
 		setOpaque(false);
 		setBackground(null);
 	}
-	
+
 	@Override
 	public Dimension getPreferredSize() {
 		return null;
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics gfx) {
 		Graphics2D g = (Graphics2D)gfx;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-		
+
 		// The drag link
 		if(canvas.getCurrentlyDraggedLinkInputField() != null) {
 			Ellipse2D anchor = canvas.getCurrentlyDraggedLinkInputField().getAnchor();
 			Point p = new Point((int)anchor.getCenterX(), (int)anchor.getCenterY());
 			p = SwingUtilities.convertPoint(canvas.getCurrentlyDraggedLinkInputField(), p, canvas);
-			
+
 			final Shape link = LinksLayer.createSmoothLink(p, canvas.getCurrentDragLinkLocation());
 			final Stroke oldStroke = g.getStroke();
-			
+
 			if(link != null) {
 				g.setColor(canvas.isDragLinkValid() ? Color.WHITE : Color.RED);
 				g.setStroke(LinksLayer.THIN);
 				g.draw(link);
-				
+
 				g.setColor(Color.BLACK);
 				g.setStroke(oldStroke);
 				g.draw(LinksLayer.THICK.createStrokedShape(link));
 			}
 		}
-		
+
 		// the selection rect
 		final Rectangle selectionRect = canvas.getSelectionRect();
 		if(selectionRect != null) {
@@ -97,17 +97,17 @@ public class CanvasOverlay extends JComponent {
 			int y = selectionRect.y;
 			int w = selectionRect.width;
 			int h = selectionRect.height;
-			
+
 			if(w < 0) {
 				x += w;
 				w = -w;
 			}
-			
+
 			if(h < 0) {
 				y += h;
 				h = -h;
 			}
-			
+
 			g.setColor(new Color(255, 255, 255, 50));
 			g.fillRect(x, y, w, h);
 			g.setColor(Color.WHITE);

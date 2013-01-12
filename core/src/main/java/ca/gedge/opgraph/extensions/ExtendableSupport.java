@@ -32,7 +32,7 @@ import java.util.LinkedHashMap;
 public class ExtendableSupport implements Extendable {
 	/** The mapping of extension type to extension */
 	private HashMap<Class<?>, Object> extensions;
-	
+
 	/** The parent class that this class supports */
 	@SuppressWarnings("unused")
 	private Class<?> parentClass;
@@ -46,24 +46,24 @@ public class ExtendableSupport implements Extendable {
 		this.extensions = new LinkedHashMap<Class<?>, Object>();
 		this.parentClass = parentClass;
 	}
-	
+
 	//
 	// Extendable
 	//
-	
+
 	@Override
 	public <T> T getExtension(Class<T> type) {
 		if(type == null)
 			throw new NullPointerException("Extension type cannot be null");
-		
+
 		return type.cast(extensions.get(type));
 	}
-	
+
 	@Override
 	public Collection<Class<?>> getExtensionClasses() {
 		return Collections.unmodifiableCollection(extensions.keySet());
 	}
-	
+
 	@Override
 	public <T> T putExtension(Class<T> type, T extension) {
 		if(type == null)

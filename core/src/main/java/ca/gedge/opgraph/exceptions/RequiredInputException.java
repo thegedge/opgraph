@@ -30,10 +30,10 @@ import ca.gedge.opgraph.OpNode;
 public final class RequiredInputException extends ProcessingException {
 	/** The node from which the field comes from */
 	private OpNode node;
-	
+
 	/** The field with required input */
 	private InputField field;
-	
+
 	/**
 	 * Constructs exception with the input field that required
 	 * 
@@ -45,7 +45,7 @@ public final class RequiredInputException extends ProcessingException {
 		this.node = node;
 		this.field = field;
 	}
-	
+
 	/**
 	 * Gets the node which contains the field that received no input.
 	 * 

@@ -31,7 +31,7 @@ import javax.swing.border.Border;
  */
 public class DefaultNodeBorder implements Border {
 	static final int MAX_SIZE = 5;
-	
+
 	@Override
 	public Insets getBorderInsets(Component c) {
 		return new Insets(MAX_SIZE, MAX_SIZE, MAX_SIZE, MAX_SIZE);
@@ -53,12 +53,12 @@ public class DefaultNodeBorder implements Border {
 				g.fillRect(w - MAX_SIZE, y + MAX_SIZE, MAX_SIZE, h - MAX_SIZE);
 				g.fillRect(x + MAX_SIZE, h - MAX_SIZE, w - 2*MAX_SIZE, MAX_SIZE);
 			}
-			
+
 			x += MAX_SIZE - 1;
 			y += MAX_SIZE - 1;
 			w -= 2*MAX_SIZE - 1;
 			h -= 2*MAX_SIZE - 1;
-			
+
 			g.setColor(canvasNode.getStyle().NodeBorderColor);
 			g.drawRect(x, y, w, h);
 		}

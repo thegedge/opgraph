@@ -37,10 +37,10 @@ import ca.gedge.opgraph.app.extensions.Note;
 public class SetNoteColorCommand extends AbstractAction {
 	/** The initial x-coordinate for the note */
 	private Note note;
-	
+
 	/** The initial y-coordinate for the note */
 	private Color color;
-	
+
 	/**
 	 * Constructs a command to set the color of a specified note.
 	 * 
@@ -50,31 +50,31 @@ public class SetNoteColorCommand extends AbstractAction {
 	 */
 	public SetNoteColorCommand(Note note, Color color, String name) {
 		super(name);
-		
+
 		this.note = note;
 		this.color = color;
-		
+
 		// Create an icon
 		final int PAD = 2;
 		final int SZ = 12;
 		final BufferedImage iconImage = new BufferedImage(SZ + 2*PAD, SZ + 2*PAD, BufferedImage.TYPE_INT_ARGB);
 		final Graphics2D g = iconImage.createGraphics();
-		
+
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-		
+
 		g.setColor(color);
 		g.fillRoundRect(PAD, PAD, SZ - 1, SZ - 1, SZ / 2, SZ / 2);
 		g.setColor(Color.BLACK);
 		g.drawRoundRect(PAD, PAD, SZ - 1, SZ - 1, SZ / 2, SZ / 2);
-		
+
 		putValue(SMALL_ICON, new ImageIcon(iconImage));
 	}
-	
+
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();

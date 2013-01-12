@@ -41,16 +41,16 @@ public class StepIntoCommand extends AbstractAction {
 	 */
 	public StepIntoCommand() {
 		super("Step Into");
-		
+
 		final int CTRL = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, CTRL));
 		putValue(SMALL_ICON, IconLibrary.getIcon(IconType.DEBUG_STEP, 16, 16));
 	}
-	
+
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();
@@ -60,7 +60,7 @@ public class StepIntoCommand extends AbstractAction {
 				context = new Processor(document.getGraph());
 				document.setProcessingContext(context);
 			}
-			
+
 			if(context.hasNext()) {
 				context.stepInto();
 				document.updateDebugState(context);

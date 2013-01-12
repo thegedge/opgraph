@@ -32,10 +32,10 @@ import ca.gedge.opgraph.util.ServiceDiscovery;
 public abstract class OpGraphSerializerFactory {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(OpGraphSerializerFactory.class.getName());
-	
+
 	/** System property for defining the default serializer */
 	public static final String DEFAULT_SERIALIZER_PROPERTY = "ca.gedge.defaultSerializer";
-	
+
 	/**
 	 * Gets a default serializer.
 	 * 
@@ -44,7 +44,7 @@ public abstract class OpGraphSerializerFactory {
 	 */
 	public static OpGraphSerializer getDefaultSerializer() {
 		OpGraphSerializer serializer = null;
-		
+
 		// See if there's a default one defined via a system property first...
 		final String defaultClass = System.getProperty(DEFAULT_SERIALIZER_PROPERTY);
 		if(defaultClass != null) {
@@ -74,10 +74,10 @@ public abstract class OpGraphSerializerFactory {
 				}
 			}
 		}
-		
+
 		return serializer;
 	}
-	
+
 	/**
 	 * Gets a serializer by the file extension it understands.
 	 * 
@@ -101,10 +101,10 @@ public abstract class OpGraphSerializerFactory {
 				break;
 			}
 		}
-		
+
 		return serializer;
 	}
-	
+
 	/**
 	 * Gets all registered serializers.
 	 * 

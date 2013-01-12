@@ -40,7 +40,7 @@ public class GraphCanvasSelectionModel {
 	public OpNode getSelectedNode() {
 		return (selectedNodes.isEmpty() ? null : selectedNodes.get(0));
 	}
-	
+
 	/**
 	 * Sets the selected node.
 	 * 
@@ -51,7 +51,7 @@ public class GraphCanvasSelectionModel {
 		selectedNodes.clear();
 		if(node != null)
 			selectedNodes.add(node);
-		
+
 		fireSelectionStateChanged(old);
 	}
 
@@ -63,7 +63,7 @@ public class GraphCanvasSelectionModel {
 	public Collection<OpNode> getSelectedNodes() {
 		return Collections.unmodifiableCollection(selectedNodes);
 	}
-	
+
 	/**
 	 * Sets the nodes to select. If a specified node is not a member of
 	 * the graph specified by this model, it is not selected.
@@ -80,7 +80,7 @@ public class GraphCanvasSelectionModel {
 					selected.add(node);
 			}
 		}
-	
+
 		// Only update selection if necessary
 		//if(!newSelection.equals(selected)) {
 			final Collection<OpNode> old = this.selectedNodes;
@@ -88,7 +88,7 @@ public class GraphCanvasSelectionModel {
 			fireSelectionStateChanged(old);
 		//}
 	}
-	
+
 	/**
 	 * Adds a node to the selection, if it isn't already selected.
 	 * 
@@ -101,7 +101,7 @@ public class GraphCanvasSelectionModel {
 			fireSelectionStateChanged(old);
 		}
 	}
-	
+
 	/**
 	 * Remove a node from the selected nodes, if it is selected.
 	 * 
@@ -114,7 +114,7 @@ public class GraphCanvasSelectionModel {
 			fireSelectionStateChanged(old);
 		}
 	}
-	
+
 	/**
 	 * Remove a collection of nodes from the selection.
 	 * 
@@ -127,11 +127,11 @@ public class GraphCanvasSelectionModel {
 			fireSelectionStateChanged(old);
 		}
 	}
-	
+
 	//
 	// Listeners
 	//
-	
+
 	private ArrayList<GraphCanvasSelectionListener> listeners = new ArrayList<GraphCanvasSelectionListener>();
 
 	/**
@@ -145,7 +145,7 @@ public class GraphCanvasSelectionModel {
 				listeners.add(listener);
 		}
 	}
-	
+
 	/**
 	 * Removes a listener from this model.
 	 * 
@@ -156,7 +156,7 @@ public class GraphCanvasSelectionModel {
 			listeners.remove(listener);
 		}
 	}
-	
+
 	protected void fireSelectionStateChanged(Collection<OpNode> old) {
 		synchronized(listeners) {
 			for(GraphCanvasSelectionListener listener : listeners)

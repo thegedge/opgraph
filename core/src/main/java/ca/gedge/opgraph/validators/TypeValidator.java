@@ -31,7 +31,7 @@ public interface TypeValidator {
 	 *          <code>false</code> otherwise
 	 */
 	public abstract boolean isAcceptable(Object obj);
-	
+
 	/**
 	 * Gets whether or not this validator can potentially accept instances
 	 * of a given class.

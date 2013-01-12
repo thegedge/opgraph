@@ -30,13 +30,13 @@ import ca.gedge.opgraph.validators.TypeValidator;
 public class InputField extends SimpleItem {
 	/** An instance of a type validator, or <code>null</code> if this field accepts anything */
 	private TypeValidator validator;
-	
+
 	/** Whether or not this field is optional */
 	private boolean optional;
-	
+
 	/** Whether or not this field is a fixed field. Fixed fields cannot be removed. */
 	private boolean fixed;
-	
+
 	/**
 	 * Constructs a non-optional, fixed input field with a key and
 	 * description that accepts all types.
@@ -47,7 +47,7 @@ public class InputField extends SimpleItem {
 	public InputField(String key, String description) {
 		this(key, description, false, true);
 	}
-	
+
 	/**
 	 * Constructs an input field with a key, description, and optionality. The
 	 * field that accepts all incoming types.
@@ -65,7 +65,7 @@ public class InputField extends SimpleItem {
 	{
 		this(key, description, isOptional, isFixed, (TypeValidator)null);
 	}
-	
+
 	/**
 	 * Constructs a non-optional, fixed input field with a key and description
 	 * that accepts a specified list of classes.
@@ -81,7 +81,7 @@ public class InputField extends SimpleItem {
 	{
 		this(key, description, false, true, acceptedTypes);
 	}
-	
+
 	/**
 	 * Constructs a non-optional, fixed input field with a key, description
 	 * and validator list.
@@ -117,7 +117,7 @@ public class InputField extends SimpleItem {
 	{
 		this(key, description, isOptional, isFixed, new ClassValidator(acceptedTypes));
 	}
-	
+
 	/**
 	 * Constructs an input descriptor with a specified list of validators.
 	 * 
@@ -141,7 +141,7 @@ public class InputField extends SimpleItem {
 		if(validators.length > 0)
 			this.validator = (validators.length == 1 ? validators[0] : new CompositeValidator(validators));
 	}
-	
+
 	/**
 	 * Gets the type validator for this field.
 	 * 
@@ -151,7 +151,7 @@ public class InputField extends SimpleItem {
 	public TypeValidator getValidator() {
 		return validator;
 	}
-	
+
 	/**
 	 * Sets the type validator for this field.
 	 * 
@@ -161,7 +161,7 @@ public class InputField extends SimpleItem {
 	public void setValidator(TypeValidator validator) {
 		this.validator = validator;
 	}
-	
+
 	/**
 	 * Gets whether or not this is a fixed field. Fixed fields cannot be removed.
 	 * 
@@ -188,7 +188,7 @@ public class InputField extends SimpleItem {
 	public boolean isOptional() {
 		return optional;
 	}
-	
+
 	/**
 	 * Sets whether or not this field is optional.
 	 * 
@@ -197,11 +197,11 @@ public class InputField extends SimpleItem {
 	public void setOptional(boolean optional) {
 		this.optional = optional;
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public String toString() {
 		return getKey();

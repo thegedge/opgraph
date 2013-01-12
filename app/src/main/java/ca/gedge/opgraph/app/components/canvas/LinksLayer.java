@@ -49,16 +49,16 @@ import ca.gedge.opgraph.OpNode;
 public class LinksLayer extends JComponent {
 	/** Thin stroke for drawing links */
 	static final Stroke THIN = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
-	
+
 	/** Thick stroke for drawing links */
 	static final Stroke THICK = new BasicStroke(3.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
-	
+
 	/** The mapping of links to link shapes */
 	private TreeMap<OpLink, Shape> links;
-	
+
 	/** The canvas parent */
 	private GraphCanvas canvas;
-	
+
 	/**
 	 * Default constructor.
 	 * 
@@ -67,7 +67,7 @@ public class LinksLayer extends JComponent {
 	public LinksLayer(GraphCanvas canvas) {
 		this.canvas = canvas;
 		this.links = new TreeMap<OpLink, Shape>();
-		
+
 		setOpaque(false);
 		setBackground(null);
 	}
@@ -85,13 +85,13 @@ public class LinksLayer extends JComponent {
 		final double cy1 = p1.y;
 		final double cx2 = (p1.x + p2.x) * 0.5;
 		final double cy2 = p2.y;
-		
+
 		final Path2D link = new Path2D.Double();
 		link.moveTo(p1.x, p1.y);
 		link.curveTo(cx1, cy1, cx2, cy2, p2.x, p2.y);
 		return link;
 	}
-	
+
 	/**
 	 * Updates the path shape for a given link.
 	 * 
@@ -107,15 +107,15 @@ public class LinksLayer extends JComponent {
 				// Get the anchoring points
 				final Ellipse2D sourceAnchor = sourceField.getAnchor();
 				final Ellipse2D destAnchor = destField.getAnchor();
-				
+
 				// Convert to our coordinate system
 				Point sourceLoc = new Point((int)sourceAnchor.getCenterX(), (int)sourceAnchor.getCenterY());
 				Point destLoc = new Point((int)destAnchor.getCenterX(), (int)destAnchor.getCenterY());
 				sourceLoc = SwingUtilities.convertPoint(sourceField, sourceLoc, canvas);
 				destLoc = SwingUtilities.convertPoint(destField, destLoc, canvas);
-				
+
 				links.put(link, createSmoothLink(sourceLoc, destLoc));
-				
+
 				repaint();
 			}
 		}
@@ -146,31 +146,31 @@ public class LinksLayer extends JComponent {
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public Dimension getPreferredSize() {
 		return null;
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics gfx) {
 		Graphics2D g = (Graphics2D)gfx;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-		
+
 		// Draw links between nodes
 		final Stroke oldStroke = g.getStroke();
 		if(canvas.getDocument().getProcessingContext() != null) {
 			// Find links connected to the current node
 			final IdentityHashMap<OpLink, Boolean> connectedLinks = new IdentityHashMap<OpLink, Boolean>();
 			final OpNode currentNode = canvas.getDocument().getProcessingContext().getCurrentNode();
-			
+
 			for(OpLink link : canvas.getDocument().getGraph().getIncomingEdges(currentNode))
 				connectedLinks.put(link, true);
-			
+
 			for(OpLink link : canvas.getDocument().getGraph().getOutgoingEdges(currentNode))
 				connectedLinks.put(link, true);
-			
+
 			// We're debugging, so draw things faded out
 			final Color SELECTED_FILL = Color.ORANGE;
 			final Color REGULAR_FILL = Color.ORANGE.darker().darker();
@@ -181,12 +181,12 @@ public class LinksLayer extends JComponent {
 				Color fillColor = REGULAR_FILL;
 				if(connectedLinks.containsKey(link.getKey()))
 					fillColor = SELECTED_FILL;
-				
+
 				// Link fill
 				g.setColor(fillColor);
 				g.setStroke(THIN);
 				g.draw(link.getValue());
-				
+
 				// Link outline
 				g.setColor(strokeColor);
 				g.setStroke(oldStroke);
@@ -198,11 +198,11 @@ public class LinksLayer extends JComponent {
 			for(OpNode node : canvas.getSelectionModel().getSelectedNodes()) {
 				for(OpLink link : canvas.getDocument().getGraph().getIncomingEdges(node))
 					selectedLinks.add(link);
-				
+
 				for(OpLink link : canvas.getDocument().getGraph().getOutgoingEdges(node))
 					selectedLinks.add(link);
 			}
-			
+
 			// Draw links
 			for(Map.Entry<OpLink, Shape> link : links.entrySet()) {
 				Color strokeColor = Color.BLACK;
@@ -213,19 +213,19 @@ public class LinksLayer extends JComponent {
 				} else if(selectedLinks.contains(link.getKey())) {
 					fillColor = Color.GREEN;
 				}
-				
+
 				// Link fill
 				g.setColor(fillColor);
 				g.setStroke(THIN);
 				g.draw(link.getValue());
-				
+
 				// Link outline
 				g.setColor(strokeColor);
 				g.setStroke(oldStroke);
 				g.draw(THICK.createStrokedShape(link.getValue()));
 			}
 		}
-		
+
 		g.setStroke(oldStroke);
 	}
 }

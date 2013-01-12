@@ -56,7 +56,7 @@ import ca.gedge.opgraph.exceptions.ItemMissingException;
 public class PasteCommand extends AbstractAction {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(PasteCommand.class.getName());
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -64,16 +64,16 @@ public class PasteCommand extends AbstractAction {
 		super("Paste");
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 	}
-	
+
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(GraphicsEnvironment.isHeadless())
 			return;
-		
+
 		final GraphDocument document = GraphEditorModel.getActiveDocument();
 		if(document != null) {
 			// Check to make sure the clipboard has something we can paste
@@ -82,11 +82,11 @@ public class PasteCommand extends AbstractAction {
 				try {
 					final SubgraphClipboardContents nodeClipboardContents = 
 							SubgraphClipboardContents.class.cast(clipboardContents.getTransferData(SubgraphClipboardContents.copyFlavor));
-					
+
 					final CompoundEdit cmpEdit = new CompoundEdit();
 					final OpGraph graph = document.getGraph();
 					final Map<String, String> nodeMap = new HashMap<String, String>();
-					
+
 					// Keep track of the number of times this graph has been pasted
 					Integer timesDuplicated = nodeClipboardContents.graphDuplicates.get(graph);
 					if(timesDuplicated == null) {
@@ -94,9 +94,9 @@ public class PasteCommand extends AbstractAction {
 					} else {
 						timesDuplicated = timesDuplicated + 1;
 					}
-					
+
 					nodeClipboardContents.graphDuplicates.put(graph, timesDuplicated);
-					
+
 					// Create a new node edit for each node in the contents
 					final Collection<OpNode> newNodes = new ArrayList<OpNode>();
 					for(OpNode node : nodeClipboardContents.subGraph.getVertices()) {
@@ -104,28 +104,28 @@ public class PasteCommand extends AbstractAction {
 						final OpNode newNode = GraphUtils.cloneNode(node);
 						newNodes.add(newNode);
 						nodeMap.put(node.getId(), newNode.getId());
-						
+
 						// Offset to avoid pasting on top of current nodes
 						final NodeMetadata metadata = newNode.getExtension(NodeMetadata.class);
 						if(metadata != null) {
 							metadata.setX(metadata.getX() + (50 * timesDuplicated));
 							metadata.setY(metadata.getY() + (30 * timesDuplicated));
 						}
-						
+
 						// Add an undoable edit for this node
 						cmpEdit.addEdit(new AddNodeEdit(graph, newNode));
 					}
-					
+
 					// Pasted node become the selection
 					document.getSelectionModel().setSelectedNodes(newNodes);
-					
+
 					// Add copied node to graph
 					for(OpLink link : nodeClipboardContents.subGraph.getEdges()) {
 						final OpNode srcNode = graph.getNodeById(nodeMap.get(link.getSource().getId()), false);
 						final OutputField srcField = srcNode.getOutputFieldWithKey(link.getSourceField().getKey());
 						final OpNode dstNode = graph.getNodeById(nodeMap.get(link.getDestination().getId()), false);
 						final InputField dstField = dstNode.getInputFieldWithKey(link.getDestinationField().getKey());
-						
+
 						try {
 							final OpLink newLink = new OpLink(srcNode, srcField, dstNode, dstField);
 							cmpEdit.addEdit(new AddLinkEdit(graph, newLink));
@@ -137,7 +137,7 @@ public class PasteCommand extends AbstractAction {
 							LOGGER.severe(exc.getMessage());
 						}
 					}
-					
+
 					// Add the compound edit to the undo manager
 					cmpEdit.end();
 					document.getUndoSupport().postEdit(cmpEdit);

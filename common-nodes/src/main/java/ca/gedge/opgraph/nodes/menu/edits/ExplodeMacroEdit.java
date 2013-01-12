@@ -42,19 +42,19 @@ import ca.gedge.opgraph.nodes.general.MacroNode;
 public class ExplodeMacroEdit extends AbstractUndoableEdit {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(ExplodeMacroEdit.class.getName());
-	
+
 	/** The graph to which this edit was applied  */
 	private OpGraph graph;
-	
+
 	/** The constructed macro node */
 	private MacroNode macro;
-	
+
 	/** Links within the macro, and for published fields */
 	private Set<OpLink> newLinks;
-	
+
 	/** Links attached to the macro */
 	private Set<OpLink> oldLinks;
-	
+
 	/**
 	 * Constructs a macro-explosion edit which acts upon a given macro node.
 	 * 
@@ -64,20 +64,20 @@ public class ExplodeMacroEdit extends AbstractUndoableEdit {
 	public ExplodeMacroEdit(OpGraph graph, MacroNode macro) {
 		this.graph = graph;
 		this.macro = macro;
-		
+
 		this.oldLinks = new TreeSet<OpLink>();
 		this.oldLinks.addAll(graph.getIncomingEdges(macro));
 		this.oldLinks.addAll(graph.getOutgoingEdges(macro));
-		
+
 		this.newLinks = new TreeSet<OpLink>();
 		this.newLinks.addAll(macro.getGraph().getEdges());
-		
+
 		for(OpLink link : graph.getIncomingEdges(macro)) {
 			// If an incoming link is linked to a node that isn't a published
 			// input, we can't reliably explode this node 
 			if(!(link.getDestinationField() instanceof PublishedInput))
 				throw new IllegalArgumentException("Macro node contains an incoming link linked to a node that isn't a published input.");
-			
+
 			final PublishedInput input = (PublishedInput)link.getDestinationField();
 			try {
 				this.newLinks.add(new OpLink(link.getSource(),
@@ -88,13 +88,13 @@ public class ExplodeMacroEdit extends AbstractUndoableEdit {
 				throw new IllegalArgumentException("A link connected to this MacroNode is in an impossible state");
 			}
 		}
-		
+
 		for(OpLink link : graph.getOutgoingEdges(macro)) {
 			// If an outgoing link is linked to a node that isn't a published
 			// output, we can't reliably explode this node 
 			if(!(link.getSourceField() instanceof PublishedOutput))
 				throw new IllegalArgumentException("Macro node contains an outgoing link linked to a node that isn't a published output. Cannot reliably explode.");
-			
+
 			final PublishedOutput output = (PublishedOutput)link.getSourceField();
 			try {
 				this.newLinks.add(new OpLink(output.sourceNode,
@@ -105,21 +105,21 @@ public class ExplodeMacroEdit extends AbstractUndoableEdit {
 				throw new IllegalArgumentException("A link connected to this MacroNode is in an impossible state");
 			}
 		}
-		
+
 		perform();
 	}
-	
+
 	/**
 	 * Performs this edit.
 	 */
 	private void perform() {
 		// Remove macro node
 		graph.remove(macro);
-		
+
 		// Add all nodes from macro
 		for(OpNode nodes : macro.getGraph().getVertices())
 			graph.add(nodes);
-		
+
 		// Add new links
 		for(OpLink link : newLinks) {
 			try {
@@ -131,11 +131,11 @@ public class ExplodeMacroEdit extends AbstractUndoableEdit {
 			}
 		}
 	}
-	
+
 	//
 	// AbstractEdit overrides
 	//
-	
+
 	@Override
 	public String getPresentationName() {
 		return "Create Macro";
@@ -146,18 +146,18 @@ public class ExplodeMacroEdit extends AbstractUndoableEdit {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();
-		
+
 		// Add all nodes from macro
 		for(OpNode node : macro.getGraph().getVertices())
 			graph.remove(node);
-		
+
 		// Add macro node
 		graph.add(macro);
-		
+
 		for(OpLink link : oldLinks) {
 			try {
 				graph.add(link);

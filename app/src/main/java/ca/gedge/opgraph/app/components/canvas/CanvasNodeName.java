@@ -44,16 +44,16 @@ import ca.gedge.opgraph.app.util.GUIHelper;
 public class CanvasNodeName extends JTextField {
 	/** Double-click support */
 	private DoubleClickableTextField doubleClickSupport;
-	
+
 	/** The node whose name this component is showing */
 	private OpNode node;
-	
+
 	/** The style used for this component */
 	private NodeStyle style;
-	
+
 	/** Undo support for node name edits */
 	private UndoableEditSupport undoSupport;
-	
+
 	/**
 	 * Constructs a name component that references the given node.
 	 * 
@@ -65,12 +65,12 @@ public class CanvasNodeName extends JTextField {
 	public CanvasNodeName(OpNode node, NodeStyle style) {
 		this.doubleClickSupport = new DoubleClickableTextField(this);
 		this.undoSupport = new UndoableEditSupport();
-		
+
 		setHorizontalAlignment(CENTER);
 		setFont(getFont().deriveFont(Font.BOLD));
 		setNode(node);
 		setStyle(style);
-		
+
 		this.doubleClickSupport.addPropertyChangeListener(DoubleClickableTextField.TEXT_PROPERTY, textListener);
 	}
 
@@ -92,19 +92,19 @@ public class CanvasNodeName extends JTextField {
 	 */
 	public void setNode(OpNode node) {
 		if(node == null) throw new NullPointerException("node cannot be null");
-		
+
 		if(this.node != null)
 			this.node.removeNodeListener(nodeListener);
-		
+
 		this.node = node;
 		this.node.addNodeListener(nodeListener);
-		
+
 		// Update component
 		setBorder(new EmptyBorder(2, 5, 2, 5));
 		setText(node.getName());
 		setToolTipText(node.getDescription());
 	}
-	
+
 	/**
 	 * Sets the style used for this node.
 	 * 
@@ -115,11 +115,11 @@ public class CanvasNodeName extends JTextField {
 
 		setBackground(this.style.NodeNameTopColor);
 		setForeground(this.style.NodeNameTextColor);
-		
+
 		revalidate();
 		repaint();
 	}
-	
+
 	//
 	// Overrides
 	//
@@ -161,7 +161,7 @@ public class CanvasNodeName extends JTextField {
 	//
 	// DoubleClickableTextField property listener
 	//
-	
+
 	private final PropertyChangeListener textListener = new PropertyChangeListener() {
 		@Override
 		public void propertyChange(PropertyChangeEvent e) {
@@ -169,16 +169,16 @@ public class CanvasNodeName extends JTextField {
 				String t = (String)e.getNewValue();
 				if(t == null || t.trim().length() == 0)
 					t = node.getName();
-				
+
 				undoSupport.postEdit(new ChangeNodeNameEdit(node, t));
 			}
 		}
 	};
-	
+
 	//
 	// UndoableEdit support
 	//
-	
+
 	/**
 	 * Adds an undoable edit listener to this component.
 	 * 
@@ -187,7 +187,7 @@ public class CanvasNodeName extends JTextField {
 	public void addUndoableEditListener(UndoableEditListener listener) {
 		undoSupport.addUndoableEditListener(listener);
 	}
-	
+
 	/**
 	 * Removes an undoable edit listener from this component.
 	 * 

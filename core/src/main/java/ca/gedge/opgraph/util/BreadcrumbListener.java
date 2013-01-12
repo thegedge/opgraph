@@ -33,7 +33,7 @@ public interface BreadcrumbListener<S, V> {
 	 * @param newState  the new state
 	 */
 	public void stateChanged(S oldState, S newState);
-	
+
 	/**
 	 * Called when a state is added to a breadcrumb.
 	 * 

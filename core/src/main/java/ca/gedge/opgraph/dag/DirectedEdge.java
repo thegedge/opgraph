@@ -30,7 +30,7 @@ public interface DirectedEdge<V> extends Comparable<DirectedEdge<V>> {
 	 * @return a {@link Vertex} reference.  
 	 */
 	public abstract V getSource();
-	
+
 	/**
 	 * Gets the vertex at the destination end of this edge.
 	 * 

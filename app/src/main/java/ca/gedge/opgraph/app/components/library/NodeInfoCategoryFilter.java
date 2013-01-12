@@ -31,7 +31,7 @@ public class NodeInfoCategoryFilter extends NodeInfoFilter {
 	public boolean isAccepted(NodeData info) {
 		if(filterPattern == null)
 			return true;
-		
+
 		if(info != null) {
 			final String category = (info.category.length() == 0 ? "General" : info.category);
 			return (info != null && filterPattern.matcher(category).find());

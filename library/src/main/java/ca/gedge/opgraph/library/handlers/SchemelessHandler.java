@@ -48,17 +48,17 @@ public class SchemelessHandler implements URIHandler<List<NodeData>> {
 	public void put(NodeData info) {
 		if(info == null)
 			throw new NullPointerException("Given info cannot be null");
-		
+
 		if(info.uri == null || info.uri.getFragment() == null)
 			throw new NullPointerException("Given uri has a null fragment component");
-		
+
 		items.put(info.uri.getFragment(), info);
 	}
-	
+
 	//
 	// URIHandler<List<NodeData>>
 	//
-	
+
 	@Override
 	public boolean handlesURI(URI uri) {
 		if(uri != null && (uri.getScheme() == null || uri.getScheme().trim().length() == 0))
@@ -71,7 +71,7 @@ public class SchemelessHandler implements URIHandler<List<NodeData>> {
 		// Make sure we can handle URI
 		if(!handlesURI(uri))
 			throw new IllegalArgumentException("Cannot handle uri '" + uri + "'");
-		
+
 		ArrayList<NodeData> ret = new ArrayList<NodeData>();
 		ret.add(items.get(uri.getFragment()));
 		return ret;

@@ -48,34 +48,34 @@ import ca.gedge.opgraph.util.Breadcrumb;
 public class GraphDocument {
 	/** Key for the processing context property */
 	public static final String PROCESSING_CONTEXT = "processor";
-	
+
 	/** Key for the processing source */
 	public static final String SOURCE = "source";
-	
+
 	/** Key for the processing undo state property */
 	public static final String UNDO_STATE = "undoState";
-	
+
 	/** Active canvas */
 	private final WeakReference<GraphCanvas> canvas; // REMOVEME eventually
-	
+
 	/** The selection model this canvas uses */
 	private GraphCanvasSelectionModel selectionModel;
-	
+
 	/** The set of models this canvas is displaying */
 	private Breadcrumb<OpGraph, String> breadcrumb;
-	
+
 	/** Undo manager for the application */
 	private UndoManager undoManager;
-	
+
 	/** The source file, or <code>null</code> if not editing a file */
 	private File source;
 
 	/** The processing context for the currently viewed graph */
 	private Processor processor; // XXX should this be here or in GraphEditorModel?
-	
+
 	/** Support for undoable edits */
 	private UndoableEditSupport undoSupport;
-	
+
 	/** Support for property changes */
 	private PropertyChangeSupport changeSupport;
 
@@ -163,7 +163,7 @@ public class GraphDocument {
 				                              "Save Current Graph",
 				                              JOptionPane.YES_NO_CANCEL_OPTION,
 				                              JOptionPane.QUESTION_MESSAGE);
-			
+
 			if(retVal == JOptionPane.YES_OPTION) {
 				canReset = SaveCommand.saveDocument(this, source);
 			} else if(retVal == JOptionPane.CANCEL_OPTION) {
@@ -356,7 +356,7 @@ public class GraphDocument {
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		changeSupport.removePropertyChangeListener(listener);
 	}
-	
+
 	/**
 	 * Removes a property change listener for a specific property from this document.
 	 * 

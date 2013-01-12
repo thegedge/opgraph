@@ -33,65 +33,65 @@ public class TestRandomNodes {
 	public void testRandomInteger() throws ProcessingException {
 		final RandomIntegerNode node = new RandomIntegerNode();
 		final OpContext context = new OpContext();
-		
+
 		node.operate(context);
 		assertTrue("Output exists", context.containsKey(node.VALUE_OUTPUT));
 		assertTrue("Output value is an integer", Integer.class.isInstance(context.get(node.VALUE_OUTPUT)));
-		
+
 		context.put(node.MIN_INPUT, 50);
 		node.operate(context);
 		assertTrue("Output exists", context.containsKey(node.VALUE_OUTPUT));
 		assertTrue("Output value is an integer", Integer.class.isInstance(context.get(node.VALUE_OUTPUT)));
 		assertTrue("Output greater than min", ((Integer)context.get(node.VALUE_OUTPUT)) >= 50);
-		
+
 		context.put(node.MAX_INPUT, 80);
 		node.operate(context);
 		assertTrue("Output exists", context.containsKey(node.VALUE_OUTPUT));
 		assertTrue("Output value is an integer", Integer.class.isInstance(context.get(node.VALUE_OUTPUT)));
-		
+
 		final int value = (Integer)context.get(node.VALUE_OUTPUT);
 		assertTrue("Output in range", (value >= 50) && (value <= 80));
 	}
-	
+
 	@Test
 	public void testRandomDecimal() throws ProcessingException {
 		final RandomDecimalNode node = new RandomDecimalNode();
 		final OpContext context = new OpContext();
-		
+
 		node.operate(context);
 		assertTrue("Output exists", context.containsKey(node.VALUE_OUTPUT));
 		assertTrue("Output value is a double", Double.class.isInstance(context.get(node.VALUE_OUTPUT)));
-		
+
 		context.put(node.MIN_INPUT, 50);
 		node.operate(context);
 		assertTrue("Output exists", context.containsKey(node.VALUE_OUTPUT));
 		assertTrue("Output value is a double", Double.class.isInstance(context.get(node.VALUE_OUTPUT)));
 		assertTrue("Output greater than min", ((Double)context.get(node.VALUE_OUTPUT)) >= 50);
-		
+
 		context.put(node.MAX_INPUT, 80);
 		node.operate(context);
 		assertTrue("Output exists", context.containsKey(node.VALUE_OUTPUT));
 		assertTrue("Output value is a double", Double.class.isInstance(context.get(node.VALUE_OUTPUT)));
-		
+
 		final double value = (Double)context.get(node.VALUE_OUTPUT);
 		assertTrue("Output in range", (value + 1e-10 >= 50) && (value <= 80 + 1e-10));
 	}
-	
+
 	@Test
 	public void testRandomBoolean() throws ProcessingException {
 		final RandomBooleanNode node = new RandomBooleanNode();
 		final OpContext context = new OpContext();
-		
+
 		node.operate(context);
 		assertTrue("Output exists", context.containsKey(node.VALUE_OUTPUT));
 		assertTrue("Output value is a boolean", Boolean.class.isInstance(context.get(node.VALUE_OUTPUT)));
 	}
-	
+
 	@Test
 	public void testRandomString() throws ProcessingException {
 		final RandomStringNode node = new RandomStringNode();
 		final OpContext context = new OpContext();
-		
+
 		for(int test = 0; test < 50; ++test) {
 			final int LENGTH = (int)(Math.random() * 500) + 10;
 			context.put(node.LENGTH_INPUT, LENGTH);

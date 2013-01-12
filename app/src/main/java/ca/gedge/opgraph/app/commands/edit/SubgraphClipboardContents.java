@@ -57,19 +57,19 @@ import ca.gedge.opgraph.util.Pair;
 class SubgraphClipboardContents implements Transferable {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(SubgraphClipboardContents.class.getName());
-	
+
 	/** Clipboard data flavor */
 	public static final DataFlavor copyFlavor = new DataFlavor(SubgraphClipboardContents.class, "SubgraphClipboardContents");
-	
+
 	/** The document containing the graph to copy from */
 	public final GraphDocument document;
-	
+
 	/** The copied sub-graph */
 	public final OpGraph subGraph;
-	
+
 	/** Mapping from graph to the number of times it has been pasted into each graph */
 	public final Map<OpGraph, Integer> graphDuplicates = new HashMap<OpGraph, Integer>();
-	
+
 	/** Cached data values */
 	private final Map<DataFlavor, Object> cachedData = new HashMap<DataFlavor, Object>();
 
@@ -84,7 +84,7 @@ class SubgraphClipboardContents implements Transferable {
 		this.subGraph = selectedGraph;
 		this.graphDuplicates.put(document.getGraph(), new Integer(0));
 	}
-	
+
 	/**
 	 * Gets the bounding rectangle of a given set of nodes.
 	 * 
@@ -106,19 +106,19 @@ class SubgraphClipboardContents implements Transferable {
 				ymax = Math.max(ymax, comp.getY() + pref.height);
 			}
 		}
-		
+
 		return new Rectangle(xmin, ymin, xmax-xmin, ymax-ymin);
 	}
-	
+
 	//
 	// Transferable overrides
 	//
-	
+
 	@Override
 	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
 		// First, check to see if we've cached a value for this data flavor 
 		Object retVal = cachedData.get(flavor);
-		
+
 		if(retVal == null) {
 			if(flavor == copyFlavor) {
 				retVal = this;
@@ -130,19 +130,19 @@ class SubgraphClipboardContents implements Transferable {
 					final BufferedImage img = new BufferedImage(boundRect.width, boundRect.height, BufferedImage.TYPE_INT_ARGB);
 					final Graphics2D g = (Graphics2D)img.getGraphics();
 					final Collection<OpNode> currentSelection = document.getSelectionModel().getSelectedNodes();
-					
+
 					// Set clip and paint into temp buffer
 					final AffineTransform transform = AffineTransform.getTranslateInstance(-boundRect.getX(), -boundRect.getY());
 					g.setColor(new Color(255,255,255,0));
 					g.fill(new Rectangle(0, 0, fullSize.width, fullSize.height));
 					g.setTransform(transform);
 					g.setClip(boundRect);
-					
+
 					// Paint to graphics (without selection)
 					document.getSelectionModel().setSelectedNodes(null);
 					document.getCanvas().paint(g);
 					document.getSelectionModel().setSelectedNodes(currentSelection);
-					
+
 					// Create the image
 					//final ByteArrayOutputStream bout = new ByteArrayOutputStream();
 					//ImageIO.write(img, "png", bout);
@@ -157,7 +157,7 @@ class SubgraphClipboardContents implements Transferable {
 					LOGGER.severe("No default serializer available");
 					return false;
 				}
-				
+
 				// Write XML to byte stream
 				final ByteArrayOutputStream bout = new ByteArrayOutputStream();
 				try {
@@ -171,11 +171,11 @@ class SubgraphClipboardContents implements Transferable {
 			} else {
 				throw new UnsupportedFlavorException(flavor);
 			}
-			
+
 			if(retVal != null)
 				cachedData.put(flavor, retVal);
 		}
-		
+
 		return retVal;
 	}
 
@@ -188,5 +188,5 @@ class SubgraphClipboardContents implements Transferable {
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
 		return (flavor.equals(copyFlavor) || flavor.equals(DataFlavor.imageFlavor) || flavor.equals(DataFlavor.stringFlavor));
 	}
-	
+
 }

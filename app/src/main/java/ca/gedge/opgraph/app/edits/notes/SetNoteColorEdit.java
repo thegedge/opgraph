@@ -36,10 +36,10 @@ import ca.gedge.opgraph.app.extensions.Note;
 public class SetNoteColorEdit extends AbstractUndoableEdit {
 	/** The note's UI component */
 	private JComponent noteComp;
-	
+
 	/** Old note color */
 	private Color oldColor;
-	
+
 	/** New note color */
 	private Color newColor;
 
@@ -56,40 +56,40 @@ public class SetNoteColorEdit extends AbstractUndoableEdit {
 	public SetNoteColorEdit(Note note, Color color) {
 		if(note == null)
 			throw new NullPointerException();
-		
+
 		noteComp = note.getExtension(JComponent.class);
 		if(noteComp == null)
 			throw new NullPointerException();
-		
+
 		this.oldColor = noteComp.getBackground();
 		this.newColor = color;
 		perform();
 	}
-	
+
 	// XXX assumes noteComp doesn't change for the note
-	
+
 	/**
 	 * Performs this edit.
 	 */
 	private void perform() {
 		noteComp.setBackground(newColor);
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
-	
+
 	@Override
 	public String getPresentationName() {
 		return "Set Note Color";
 	}
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();

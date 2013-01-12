@@ -37,7 +37,7 @@ public class NewCommand extends AbstractAction {
 	 */
 	public NewCommand() {
 		super("New");
-		
+
 		final int CTRL = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, CTRL));
 	}

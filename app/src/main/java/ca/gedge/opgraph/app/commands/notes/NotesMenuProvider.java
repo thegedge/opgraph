@@ -45,7 +45,7 @@ public class NotesMenuProvider implements MenuProvider {
 	public void installPopupItems(Object context, MouseEvent event, GraphEditorModel model, PathAddressableMenu menu) {
 		final boolean isGraph = (context instanceof OpGraph);
 		final boolean isNote = (context instanceof Note);
-		
+
 		if(isGraph || isNote) {
 			final Point loc = model.getCanvas().getMousePosition();
 			menu.addSeparator("");
@@ -64,10 +64,10 @@ public class NotesMenuProvider implements MenuProvider {
 				new Color(255, 200, 100), "Orange",
 				new Color(200, 200, 200), "Gray"
 			};
-			
+
 			menu.addMenuItem("remove_note", new RemoveNoteCommand(note));
 			menu.addSeparator("");
-			
+
 			final JMenu colorsMenu = menu.addMenu("colors", "Colors");
 			for(int index = 0; index < colors.length; index += 2) {
 				final Color color = (Color)colors[index];

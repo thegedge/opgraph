@@ -51,27 +51,27 @@ public class MacroNode
 {
 	/** The graph representing this macro */
 	protected OpGraph graph;
-	
+
 	/** A list from published inputs */
 	protected List<PublishedInput> publishedInputs;
-	
+
 	/** A list of published outputs */
 	protected List<PublishedOutput> publishedOutputs;
-	
+
 	/**
 	 * The source file for this macro.
 	 * 
 	 * @see #getSource()
 	 */
 	private final File source;
-	
+
 	/**
 	 * Constructs a new macro with no source file and a default graph.
 	 */
 	public MacroNode() {
 		this(null, null);
 	}
-	
+
 	/**
 	 * Constructs a new macro with no source file and a specified graph.
 	 * 
@@ -82,7 +82,7 @@ public class MacroNode
 	public MacroNode(OpGraph graph) {
 		this(null, graph);
 	}
-	
+
 	/**
 	 * Constructs a macro node from the given source file and DAG.
 	 * 
@@ -94,12 +94,12 @@ public class MacroNode
 		this.graph = (graph == null ? new OpGraph() : graph);
 		this.publishedInputs = new ArrayList<PublishedInput>();
 		this.publishedOutputs = new ArrayList<PublishedOutput>();
-		
+
 		putExtension(CompositeNode.class, this);
 		putExtension(CustomProcessing.class, this);
 		putExtension(Publishable.class, this);
 	}
-	
+
 	/**
 	 * Gets the source file for this macro.
 	 * 
@@ -110,7 +110,7 @@ public class MacroNode
 	public File getSource() {
 		return source;
 	}
-	
+
 	/**
 	 * Constructs a context mapping for this macro's published inputs. Inputs contained
 	 * in the given context will be mapped to their appropriate node/input field in the
@@ -125,7 +125,7 @@ public class MacroNode
 			local.put(publishedInput.nodeInputField, context.get(publishedInput));
 		}
 	}
-	
+
 	/**
 	 * Maps published outputs from a given context mapping to a given context.
 	 * 
@@ -139,31 +139,31 @@ public class MacroNode
 				context.put(publishedOutput, sourceContext.get(publishedOutput.nodeOutputField));
 		}
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 		if(graph != null) {
 			// First set up processor
 			final Processor processor = new Processor(graph);
 			processor.reset(context);
-			
+
 			// The reset call above could clear out the context, so map after
 			mapInputs(context);
-			
+
 			// Now run the graph
 			processor.stepAll();
 			if(processor.getError() != null)
 				throw processor.getError();
-			
+
 			// Map the published outputs from the child nodes back into context
 			mapOutputs(context);
 		}
 	}
-	
+
 	//
 	// CompositeNode
 	//
@@ -190,17 +190,17 @@ public class MacroNode
 			public void remove() {
 				throw new UnsupportedOperationException("remove not supported");
 			}
-			
+
 			@Override
 			public OpNode next() {
 				return nodeIter.next();
 			}
-			
+
 			@Override
 			public boolean hasNext() {
 				return nodeIter.hasNext();
 			}
-			
+
 			@Override
 			public void initialize(OpContext context) {
 				mapInputs(context);
@@ -212,7 +212,7 @@ public class MacroNode
 			}
 		};
 	}
-	
+
 	//
 	// Publishable
 	//
@@ -240,7 +240,7 @@ public class MacroNode
 	public OutputField publish(String key, OpNode source, OutputField field) {
 		// First, check to see if the field isn't already published
 		OutputField publishedOutput = getPublishedOutput(source, field);
-		
+
 		// If no existing published output field for the given, create a new one.
 		// Otherwise, set the key of the old one to the newly specified key.
 		if(publishedOutput == null) {

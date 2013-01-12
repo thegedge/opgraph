@@ -31,17 +31,17 @@ import ca.gedge.opgraph.app.extensions.Notes;
 public class AddNoteCommand extends AbstractAction {
 	/** The initial x-coordinate for the note */
 	private int x;
-	
+
 	/** The initial y-coordinate for the note */
 	private int y;
-	
+
 	/**
 	 * Constructs an add note command that adds a note at the origin.
 	 */
 	public AddNoteCommand() {
 		this(0, 0);
 	}
-	
+
 	/**
 	 * Constructs an add note command that adds a note at a given location.
 	 * 
@@ -53,11 +53,11 @@ public class AddNoteCommand extends AbstractAction {
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();

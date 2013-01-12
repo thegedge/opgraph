@@ -38,11 +38,11 @@ public class ObjectSelection implements Transferable {
 	public ObjectSelection(Object obj) {
 		this.obj = obj;
 	}
-	
+
 	//
 	// Transferable
 	//
-	
+
 	@Override
 	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
 		if(isDataFlavorSupported(flavor))

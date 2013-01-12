@@ -43,14 +43,14 @@ public class ClassHandler implements URIHandler<List<NodeData>> {
 		// Make sure we can handle URI
 		if(!handlesURI(uri))
 			throw new IllegalArgumentException("Cannot handle uri '" + uri + "'");
-		
+
 		// Load class
 		ArrayList<NodeData> ret = new ArrayList<NodeData>();
 		try {
 			final String className = uri.getSchemeSpecificPart();
 			final Class<?> clz = Class.forName(className, false, getClass().getClassLoader());
 			final Class<? extends OpNode> ovClz = clz.asSubclass(OpNode.class);
-			
+
 			// If a node info annotation is present then we don't need to instantiate the class
 			final OpNodeInfo info = ovClz.getAnnotation(OpNodeInfo.class);
 			if(info != null) {
@@ -77,7 +77,7 @@ public class ClassHandler implements URIHandler<List<NodeData>> {
 		} catch(IllegalAccessException exc) {
 			throw new IOException("Class could not be instantiated: " + uri.getPath(), exc);
 		}
-		
+
 		return ret;
 	}
 }

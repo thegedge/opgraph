@@ -33,10 +33,10 @@ import ca.gedge.opgraph.OutputField;
 public abstract class GetContextValueNode extends OpNode {
 	/** The value output field for this node */
 	private OutputField outputField;
-	
+
 	/** The key of the context value that will be fetched */
 	private String key;
-	
+
 	/**
 	 * Constructs a node that will grab a context value with a specified key.
 	 * 
@@ -47,11 +47,11 @@ public abstract class GetContextValueNode extends OpNode {
 		this.key = key;
 		putField(outputField = new OutputField("value", "context value", true, valueType));
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public void operate(OpContext context) {
 		context.put(outputField, context.get(key));

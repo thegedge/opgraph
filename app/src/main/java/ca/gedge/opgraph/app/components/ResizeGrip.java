@@ -38,13 +38,13 @@ import javax.swing.JComponent;
 public class ResizeGrip extends JComponent {
 	/** The component whose size this resize grip will control */
 	private Component component;
-	
+
 	/** The size of the grip */
 	private Dimension size;
-	
+
 	/** The size of the component before this grip was clicked */
 	private Dimension initialComponentSize;
-	
+
 	/**
 	 * Constructs a default resize grip component.
 	 * 
@@ -53,7 +53,7 @@ public class ResizeGrip extends JComponent {
 	public ResizeGrip(Component component) {
 		this(component, 10, 10);
 	}
-	
+
 	/**
 	 * Construct s a resize grip component with a given size.
 	 * 
@@ -65,38 +65,38 @@ public class ResizeGrip extends JComponent {
 		this.component = component;
 		this.size = new Dimension(w, h);
 		this.initialComponentSize = component.getSize();
-		
+
 		setOpaque(true);
 		addMouseListener(mouseAdapter);
 		addMouseMotionListener(mouseAdapter);
 	}
-	
+
 	/**
 	 * Gets the component this grip resizes.
 	 * 
-     * @return the component
-     */
-    public Component getComponent() {
-	    return component;
-    }
-    
+	 * @return the component
+	 */
+	public Component getComponent() {
+		return component;
+	}
+
 	/**
 	 * Gets the size of the component before this grip was clicked.
 	 * 
-     * @return the size of the component
-     */
-    public Dimension getInitialComponentSize() {
-	    return initialComponentSize;
-    }
-	
+	 * @return the size of the component
+	 */
+	public Dimension getInitialComponentSize() {
+		return initialComponentSize;
+	}
+
 	//
 	// Event adapters
 	//
-	
+
 	private final MouseAdapter mouseAdapter = new MouseAdapter() {
 		/** The initial click point on screen */
 		private Point initialLocationOnScreen;
-		
+
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			final Point p = e.getLocationOnScreen();
@@ -113,18 +113,18 @@ public class ResizeGrip extends JComponent {
 				}
 			}	
 		}
-		
+
 		@Override
 		public void mousePressed(MouseEvent e) {
 			initialComponentSize = component.getSize();
 			initialLocationOnScreen = e.getLocationOnScreen();
 		}
 	};
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public Dimension getPreferredSize() {
 		return size;

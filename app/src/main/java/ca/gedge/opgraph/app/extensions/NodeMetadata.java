@@ -35,33 +35,33 @@ public class NodeMetadata {
 	//
 	// Properties
 	//
-	
+
 	/** Key for the location property */
 	public static final String LOCATION_PROPERTY = "nodeLocation";
-	
+
 	/** Key for the defaults property */
 	public static final String DEFAULTS_PROPERTY = "nodeDefaults";
 
 	/** Support member for property change listeners */
 	private final PropertyChangeSupport changeSupport;
-	
+
 	//
 	// NodeMetadata
 	//
-	
+
 	/** Coordinates on a canvas */
 	private Point p;
-	
+
 	/** A map of default values for a node's inputs */
 	private Map<InputField, Object> defaults;
-	
+
 	/**
 	 * Constructs metadata with a node located at the origin.
 	 */
 	public NodeMetadata() {
 		this(0, 0);
 	}
-	
+
 	/**
 	 * Constructs metadata with a node located at the specified coordinates.
 	 * 
@@ -73,7 +73,7 @@ public class NodeMetadata {
 		this.defaults = new HashMap<InputField, Object>();	
 		this.changeSupport = new PropertyChangeSupport(this);
 	}
-	
+
 	/**
 	 * Gets the y-coordinate.
 	 * 
@@ -117,7 +117,7 @@ public class NodeMetadata {
 			changeSupport.firePropertyChange(LOCATION_PROPERTY, oldP, new Point(p.x, p.y));
 		}
 	}
-	
+
 	/**
 	 * Sets the location.
 	 * 
@@ -145,10 +145,10 @@ public class NodeMetadata {
 			if(defaults.get(field) == null)
 				defaults.remove(field);
 		}
-		
+
 		return Collections.unmodifiableMap(defaults);
 	}
-	
+
 	/**
 	 * Gets the default value for the given input field.
 	 * 
@@ -160,7 +160,7 @@ public class NodeMetadata {
 	public Object getDefault(InputField field) {
 		return defaults.get(field);
 	}
-	
+
 	/**
 	 * Sets the default value for the given input field.
 	 * 
@@ -181,11 +181,11 @@ public class NodeMetadata {
 			changeSupport.firePropertyChange(DEFAULTS_PROPERTY, oldValue, value);
 		}
 	}
-	
+
 	//
 	// PropertyChangeListener support
 	//
-	
+
 	/**
 	 * Adds a property change listener to this metadata.
 	 * 
@@ -194,7 +194,7 @@ public class NodeMetadata {
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		changeSupport.addPropertyChangeListener(listener);
 	}
-	
+
 	/**
 	 * Removes a property change listener from this metadata.
 	 * 

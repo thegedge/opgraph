@@ -31,7 +31,7 @@ public final class InvalidTypeException extends ProcessingException {
 
 	/** The given input */
 	private Object value;
-	
+
 	/**
 	 * Constructs an exception with the input field that did not accept
 	 * the given object.
@@ -53,7 +53,7 @@ public final class InvalidTypeException extends ProcessingException {
 	public InputField getField() {
 		return field;
 	}
-	
+
 	/**
 	 * Gets the value the input field was given
 	 * 

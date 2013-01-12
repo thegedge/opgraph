@@ -35,7 +35,7 @@ import ca.gedge.opgraph.OpNode;
 public class GenerateDITAFiles {
 	/** Logger **/
 	private static final Logger LOGGER = Logger.getLogger(GenerateDITAFiles.class.getName());
-	
+
 	/**
 	 * Program entry point.
 	 * 

@@ -39,7 +39,7 @@ import ca.gedge.opgraph.util.Pair;
 public class PathAddressableMenuImpl implements PathAddressableMenu {
 	/** The root element to base paths off of */
 	private MenuElement root;
-	
+
 	/**
 	 * Constructs a path-adressable menu with a given menu element as its root.
 	 * 
@@ -48,29 +48,29 @@ public class PathAddressableMenuImpl implements PathAddressableMenu {
 	public PathAddressableMenuImpl(MenuElement root) {
 		this.root = root;
 	}
-	
+
 	//
 	// PathAddressableMenu
 	//
-	
+
 	@Override
 	public JMenu getMenu(String path) {
 		final MenuElement elem = getMenuElement(path);
 		return (elem != null && (elem instanceof JMenu) ? (JMenu)elem : null);
 	}
-	
+
 	@Override
 	public JMenuItem getMenuItem(String path) {
 		final MenuElement elem = getMenuElement(path);
 		return (elem != null && (elem instanceof JMenuItem) ? (JMenuItem)elem : null);
 	}
-	
+
 	@Override
 	public MenuElement getMenuElement(String path) {
 		final Pair<String, MenuElement> deepest = getDeepestMenuElement(root, path);
 		return ((deepest.getFirst().length() == path.length()) ? deepest.getSecond() : null);
 	}
-	
+
 	@Override
 	public JMenu addMenu(String path, String text) {
 		final Pair<String, MenuElement> deepest = getDeepestMenuElement(root, path);
@@ -95,7 +95,7 @@ public class PathAddressableMenuImpl implements PathAddressableMenu {
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public JMenuItem addMenuItem(String path, Action action) {
 		final Pair<String, MenuElement> deepest = getDeepestMenuElement(root, path);
@@ -122,7 +122,7 @@ public class PathAddressableMenuImpl implements PathAddressableMenu {
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public Component addComponent(String path, Component component) {
 		final Pair<String, MenuElement> deepest = getDeepestMenuElement(root, path);
@@ -141,7 +141,7 @@ public class PathAddressableMenuImpl implements PathAddressableMenu {
 
 		return component;
 	}
-	
+
 	@Override
 	public void addSeparator(String path) {
 		final Pair<String, MenuElement> deepest = getDeepestMenuElement(root, path);
@@ -155,13 +155,13 @@ public class PathAddressableMenuImpl implements PathAddressableMenu {
 			}
 		}
 	}
-	
+
 	private Pair<String, MenuElement> getDeepestMenuElement(MenuElement elem, String path) {
 		int position = 0;
 		if(elem != null && path != null) {
 			final String [] components = path.split("/");
 			int index = 0;
-			
+
 			// Go as deep as we can go
 			while(index < components.length) {
 				final int oldIndex = index;
@@ -173,16 +173,16 @@ public class PathAddressableMenuImpl implements PathAddressableMenu {
 						break;
 					}
 				}
-				
+
 				// If we didn't move, stop
 				if(index == oldIndex)
 					break;
 			}
-			
+
 			if(index == components.length)
 				--position;
 		}
-		
+
 		return new Pair<String, MenuElement>(path.substring(0, position), elem);
 	}
 }

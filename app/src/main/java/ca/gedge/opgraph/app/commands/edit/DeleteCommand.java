@@ -45,7 +45,7 @@ public class DeleteCommand extends AbstractAction {
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();

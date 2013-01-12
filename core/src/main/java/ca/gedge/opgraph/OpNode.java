@@ -34,16 +34,16 @@ import ca.gedge.opgraph.extensions.ExtendableSupport;
 public abstract class OpNode implements Extendable, Vertex {
 	/** The key for the id property */
 	public static final String ID_PROPERTY = "id";
-	
+
 	/** The key for the name property */
 	public static final String NAME_PROPERTY = "name";
-	
+
 	/** The key for the description property */
 	public static final String DESCRIPTION_PROPERTY = "description";
-	
+
 	/** The key for the category property */
 	public static final String CATEGORY_PROPERTY = "category"; 
-	
+
 	/** Default enabled field */
 	public final static InputField ENABLED_FIELD = new InputField(
 			"enabled",
@@ -51,25 +51,25 @@ public abstract class OpNode implements Extendable, Vertex {
 			true,
 			true,
 			Boolean.class);
-	
+
 	/** A unique id for this node */
 	private String id;
-	
+
 	/** The name of this node */
 	private String name;
-	
+
 	/** The category of this node */
 	private String category;
-	
+
 	/** A short description of this node and what it does */
 	private String description;
-	
+
 	/** The list of input fields this node has */
 	private List<InputField> inputFields;
-	
+
 	/** The list of output fields this node has */
 	private List<OutputField> outputFields;
-	
+
 	/**
 	 * Constructs a node with a generated id, this class' name as the node name
 	 * and an empty description. Also adds the enabled field.
@@ -98,8 +98,7 @@ public abstract class OpNode implements Extendable, Vertex {
 	protected OpNode(String name, String description) {
 		this(null, name, description);
 	}
-	
-	
+
 	/**
 	 * Constructs a node with a given id, name, and description. Also adds a
 	 * default &quot;enabled&quot; field.
@@ -113,7 +112,7 @@ public abstract class OpNode implements Extendable, Vertex {
 		setName(name);
 		setDescription(description);
 		setCategory(null);
-		
+
 		this.outputFields = new ArrayList<OutputField>();
 		this.inputFields = new ArrayList<InputField>();
 		this.inputFields.add(ENABLED_FIELD);
@@ -136,14 +135,14 @@ public abstract class OpNode implements Extendable, Vertex {
 	public final void setId(String id) {
 		if(id == null || (id = id.trim()).length() == 0)
 			id = Integer.toHexString(System.identityHashCode(this));
-		
+
 		if(!id.equals(this.id)) {
 			final String oldId = this.id;
 			this.id = id;
 			firePropertyChange(ID_PROPERTY, oldId, this.id);
 		}
 	}
-	
+
 	/**
 	 * Gets a descriptive name for this node.
 	 * 
@@ -152,7 +151,7 @@ public abstract class OpNode implements Extendable, Vertex {
 	public final String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Gets a default name for this node. First priority is given to the
 	 * {@link OpNodeInfo} annotation, if it is present on this node class. If not,
@@ -174,7 +173,7 @@ public abstract class OpNode implements Extendable, Vertex {
 		name = (name == null ? "" : name.trim());
 		if(name.length() == 0)
 			name = getDefaultName();
-		
+
 		if(!name.equals(this.name)) {
 			final String oldName = this.name;
 			this.name = name;
@@ -190,7 +189,7 @@ public abstract class OpNode implements Extendable, Vertex {
 	public final String getDescription() {
 		return description;
 	}
-	
+
 	/**
 	 * Gets a default description for this node. First priority is given to
 	 * the {@link OpNodeInfo} annotation, if it is present on this
@@ -202,7 +201,7 @@ public abstract class OpNode implements Extendable, Vertex {
 		final OpNodeInfo info = getClass().getAnnotation(OpNodeInfo.class);
 		return (info == null ? "" : info.description());
 	}
-	
+
 	/**
 	 * Sets this node's category.
 	 * 
@@ -212,7 +211,7 @@ public abstract class OpNode implements Extendable, Vertex {
 	public final void setDescription(String description) {
 		if(description == null || (description = description.trim()).length() == 0)
 			description = getDefaultDescription();
-		
+
 		if(!description.equals(this.description)) {
 			final String oldDescription = this.description;
 			this.description = description;
@@ -228,7 +227,7 @@ public abstract class OpNode implements Extendable, Vertex {
 	public final String getCategory() {
 		return category;
 	}
-	
+
 	/**
 	 * Gets a default category for this node. First priority is given to the
 	 * {@link OpNodeInfo} annotation, if it is present on this node's class.
@@ -240,7 +239,7 @@ public abstract class OpNode implements Extendable, Vertex {
 		final OpNodeInfo info = getClass().getAnnotation(OpNodeInfo.class);
 		return (info == null ? "" : info.category());
 	}
-	
+
 	/**
 	 * Sets this node's category.
 	 * 
@@ -250,14 +249,14 @@ public abstract class OpNode implements Extendable, Vertex {
 	public final void setCategory(String category) {
 		if(category == null || (category = category.trim()).length() == 0)
 			category = getDefaultCategory();
-		
+
 		if(!category.equals(this.category)) {
 			final String oldCategory = this.category;
 			this.category = category;
 			firePropertyChange(CATEGORY_PROPERTY, oldCategory, this.category);
 		}
 	}
-	
+
 	/**
 	 * Adds an input field to this node.
 	 * 
@@ -273,7 +272,7 @@ public abstract class OpNode implements Extendable, Vertex {
 				if(inputFields.get(index).getKey().equals(field.getKey())) {
 					if(inputFields.get(index).isFixed())
 						throw new IllegalArgumentException("Cannot overwrite fixed input field '" + field.getKey() + "' in node '" + getName() + "'");
-			
+
 					foundField = inputFields.get(index);
 					break;
 				}
@@ -289,7 +288,7 @@ public abstract class OpNode implements Extendable, Vertex {
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds an output field to this node.
 	 * 
@@ -305,7 +304,7 @@ public abstract class OpNode implements Extendable, Vertex {
 				if(outputFields.get(index).getKey().equals(field.getKey())) {
 					if(outputFields.get(index).isFixed())
 						throw new IllegalArgumentException("Cannot overwrite fixed output field '" + field.getKey() + "' in node '" + getName() + "'");
-			
+
 					foundField = outputFields.get(index);
 					break;
 				}
@@ -320,7 +319,7 @@ public abstract class OpNode implements Extendable, Vertex {
 			}
 		}
 	}
-	
+
 	/**
 	 * Removes an input field from this node. Note that {@link #ENABLED_FIELD}
 	 * cannot be removed.
@@ -333,7 +332,7 @@ public abstract class OpNode implements Extendable, Vertex {
 				fireFieldRemoved(field);
 		}
 	}
-	
+
 	/**
 	 * Removes all input fields from this node, except for {@link #ENABLED_FIELD}.
 	 */
@@ -342,7 +341,7 @@ public abstract class OpNode implements Extendable, Vertex {
 		for(InputField field : fieldsCopy)
 			removeField(field);
 	}
-	
+
 	/**
 	 * Removes an output field from this node.
 	 * 
@@ -352,7 +351,7 @@ public abstract class OpNode implements Extendable, Vertex {
 		if(outputFields.remove(field))
 			fireFieldRemoved(field);
 	}
-	
+
 	/**
 	 * Removes all output fields from this node.
 	 */
@@ -361,7 +360,7 @@ public abstract class OpNode implements Extendable, Vertex {
 		for(OutputField field : fieldsCopy)
 			removeField(field);
 	}
-	
+
 	/**
 	 * Gets the input field with a specified key
 	 *  
@@ -377,7 +376,7 @@ public abstract class OpNode implements Extendable, Vertex {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the output field with a specified key
 	 *  
@@ -393,7 +392,7 @@ public abstract class OpNode implements Extendable, Vertex {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the list of input fields.
 	 * 
@@ -402,7 +401,7 @@ public abstract class OpNode implements Extendable, Vertex {
 	public final List<InputField> getInputFields() {
 		return Collections.unmodifiableList(inputFields);
 	}
-	
+
 	/**
 	 * Gets the list of output fields.
 	 * 
@@ -411,7 +410,7 @@ public abstract class OpNode implements Extendable, Vertex {
 	public final List<OutputField> getOutputFields() {
 		return Collections.unmodifiableList(outputFields);
 	}
-	
+
 	/**
 	 * Have this node perform its operation.
 	 * 
@@ -426,32 +425,32 @@ public abstract class OpNode implements Extendable, Vertex {
 	 * @throws ProcessingException  if any errors occurred during the operation
 	 */
 	public abstract void operate(OpContext context) throws ProcessingException;
-	
+
 	//
 	// Extendable
 	//
-	
+
 	private ExtendableSupport extendableSupport = new ExtendableSupport(OpNode.class);
-	
+
 	@Override
 	public <T> T getExtension(Class<T> type) {
 		return extendableSupport.getExtension(type);
 	}
-	
+
 	@Override
 	public Collection<Class<?>> getExtensionClasses() {
 		return extendableSupport.getExtensionClasses();
 	}
-	
+
 	@Override
 	public <T> T putExtension(Class<T> type, T extension) {
 		return extendableSupport.putExtension(type, extension);
 	}
-	
+
 	//
 	// Listeners
 	//
-	
+
 	private final ArrayList<OpNodeListener> listeners = new ArrayList<OpNodeListener>();
 
 	/**

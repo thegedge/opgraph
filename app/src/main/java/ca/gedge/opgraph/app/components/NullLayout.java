@@ -39,7 +39,7 @@ public class NullLayout implements LayoutManager {
 					dim.width = Math.max(min.width, dim.width);
 					dim.height = Math.max(min.height, dim.height);
 				}
-					
+
 				final Dimension max = comp.getMaximumSize();
 				if(max != null) {
 					dim.width = Math.min(max.width, dim.width);
@@ -48,7 +48,7 @@ public class NullLayout implements LayoutManager {
 			} else {
 				dim = parent.getSize();
 			}
-			
+
 			comp.setSize(dim);
 		}
 	}
@@ -57,7 +57,7 @@ public class NullLayout implements LayoutManager {
 	public Dimension minimumLayoutSize(Container parent) {
 		return preferredLayoutSize(parent);
 	}
-	
+
 	@Override
 	public Dimension preferredLayoutSize(Container parent) {
 		int maxX = 0;
@@ -70,13 +70,13 @@ public class NullLayout implements LayoutManager {
 					dim.width = Math.max(min.width, dim.width);
 					dim.height = Math.max(min.height, dim.height);
 				}
-					
+
 				final Dimension max = comp.getMaximumSize();
 				if(max != null) {
 					dim.width = Math.min(max.width, dim.width);
 					dim.height = Math.min(max.height, dim.height);
 				}
-				
+
 				maxX = Math.max(maxX, comp.getX() + dim.width);
 				maxY = Math.max(maxY, comp.getY() + dim.height);
 			}
@@ -86,7 +86,7 @@ public class NullLayout implements LayoutManager {
 
 	@Override
 	public void addLayoutComponent(String name, Component comp) {}
-	
+
 	@Override
 	public void removeLayoutComponent(Component comp) {}
 }

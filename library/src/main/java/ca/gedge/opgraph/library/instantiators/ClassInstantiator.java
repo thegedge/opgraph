@@ -26,7 +26,7 @@ package ca.gedge.opgraph.library.instantiators;
 public class ClassInstantiator<T> implements Instantiator<T> {
 	/** The class to use for instantiation */
 	private Class<? extends T> clz;
-	
+
 	/**
 	 * Constructs an instantiator that uses a specified class to create
 	 * new instances.

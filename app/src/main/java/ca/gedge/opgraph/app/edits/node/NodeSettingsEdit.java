@@ -35,13 +35,13 @@ import ca.gedge.opgraph.app.extensions.NodeSettings;
 public class NodeSettingsEdit extends AbstractUndoableEdit {
 	/** The settings for the node */
 	private NodeSettings settings;
-	
+
 	/** The new settings for the node */
 	private Properties newSettings;
-	
+
 	/** The old settings for the node */
 	private Properties oldSettings;
-	
+
 	/**
 	 * Constructs a node settings edit.
 	 * 

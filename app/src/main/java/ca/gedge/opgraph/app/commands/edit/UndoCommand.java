@@ -32,7 +32,7 @@ import javax.swing.undo.UndoManager;
 public class UndoCommand extends AbstractAction {
 	/** The undo manager to send undo commands to */
 	private UndoManager manager;
-	
+
 	/**
 	 * Constructs an undo command for a given undo manager.
 	 * 
@@ -43,7 +43,7 @@ public class UndoCommand extends AbstractAction {
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		update();
 	}
-	
+
 	/**
 	 * Updates the text and enabled state of this command.
 	 */
@@ -51,11 +51,11 @@ public class UndoCommand extends AbstractAction {
 		setEnabled(manager.canUndo());
 		putValue(NAME, manager.getUndoPresentationName());
 	}
-	
+
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(manager.canUndo())

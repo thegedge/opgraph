@@ -48,28 +48,28 @@ import ca.gedge.opgraph.app.edits.notes.SetNoteTextEdit;
 public class NoteComponent extends JPanel {
 	/** The default note color */
 	private static final Color DEFAULT_COLOR = new Color(255, 255, 150);
-	
+
 	/** The note this component displaying */
 	private WeakReference<Note> noteRef;
-	
+
 	/** Background color */
 	private Color background;
-	
+
 	/** Border color */
 	private Color border;
-	
+
 	/** Title text field */
 	private JTextField titleField;
-	
+
 	/** Double-click support for the title text field */
 	private DoubleClickableTextField titleDoubleClickSupport;
-	
+
 	/** Body text field */
 	private JTextArea bodyField;
-	
+
 	/** Double-click support for the body text field */
 	private DoubleClickableTextField bodyDoubleClickSupport;
-	
+
 	/** Resize grip */
 	private ResizeGrip resizeGrip;
 
@@ -80,7 +80,7 @@ public class NoteComponent extends JPanel {
 	 */
 	public NoteComponent(Note note) {
 		this.noteRef = new WeakReference<Note>(note);
-		
+
 		// Components
 		this.titleField = new JTextField(note.getTitle());
 		this.titleField.setBorder(new EmptyBorder(2, 5, 2, 5));
@@ -136,21 +136,21 @@ public class NoteComponent extends JPanel {
 	/**
 	 * Gets the note this component is displaying.
 	 * 
-     * @return the note
-     */
-    public Note getNote() {
-	    return noteRef.get();
-    }
-	
-    /**
-     * Gets the resize grip for this component.
-     * 
-     * @return the resize grip
-     */
-    public ResizeGrip getResizeGrip() {
-	    return resizeGrip;
-    }
-    
+	 * @return the note
+	 */
+	public Note getNote() {
+		return noteRef.get();
+	}
+
+	/**
+	 * Gets the resize grip for this component.
+	 * 
+	 * @return the resize grip
+	 */
+	public ResizeGrip getResizeGrip() {
+		return resizeGrip;
+	}
+
 	//
 	// Overrides
 	//
@@ -185,7 +185,7 @@ public class NoteComponent extends JPanel {
 		@Override
 		public void propertyChange(PropertyChangeEvent e) {
 			final Note note = noteRef.get();
-			
+
 			String title = note.getTitle();
 			String body = note.getBody();
 

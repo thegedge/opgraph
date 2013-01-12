@@ -42,17 +42,17 @@ public class StepLevelCommand extends AbstractAction {
 	 */
 	public StepLevelCommand() {
 		super("Step To Next Level");
-		
+
 		final int CTRL = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		final int SHIFT = InputEvent.SHIFT_MASK;
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, CTRL + SHIFT));
 		putValue(SMALL_ICON, IconLibrary.getIcon(IconType.DEBUG_STEP_LEVEL, 16, 16));
 	}
-	
+
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();
@@ -62,7 +62,7 @@ public class StepLevelCommand extends AbstractAction {
 				context = new Processor(document.getGraph());
 				document.setProcessingContext(context);
 			}
-			
+
 			if(context.hasNext()) {
 				context.stepToNextLevel();
 				document.updateDebugState(context);

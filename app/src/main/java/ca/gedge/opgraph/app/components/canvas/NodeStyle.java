@@ -36,7 +36,7 @@ public class NodeStyle {
 	private static final NodeStyle DEFAULT = new NodeStyle();
 	private static final NodeStyle COMPOSITE = new NodeStyle();
 	private static final Map<Class<? extends OpNode>, NodeStyle> installedStyles;
-	
+
 	static {
 		DEFAULT.NodeBorderColor = Color.GRAY;
 		DEFAULT.NodeBackgroundColor = new Color(255, 255, 255, 200);
@@ -65,7 +65,7 @@ public class NodeStyle {
 		installedStyles = new HashMap<Class<? extends OpNode>, NodeStyle>();
 		installedStyles.put(OpNode.class, DEFAULT);
 	}
-	
+
 	/**
 	 * Installs a node style for a specfied {@link OpNode} class.
 	 * 
@@ -75,7 +75,7 @@ public class NodeStyle {
 	public static void installStyleForNode(Class<? extends OpNode> cls, NodeStyle style) {
 		installedStyles.put(cls, style);
 	}
-	
+
 	/**
 	 * Gets the node style for a given node.
 	 * 
@@ -89,55 +89,55 @@ public class NodeStyle {
 			// CompositeNode extension is fixed
 			if(node.getExtension(CompositeNode.class) != null)
 				return COMPOSITE;
-			
+
 			// Go through superclasses to see if we can find something
 			Class<?> cls = node.getClass();
 			while(cls != null) {
 				if(installedStyles.containsKey(cls))
 					return installedStyles.get(cls);
-				
+
 				cls = cls.getSuperclass();
 			}
 		}
 		return DEFAULT;
 	}
-	
+
 	/** The top color for the background of the node name section */ 
 	public Color NodeNameTopColor = Color.WHITE;
-	
+
 	/** The bottom color for the background of the node name section */ 
 	public Color NodeNameBottomColor = Color.WHITE;
-	
+
 	/** The color for the node name text */
 	public Color NodeNameTextColor = Color.BLACK;
-	
+
 	/** The color for the node name text shadow */
 	public Color NodeNameTextShadowColor = Color.LIGHT_GRAY;
-	
+
 	/** The color for the node's bg */
 	public Color NodeBackgroundColor = Color.WHITE;
-	
+
 	/** The color for the node's border */
 	public Color NodeBorderColor = Color.BLACK;
-	
+
 	/** The color for the node's focus ring */
 	public Color NodeFocusColor = Color.WHITE;
-	
+
 	/** The color for the node's input/output fields */
 	public Color FieldsTextColor = Color.BLACK;
-	
+
 	/** The color for the fill in the anchor points for links when an link is attached */
 	public Color AnchorLinkFillColor = Color.GRAY;
-	
+
 	/** The color for the fill in the anchor points for links when a default value is available */
 	public Color AnchorDefaultFillColor = Color.GRAY;
-	
+
 	/** The color for the fill in the anchor points for links when it is a published input/output in a macro */
 	public Color AnchorPublishedFillColor = Color.GRAY;
-	
+
 	/** The border used for rendering a node. */
 	public Border NodeBorder = new DefaultNodeBorder();
-	
+
 	/** Whether or not to show the enabled field of a node. */
 	public boolean ShowEnabledField = true;
 }

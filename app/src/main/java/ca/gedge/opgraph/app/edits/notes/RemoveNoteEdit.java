@@ -27,7 +27,6 @@ import javax.swing.undo.CannotUndoException;
 
 import ca.gedge.opgraph.app.extensions.Note;
 import ca.gedge.opgraph.app.extensions.Notes;
-import ca.gedge.opgraph.library.NodeData;
 
 /**
  * Removes a note from a note collection.
@@ -35,13 +34,12 @@ import ca.gedge.opgraph.library.NodeData;
 public class RemoveNoteEdit extends AbstractUndoableEdit {
 	/** The graph to which this edit was applied */
 	private Notes notes;
-	
+
 	/** The note that was removed */
 	private Note note;
-	
+
 	/**
-	 * Constructs an edit that constructs a node described by a specified
-	 * {@link NodeData} and adds at the given initial location.
+	 * Constructs an edit that removes a given note from a notes collection.
 	 * 
 	 * @param notes  the notes to which this edit will be applied
 	 * @param note  the note to remove
@@ -51,34 +49,34 @@ public class RemoveNoteEdit extends AbstractUndoableEdit {
 	public RemoveNoteEdit(Notes notes, Note note) {
 		if(notes == null)
 			throw new NullPointerException();
-		
+
 		this.notes = notes;
 		this.note = note;
 		perform();
 	}
-	
+
 	/**
 	 * Performs this edit.
 	 */
 	private void perform() {
 		notes.remove(note);
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
-	
+
 	@Override
 	public String getPresentationName() {
 		return "Remove Note";
 	}
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();

@@ -39,7 +39,7 @@ class NodeLibraryTreeModel
 {
 	/** The node library */
 	private NodeLibrary library;
-	
+
 	/** The filter being used */
 	private NodeInfoFilter filter;
 
@@ -61,10 +61,10 @@ class NodeLibraryTreeModel
 	 */
 	public NodeLibraryTreeModel(NodeLibrary library, NodeInfoFilter filter) {
 		super(new DefaultMutableTreeNode());
-		
+
 		this.library = library;
 		this.filter = filter;
-		
+
 		if(this.library != null) {
 			for(NodeData nodeData : this.library)
 				nodeRegistered(nodeData);
@@ -122,9 +122,9 @@ class NodeLibraryTreeModel
 	 */
 	private DefaultMutableTreeNode getNodeForCategory(String category) {
 		final DefaultMutableTreeNode root = (DefaultMutableTreeNode)getRoot(); 
-		
+
 		DefaultMutableTreeNode ret = null;
-		
+
 		int index = 0;
 		for(; index < root.getChildCount(); ++index) {
 			final DefaultMutableTreeNode node = (DefaultMutableTreeNode)root.getChildAt(index);
@@ -136,15 +136,15 @@ class NodeLibraryTreeModel
 				break;
 			}
 		}
-		
+
 		if(ret == null) {
 			ret = new DefaultMutableTreeNode(category);
 			insertNodeInto(ret, (DefaultMutableTreeNode)getRoot(), index);
 		}
-		
+
 		return ret;
 	}
-	
+
 	//
 	// NodeLibraryListener 
 	//
@@ -159,11 +159,11 @@ class NodeLibraryTreeModel
 				node.add(newNode);
 		}
 	}
-	
+
 	@Override
 	public void nodeUnregistered(NodeData info) {
 		final String category = (info.category.length() == 0 ? "General" : info.category);
-		
+
 		DefaultMutableTreeNode node = getNodeForCategory(category);
 		if(node != null) {
 			for(int index = 0; index < node.getChildCount(); ++index) {
@@ -174,7 +174,7 @@ class NodeLibraryTreeModel
 					break;
 				}
 			}
-			
+
 			// Now that we've unregistered the node, recurse up through ancestors
 			// and remove them from their parents if they contain no children
 			while(node != null && node.getChildCount() == 0) {
@@ -183,7 +183,7 @@ class NodeLibraryTreeModel
 					node.removeFromParent();
 					nodesWereRemoved(node.getParent(), new int[]{parent.getIndex(node)}, new Object[]{node});
 				}
-				
+
 				if(node instanceof DefaultMutableTreeNode)
 					node = (DefaultMutableTreeNode)parent;
 				else

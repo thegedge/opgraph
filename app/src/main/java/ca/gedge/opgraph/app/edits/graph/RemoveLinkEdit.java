@@ -33,10 +33,10 @@ import ca.gedge.opgraph.dag.VertexNotFoundException;
 public class RemoveLinkEdit extends AbstractUndoableEdit {
 	/** The graph to which this edit was applied  */
 	private OpGraph graph;
-	
+
 	/** The link that was removed */
 	private final OpLink link;
-	
+
 	/**
 	 * Constructs an edit that removes a given link from a canvas model.
 	 * 
@@ -48,29 +48,29 @@ public class RemoveLinkEdit extends AbstractUndoableEdit {
 		this.link = link;
 		perform();
 	}
-	
+
 	/**
 	 * Performs this edit.
 	 */
 	private void perform() {
 		graph.remove(link);
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
-	
+
 	@Override
 	public String getPresentationName() {
 		return "Remove Link";
 	}
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();

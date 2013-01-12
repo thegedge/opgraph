@@ -34,7 +34,7 @@ public interface MenuProvider {
 	 * @param menu  the menu to install things to
 	 */
 	public abstract void installItems(GraphEditorModel model, PathAddressableMenu menu);
-	
+
 	/**
 	 * Installs the items associated with this provider to a popup menu.
 	 * An object is given for context, and the provider should determine if

@@ -36,10 +36,10 @@ import ca.gedge.opgraph.app.util.GUIHelper;
 public class GridLayer extends JComponent {
 	/** Grid line spacing */
 	public static final int DEFAULT_GRID_SPACING = 50;
-	
+
 	/** Snap distance */
 	public static final int DEFAULT_SNAP_DISTANCE = 5;
-	
+
 	/**
 	 * Constructs a viewport for the specified canvas.
 	 */
@@ -47,7 +47,7 @@ public class GridLayer extends JComponent {
 		setOpaque(true);
 		setBackground(Color.DARK_GRAY);
 	}
-	
+
 	/**
 	 * Snaps a point to this grid.
 	 * 
@@ -59,53 +59,53 @@ public class GridLayer extends JComponent {
 		final int mx = p.x % DEFAULT_GRID_SPACING;
 		final int my = p.y % DEFAULT_GRID_SPACING;
 		final Point snapped = new Point();
-		
+
 		if(Math.abs(mx) <= DEFAULT_SNAP_DISTANCE) {
 			snapped.x = -mx;
 		} else if(Math.abs(DEFAULT_GRID_SPACING - mx) <= DEFAULT_SNAP_DISTANCE) {
 			snapped.x = DEFAULT_GRID_SPACING - mx;
 		}
-		
+
 		if(Math.abs(my) <= DEFAULT_SNAP_DISTANCE) {
 			snapped.y = -my;
 		} else if(Math.abs(DEFAULT_GRID_SPACING - my) <= DEFAULT_SNAP_DISTANCE) {
 			snapped.y = DEFAULT_GRID_SPACING - my;
 		}
-	
+
 		return snapped;
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public Dimension getPreferredSize() {
 		return null;
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics gfx) {
 		Graphics2D g = (Graphics2D)gfx;
 		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
+
 		super.paintComponent(g);
-		
+
 		// Fill background
 		g.setColor(getBackground());
 		g.fill(getVisibleRect());
-		
+
 		// Draw grid lines
 		final Rectangle view = getVisibleRect();
 		final int startx = ((view.x / DEFAULT_GRID_SPACING - 1) * DEFAULT_GRID_SPACING); 
 		final int starty = ((view.y / DEFAULT_GRID_SPACING - 1) * DEFAULT_GRID_SPACING); 
 		final int endx = view.x + view.width + 1;
 		final int endy = view.y + view.height + 1;
-		
+
 		g.setColor(GUIHelper.highlightColor(getBackground()));
 		for(int y = starty; y < endy; y += DEFAULT_GRID_SPACING)
 			g.drawLine(view.x, y, endx, y);
-		
+
 		for(int x = startx; x < endx; x += DEFAULT_GRID_SPACING)
 			g.drawLine(x, view.y, x, endy);
 	}

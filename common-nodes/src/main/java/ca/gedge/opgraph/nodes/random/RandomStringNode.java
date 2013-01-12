@@ -39,13 +39,13 @@ import ca.gedge.opgraph.exceptions.ProcessingException;
 public class RandomStringNode extends OpNode {
 	/** Input field for the output string's length */
 	public final InputField LENGTH_INPUT = new InputField("length", "string length", false, true, Number.class);
-	
+
 	/** Output field for the random string */
 	public final OutputField VALUE_OUTPUT = new OutputField("value", "random string", true, String.class);
-	
+
 	/** Random number generator to use */
 	private SecureRandom random = new SecureRandom();
-	
+
 	/** 
 	 * Default constructor 
 	 */
@@ -53,11 +53,11 @@ public class RandomStringNode extends OpNode {
 		putField(LENGTH_INPUT);
 		putField(VALUE_OUTPUT);
 	}
-	
+
 	//
 	// OpNode
 	//
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 		final int length = ((Number)context.get(LENGTH_INPUT)).intValue();

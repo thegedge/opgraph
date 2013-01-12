@@ -40,16 +40,16 @@ public class StopCommand extends AbstractAction {
 	 */
 	public StopCommand() {
 		super("Stop");
-		
+
 		final int CTRL = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, CTRL | InputEvent.ALT_MASK));
 		putValue(SMALL_ICON, IconLibrary.getIcon(IconType.DEBUG_STOP, 16, 16));
 	}
-	
+
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();

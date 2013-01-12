@@ -40,16 +40,16 @@ public class RunCommand extends AbstractAction {
 	 */
 	public RunCommand() {
 		super("Run");
-		
+
 		final int CTRL = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, CTRL));
 		putValue(SMALL_ICON, IconLibrary.getIcon(IconType.DEBUG_RUN, 16, 16));
 	}
-	
+
 	//
 	// AbstractAction
 	//
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final GraphDocument document = GraphEditorModel.getActiveDocument();
@@ -59,7 +59,7 @@ public class RunCommand extends AbstractAction {
 				context = new Processor(document.getGraph());
 				document.setProcessingContext(context);
 			}
-			
+
 			if(context.hasNext()) {
 				context.stepAll();
 				document.updateDebugState(context);

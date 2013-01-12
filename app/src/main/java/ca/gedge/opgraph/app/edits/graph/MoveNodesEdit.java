@@ -36,13 +36,13 @@ import ca.gedge.opgraph.app.extensions.NodeMetadata;
 public class MoveNodesEdit extends AbstractUndoableEdit {
 	/** The nodes to move */
 	private Collection<NodeMetadata> metas;
-	
+
 	/** The distance along the x-axis to move the node */
 	private int deltaX;
-	
+
 	/** The distance along the y-axis to move the node */
 	private int deltaY;
-	
+
 	/**
 	 * Constructs a move edit that moves a collection of nodes a specified amount.
 	 * 
@@ -59,10 +59,10 @@ public class MoveNodesEdit extends AbstractUndoableEdit {
 			for(OpNode node : nodes)
 				this.metas.add(node.getExtension(NodeMetadata.class));
 		}
-		
+
 		perform();
 	}
-	
+
 	/**
 	 * Performs this edit.
 	 */
@@ -70,24 +70,24 @@ public class MoveNodesEdit extends AbstractUndoableEdit {
 		for(NodeMetadata meta : metas)
 			meta.setLocation(meta.getX() + deltaX, meta.getY() + deltaY);
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
-	
+
 	@Override
 	public String getPresentationName() {
 		if(metas.size() == 0)
 			return super.getPresentationName();
-		
+
 		String prefix = "Move Nodes";
 		if(metas.size() == 1)
 			prefix = "Move Node";
-		
+
 		final String suffix = MoveNodeCommand.getMoveString(deltaX, deltaY);
 		if(suffix.length() == 0)
 			return prefix;
-		
+
 		return prefix + " " + suffix;
 	}
 
@@ -106,21 +106,21 @@ public class MoveNodesEdit extends AbstractUndoableEdit {
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean isSignificant() {
 		return ((metas.size() > 0) && (deltaX != 0 || deltaY != 0));
 	}
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();

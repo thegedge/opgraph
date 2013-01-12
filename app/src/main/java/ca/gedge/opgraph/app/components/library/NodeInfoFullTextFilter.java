@@ -32,7 +32,7 @@ public class NodeInfoFullTextFilter extends NodeInfoFilter {
 	public boolean isAccepted(NodeData info) {
 		if(filterPattern == null)
 			return true;
-		
+
 		if(info != null) {
 			final String category = (info.category.length() == 0 ? "General" : info.category);
 			return ((info.name != null && filterPattern.matcher(info.name).find())
@@ -40,7 +40,7 @@ public class NodeInfoFullTextFilter extends NodeInfoFilter {
 			        || filterPattern.matcher(category).find()
 			        || (info.uri != null && filterPattern.matcher(info.uri.toString()).find()) );
 		}
-		
+
 		return false;
 	}
 }

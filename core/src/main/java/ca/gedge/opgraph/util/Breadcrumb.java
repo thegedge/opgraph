@@ -35,10 +35,10 @@ import ca.gedge.opgraph.util.Pair;
 public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> { 
 	/** The state stack */
 	private LinkedList<S> states = new LinkedList<S>();
-	
+
 	/** The values stack */
 	private LinkedList<V> values = new LinkedList<V>();
-	
+
 	/**
 	 * Gets whether or not the breadcrumb contains a state.
 	 * 
@@ -50,7 +50,7 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 	public boolean containsState(S state) {
 		return states.contains(state);
 	}
-	
+
 	/**
 	 * Gets whether or not this breadcrumb is empty.
 	 * 
@@ -60,7 +60,7 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 	public boolean isEmpty() {
 		return states.isEmpty();
 	}
-	
+
 	/**
 	 * Gets the current state of this breadcrumb.
 	 * 
@@ -69,7 +69,7 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 	public S getCurrentState() {
 		return (isEmpty() ? null : states.getFirst());
 	}
-	
+
 	/**
 	 * Gets the value associated with the current state of this breadcrumb.
 	 * 
@@ -78,7 +78,7 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 	public V getCurrentValue() {
 		return (isEmpty() ? null : values.getFirst());
 	}
-	
+
 	/**
 	 * Gets the number of states in this breadcrumb.
 	 * 
@@ -99,7 +99,7 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 			fireStateChanged(oldState, null);
 		}
 	}
-	
+
 	/**
 	 * Gets the state at the specified index from the current state.
 	 * 
@@ -113,7 +113,7 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 	public S peekState(int index) {
 		return states.get(index);
 	}
-	
+
 	/**
 	 * Empties this breadcrumb.
 	 */
@@ -125,9 +125,9 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 			final S newState = getCurrentState();
 			fireStateChanged(oldState, newState);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Goes to the given state. If the state is part of this breadcrumb, all
 	 * states following it will be removed.
@@ -140,19 +140,19 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 			if(states.get(index) == state)
 				break;
 		}
-		
+
 		if(index > 0 && index < states.size()) {
 			final S oldState = getCurrentState();
-			
+
 			while(states.getFirst() != state) {
 				states.removeFirst();
 				values.removeFirst();
 			}
-			
+
 			fireStateChanged(oldState, state);
 		}
 	}
-	
+
 	/**
 	 * Sets the complete state of the breadcrumb to a given list of
 	 * state/value pairs.
@@ -161,20 +161,20 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 	 */
 	public void set(List<Pair<S, V>> states) {
 		final S oldState = getCurrentState();
-		
+
 		// Clear and add in new
 		this.states.clear();
 		this.values.clear();
-		
+
 		for(Pair<S, V> state : states) {
 			this.states.addFirst(state.getFirst());
 			this.values.addFirst(state.getSecond());
 			fireStateAdded(state.getFirst(), state.getSecond());
 		}
-		
+
 		fireStateChanged(oldState, getCurrentState());
 	}
-	
+
 	/**
 	 * Append the given state to this breadcrumb with a <code>null</code> value.
 	 * 
@@ -183,7 +183,7 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 	public void addState(final S state) {
 		addState(state, null);
 	}
-	
+
 	/**
 	 * Append the given state/value pair to this breadcrumb.
 	 * 
@@ -197,7 +197,7 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 		fireStateAdded(state, value);
 		fireStateChanged(oldState, state);
 	}
-	
+
 	/**
 	 * Gets the set of states as an immutable list.
 	 * 
@@ -206,7 +206,7 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 	public List<S> getStates() {
 		return Collections.unmodifiableList(states);
 	}
-	
+
 	/**
 	 * Gets the set of values as an immutable list.
 	 * 
@@ -215,11 +215,11 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 	public List<V> getValues() {
 		return Collections.unmodifiableList(values);
 	}
-	
+
 	//
 	// Iterable
 	//
-	
+
 	@Override
 	public Iterator<Pair<S, V>> iterator() {
 		final Iterator<S> iterS = states.iterator();
@@ -241,7 +241,7 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 			}
 		};
 	}
-	
+
 	//
 	// Listeners
 	//
@@ -277,7 +277,7 @@ public class Breadcrumb<S, V> implements Iterable<Pair<S, V>> {
 				listener.stateChanged(oldState, newState);
 		}
 	}
-	
+
 	protected void fireStateAdded(S state, V value) {
 		synchronized(listeners) {
 			for(BreadcrumbListener<S, V> listener : listeners)

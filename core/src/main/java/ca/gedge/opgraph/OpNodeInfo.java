@@ -31,10 +31,10 @@ import java.lang.annotation.Target;
 public @interface OpNodeInfo {
 	/** Name of the node */
 	public String name();
-	
+
 	/** Short description for the node */
 	public String description();
-	
+
 	/** A category for the node */ 
 	public String category() default "";
 }

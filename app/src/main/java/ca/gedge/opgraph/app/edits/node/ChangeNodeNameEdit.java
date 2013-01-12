@@ -31,13 +31,13 @@ import ca.gedge.opgraph.OpNode;
 public class ChangeNodeNameEdit extends AbstractUndoableEdit {
 	/** The node whose name is changing */
 	private final OpNode node;
-	
+
 	/** The new name of the node */
 	private final String newName;
-	
+
 	/** The previous name of the node */
 	private String oldName;
-	
+
 	/**
 	 * Constructs an edit that changes a node's name. 
 	 * 
@@ -50,23 +50,23 @@ public class ChangeNodeNameEdit extends AbstractUndoableEdit {
 		this.oldName = node.getName();
 		perform();
 	}
-	
+
 	/**
 	 * Performs this edit.
 	 */
 	private void perform() {
 		node.setName(newName);
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
-	
+
 	@Override
 	public boolean isSignificant() {
 		return !oldName.equals(newName);
 	}
-	
+
 	@Override
 	public boolean replaceEdit(UndoableEdit anEdit) {
 		boolean ret = false;
@@ -75,24 +75,24 @@ public class ChangeNodeNameEdit extends AbstractUndoableEdit {
 			ret = (cnn.node == node
 			      && (newName != null && newName.equals(cnn.newName))
 			      && (oldName != null && oldName.equals(cnn.oldName)) );
-			
+
 			if(ret)
 				oldName = cnn.oldName;
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public String getPresentationName() {
 		return "Change Node Name";
 	}
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();

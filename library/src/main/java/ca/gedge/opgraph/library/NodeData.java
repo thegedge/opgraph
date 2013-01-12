@@ -31,19 +31,19 @@ import ca.gedge.opgraph.library.instantiators.Instantiator;
 public class NodeData {
 	/** The {@link URI} for this node descriptor */
 	public final URI uri;
-	
+
 	/** The name of this node */
 	public final String name;
-	
+
 	/** The description of this node */
 	public final String description;
-	
+
 	/** The category of this node */
 	public final String category;
-	
+
 	/** An instantiator for this node */
 	public final Instantiator<? extends OpNode> instantiator;
-	
+
 	/**
 	 * Constructs a node info.
 	 * 
@@ -65,7 +65,7 @@ public class NodeData {
 		this.category = category;
 		this.instantiator = instantiator;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name;

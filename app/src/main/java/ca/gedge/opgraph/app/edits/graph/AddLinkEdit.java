@@ -34,10 +34,10 @@ import ca.gedge.opgraph.exceptions.ItemMissingException;
 public class AddLinkEdit extends AbstractUndoableEdit {
 	/** The graph to which this edit was applied  */
 	private OpGraph graph;
-	
+
 	/** The node whose name is changing */
 	private final OpLink link;
-	
+
 	/**
 	 * Constructs an edit that creates a link between two fields.
 	 * 
@@ -55,23 +55,23 @@ public class AddLinkEdit extends AbstractUndoableEdit {
 		this.link = link;
 		perform();
 	}
-	
+
 	/**
 	 * Performs this edit.
 	 */
 	private void perform() throws VertexNotFoundException, CycleDetectedException {
 		graph.add(link);
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
-	
+
 	@Override
 	public String getPresentationName() {
 		return "Add Link";
 	}
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
@@ -83,7 +83,7 @@ public class AddLinkEdit extends AbstractUndoableEdit {
 			throw new CannotRedoException();
 		}
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();

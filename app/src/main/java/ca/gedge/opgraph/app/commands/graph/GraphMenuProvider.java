@@ -44,26 +44,26 @@ public class GraphMenuProvider implements MenuProvider {
 	@Override
 	public void installItems(final GraphEditorModel model, PathAddressableMenu menu) {
 		final JMenu graph = menu.addMenu("graph", "Graph");
-		
+
 		final JMenuItem move1 = menu.addMenuItem("graph/move down", new MoveNodeCommand(0, GridLayer.DEFAULT_GRID_SPACING / 2));
 		final JMenuItem move2 = menu.addMenuItem("graph/move up", new MoveNodeCommand(0, -GridLayer.DEFAULT_GRID_SPACING / 2));
 		final JMenuItem move3 = menu.addMenuItem("graph/move right", new MoveNodeCommand(GridLayer.DEFAULT_GRID_SPACING / 2, 0));
 		final JMenuItem move4 = menu.addMenuItem("graph/move left", new MoveNodeCommand(-GridLayer.DEFAULT_GRID_SPACING / 2, 0));
 		menu.addSeparator("graph");
 		menu.addMenuItem("graph/auto layout", new AutoLayoutCommand());
-		
+
 		move1.setEnabled(false);
 		move2.setEnabled(false);
 		move3.setEnabled(false);
 		move4.setEnabled(false);
-		
+
 		model.getDocument().addPropertyChangeListener(GraphDocument.PROCESSING_CONTEXT, new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				graph.setEnabled(evt.getNewValue() == null);
 			}
 		});
-		
+
 		model.getCanvas().getSelectionModel().addSelectionListener(new GraphCanvasSelectionListener() {
 			@Override
 			public void nodeSelectionChanged(Collection<OpNode> old, Collection<OpNode> selected) {

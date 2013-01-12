@@ -42,16 +42,16 @@ import ca.gedge.opgraph.dag.VertexNotFoundException;
 public class DeleteNodesEdit extends AbstractUndoableEdit {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(DeleteNodesEdit.class.getName());
-	
+
 	/** The graph to which this edit was applied  */
 	private OpGraph graph;
-	
+
 	/** The nodes to remove */
 	private List<OpNode> nodes;
-	
+
 	/** The links that get removed when the nodes get removed */
 	private Set<OpLink> links;
-	
+
 	/**
 	 * Constructs a delete edit that removes a collection of nodes from a
 	 * specified canvas model.
@@ -63,20 +63,20 @@ public class DeleteNodesEdit extends AbstractUndoableEdit {
 		this.graph = graph;
 		this.nodes = new ArrayList<OpNode>();
 		this.links = new TreeSet<OpLink>();
-		
+
 		if(nodes != null)
 			this.nodes.addAll(nodes);
-		
+
 		for(OpNode node : this.nodes) {
 			if(graph.contains(node)) {
 				links.addAll(graph.getIncomingEdges(node));
 				links.addAll(graph.getOutgoingEdges(node));
 			}
 		}
-		
+
 		perform();
 	}
-	
+
 	/**
 	 * Performs this edit.
 	 */
@@ -84,7 +84,7 @@ public class DeleteNodesEdit extends AbstractUndoableEdit {
 		for(OpNode link : nodes)
 			graph.remove(link);
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
@@ -94,7 +94,7 @@ public class DeleteNodesEdit extends AbstractUndoableEdit {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();
@@ -102,7 +102,7 @@ public class DeleteNodesEdit extends AbstractUndoableEdit {
 		// Add nodes
 		for(OpNode node : nodes)
 			graph.add(node);
-		
+
 		// Add old links
 		for(OpLink link : links) {
 			try {
@@ -116,7 +116,7 @@ public class DeleteNodesEdit extends AbstractUndoableEdit {
 			}
 		}
 	}
-	
+
 	@Override
 	public String getPresentationName() {
 		if(nodes.size() == 0)
@@ -126,7 +126,7 @@ public class DeleteNodesEdit extends AbstractUndoableEdit {
 		else
 			return "Delete Nodes";
 	}
-	
+
 	@Override
 	public boolean isSignificant() {
 		return (nodes.size() > 0);

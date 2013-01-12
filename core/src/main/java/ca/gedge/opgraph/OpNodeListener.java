@@ -33,7 +33,7 @@ public interface OpNodeListener {
 	 * @param newValue  the new value of the property
 	 */
 	public abstract void nodePropertyChanged(String propertyName, Object oldValue, Object newValue);
-	
+
 	/**
 	 * Called when an input field was added to a node.
 	 *  
@@ -41,7 +41,7 @@ public interface OpNodeListener {
 	 * @param field  the input field that was added
 	 */
 	public abstract void fieldAdded(OpNode node, InputField field);
-	
+
 	/**
 	 * Called when an input field was removed from a node.
 	 * 
@@ -49,7 +49,7 @@ public interface OpNodeListener {
 	 * @param field  the input field that was removed
 	 */
 	public abstract void fieldRemoved(OpNode node, InputField field);
-	
+
 	/**
 	 * Called when an output field was added to a node.
 	 *  
@@ -57,7 +57,7 @@ public interface OpNodeListener {
 	 * @param field  the output field that was added
 	 */
 	public abstract void fieldAdded(OpNode node, OutputField field);
-	
+
 	/**
 	 * Called when an output field was removed from a node.
 	 * 

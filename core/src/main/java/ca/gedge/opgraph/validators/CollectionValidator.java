@@ -27,7 +27,7 @@ import java.util.Collection;
 public class CollectionValidator implements TypeValidator {
 	/** The validator used for collection elements */
 	private TypeValidator elementValidator;
-	
+
 	/**
 	 * Constructs this validator with an element validator which accepts
 	 * the given list of classes.
@@ -37,7 +37,7 @@ public class CollectionValidator implements TypeValidator {
 	public CollectionValidator(Class<?>... acceptedTypes) {
 		this(new ClassValidator(acceptedTypes));
 	}
-	
+
 	/**
 	 * Constructs this validator with the given validator to use against
 	 * iterated elements.
@@ -47,11 +47,11 @@ public class CollectionValidator implements TypeValidator {
 	public CollectionValidator(TypeValidator elementValidator) {
 		this.elementValidator = elementValidator;
 	}
-	
+
 	//
 	// TypeValidator
 	//
-	
+
 	@Override
 	public boolean isAcceptable(Object obj) {
 		boolean ret = true;
@@ -65,7 +65,7 @@ public class CollectionValidator implements TypeValidator {
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public boolean isAcceptable(Class<?> cls) {
 		if(cls == null)

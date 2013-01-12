@@ -50,43 +50,43 @@ public class DefaultGraphXMLSerializer implements XMLSerializer {
 	{
 		if(obj == null)
 			throw new IOException("Null object given to serializer");
-		
+
 		if(!(obj instanceof OpGraph))
 			throw new IOException(DefaultGraphXMLSerializer.class.getName() + " cannot write objects of type " + obj.getClass().getName());
-		
+
 		// Create graph element
 		final OpGraph graph = (OpGraph)obj;
 		final Element graphElem = doc.createElementNS(GRAPH_QNAME.getNamespaceURI(), GRAPH_QNAME.getLocalPart());
-		
+
 		graphElem.setAttribute("id", graph.getId());
-		
+
 		// Nodes first
 		for(OpNode node : graph.getVertices()) {
 			final XMLSerializer serializer = serializerFactory.getHandler(node.getClass());
 			if(serializer == null)
 				throw new IOException("Cannot get handler for node: " + node.getClass().getName());
-			
+
 			serializer.write(serializerFactory, doc, graphElem, node);
 		}
-		
+
 		// Link next
 		for(OpLink link : graph.getEdges()) {
 			final XMLSerializer serializer = serializerFactory.getHandler(link.getClass());
 			if(serializer == null)
 				throw new IOException("Cannot get handler for link: " + link.getClass().getName());
-			
+
 			serializer.write(serializerFactory, doc, graphElem, link);
 		}
-		
+
 		// Extensions last
 		if(graph.getExtensionClasses().size() > 0) {
 			final XMLSerializer serializer = serializerFactory.getHandler(Extendable.class);
 			if(serializer == null)
 				throw new IOException("No XML serializer for extensions");
-			
+
 			serializer.write(serializerFactory, doc, graphElem, graph);
 		}
-		
+
 		//
 		parentElem.appendChild(graphElem);
 	}
@@ -97,7 +97,7 @@ public class DefaultGraphXMLSerializer implements XMLSerializer {
 	{
 		if(GRAPH_QNAME.equals(XMLSerializerFactory.getQName(elem))) {
 			graph = new OpGraph();
-			
+
 			// Read children
 			final NodeList children = elem.getChildNodes();
 			for(int childIndex = 0; childIndex < children.getLength(); ++childIndex) {
@@ -109,7 +109,7 @@ public class DefaultGraphXMLSerializer implements XMLSerializer {
 					final XMLSerializer serializer = serializerFactory.getHandler(name);
 					if(serializer == null)
 						throw new IOException("Could not get handler for element: " + name);
-					
+
 					// Determine what kind of element was read. If the element represented a
 					// node/link, add it to the graph, otherwise it should be the <extensions>
 					// element, and the extendable serializer handles adding the extensions
@@ -139,7 +139,7 @@ public class DefaultGraphXMLSerializer implements XMLSerializer {
 				final Node childNode = children.item(childIndex);
 				if(childNode instanceof Element) {
 					final Element childElem = (Element)childNode;
-					
+
 					if(GRAPH_QNAME.equals(XMLSerializerFactory.getQName(childElem))
 					   && "root".equals(childElem.getAttribute("id")))
 					{
@@ -149,7 +149,7 @@ public class DefaultGraphXMLSerializer implements XMLSerializer {
 				}
 			}
 		}
-		
+
 		return graph;
 	}
 

@@ -118,88 +118,88 @@ import ca.gedge.opgraph.util.Pair;
 public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(GraphCanvas.class.getName());
-	
+
 	/** The application model this canvas uses */
 	private GraphEditorModel model;
-	
+
 	/** The document model this canvas uses */
 	private GraphDocument document;
-	
+
 	/** The mapping of nodes to node components */
 	private HashMap<OpNode, CanvasNode> nodes;
-	
+
 	/** The layer that displays a grid */
 	private final GridLayer gridLayer;
-	
+
 	/** The layer that displays links between nodes */
 	private final LinksLayer linksLayer;
 
 	/** The layer that overlays the whole canvas */
 	private final CanvasOverlay canvasOverlay;
-	
+
 	/** The debug layer that overlays the whole canvas */
 	private final DebugOverlay canvasDebugOverlay;
-	
+
 	//
 	// Drag-based members
 	//
-	
+
 	/**
 	 * If link dragging is happening, <code>null</code> if this should be a new
 	 * link, or a reference to an existing link if editing a link.
 	 */
 	private OpLink currentlyDraggedLink;
-	
+
 	/** If link dragging is happening, the input field from which this link originates */
 	private CanvasNodeField currentlyDraggedLinkInputField;
-	
+
 	/** If link dragging is happening, the current location of the destination end */
 	private Point currentDragLinkLocation;
-	
+
 	/**
 	 * If link dragging is started, specifies whether or not the current
 	 * position of the drag is a valid drop location for the link.
 	 */
 	private boolean dragLinkIsValid;
-	
+
 	/** The selection rectangle, or <code>null</code> if none */
 	private Rectangle selectionRect;
-	
+
 	/** The initial click point (screen coordinates) within the canvas */
 	private Point clickLocation;
-	
+
 	/** Component(s) whose location(s) will move during a mouse drag operation */
 	private List<Pair<Component, Point>> componentsToMove = new ArrayList<Pair<Component, Point>>();
-	
+
 	//
 	// Layers
 	//
-	
+
 	private static final Integer GRID_LAYER = 1;
-	
+
 	@SuppressWarnings("unused")
 	private static final Integer BACKGROUND_LAYER = 2;
-	
+
 	private static final Integer NOTES_LAYER = 10;
 	private static final Integer LINKS_LAYER = 100;
 	private static final Integer NODES_LAYER = 200;
 	private static final Integer OVERLAY_LAYER = 10000;
 	private static final Integer DEBUG_OVERLAY_LAYER = 10001;
-	
+
 	@SuppressWarnings("unused")
 	private static final Integer FOREGROUND_LAYER = Integer.MAX_VALUE;
-	
+
 	//
 	// Listener objects
 	//
-	
+
 	private class MetaListener implements PropertyChangeListener {
 		private OpNode node;
-		
+
 		public MetaListener(OpNode node) {
 			this.node = node;
 		}
-		
+
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
 			if(evt.getSource() instanceof NodeMetadata) {
@@ -215,7 +215,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 			}
 		}
 	};
-		
+
 	/**
 	 * Constructs a canvas that displays a given graph model.
 	 * 
@@ -229,16 +229,16 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 		this.linksLayer = new LinksLayer(this);
 		this.canvasOverlay = new CanvasOverlay(this);
 		this.canvasDebugOverlay = new DebugOverlay(this);
-		
+
 		// Class setup
 		this.model = model;
 		this.nodes = new HashMap<OpNode, CanvasNode>();
-		
+
 		this.document = new GraphDocument(this);
 		this.document.getBreadcrumb().addBreadcrumbListener(breadcrumbListener);
 		this.document.getSelectionModel().addSelectionListener(canvasSelectionListener);
 		changeGraph(null, this.document.getGraph());
-		
+
 		// Initialize component
 		setDoubleBuffered(true);
 		setLayout(new NullLayout());
@@ -246,17 +246,17 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 		setOpaque(false);
 		setFocusCycleRoot(true);
 		setDropTarget(new DropTarget(this, DnDConstants.ACTION_COPY, dropTargetAdapter, true));
-		
+
 		addMouseListener(mouseAdapter);
 		addMouseMotionListener(mouseMotionAdapter);
-		
+
 		final long eventMask = AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK;
 		Toolkit.getDefaultToolkit().addAWTEventListener(awtEventListener, eventMask);
-		
+
 		//
 		// Actions
 		//
-		
+
 		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "cancel");
 		getActionMap().put("cancel", new AbstractAction("Cancel") {
 			@Override
@@ -265,12 +265,12 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				// don't get moved on mouse release
 				if(currentlyDraggedLinkInputField != null)
 					clickLocation = null;
-				
+
 				selectionRect = null;
 				currentlyDraggedLink = null;
 				currentlyDraggedLinkInputField = null;
 				currentDragLinkLocation = null;
-				
+
 				repaint();
 			}
 		});
@@ -281,7 +281,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 		add(canvasOverlay, OVERLAY_LAYER);
 		add(canvasDebugOverlay, DEBUG_OVERLAY_LAYER);
 	}
-	
+
 	/**
 	 * Gets the bounding rectangle of the items currently being moved.
 	 * 
@@ -302,10 +302,10 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 			ymin = Math.min(ymin, loc.y);
 			ymax = Math.max(ymax, loc.y + pref.height);
 		}
-		
+
 		return new Rectangle(xmin, ymin, xmax-xmin, ymax-ymin);
 	}
-	
+
 	/**
 	 * Gets the selection model this canvas is using.
 	 * 
@@ -323,7 +323,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 	public GraphDocument getDocument() {
 		return document;
 	}
-	
+
 	/**
 	 * Gets a mapping from {@link OpNode} to the respective node
 	 * component that displays that node.
@@ -333,7 +333,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 	public Map<OpNode, CanvasNode> getNodeMap() {
 		return Collections.unmodifiableMap(nodes);
 	}
-	
+
 	/**
 	 * Gets the node displaying the given node. 
 	 * 
@@ -345,7 +345,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 	public CanvasNode getNode(OpNode node) {
 		return nodes.get(node);
 	}
-	
+
 	/**
 	 * Gets the link currently being dragged.
 	 * 
@@ -393,7 +393,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 	 */
 	public JPopupMenu constructPopup(MouseEvent event) {
 		Object context = document.getGraph();
-		
+
 		// Try to find a more specific context
 		final CanvasNode node = GUIHelper.getAncestorOrSelfOfClass(CanvasNode.class, event.getComponent());
 		if(node != null) {
@@ -403,20 +403,20 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 			if(note != null)
 				context = note.getNote();
 		}
-		
+
 		final JPopupMenu popup = new JPopupMenu();
 		if(context != null) {
 			final PathAddressableMenuImpl addressable = new PathAddressableMenuImpl(popup);
 			for(MenuProvider menuProvider : model.getMenuProviders())
 				menuProvider.installPopupItems(context, event, model, addressable);
 		}
-		
+
 		if(popup.getComponentCount() == 0)
 			return null;
-		
+
 		return popup;
 	}
-	
+
 	/**
 	 * Updates the debug state for this canvas. Currently, the debug state
 	 * simply highlights the node being processed.
@@ -428,37 +428,37 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 			setEnabled(true);
 		} else {
 			setEnabled(false);
-			
+
 			if(document.getBreadcrumb().containsState(context.getGraph())) {
 				document.getBreadcrumb().gotoState(context.getGraph());
 			} else {
 				// Given the current processing context, find the path that
 				// gets to the current node
 				final LinkedList<Pair<OpGraph, String>> path = new LinkedList<Pair<OpGraph, String>>();
-				
+
 				String id = context.getGraphOfContext().getId();
 				Processor activeContext = context;
 				while(activeContext != null) {
 					final OpGraph graph = activeContext.getGraphOfContext();
 					path.addLast(new Pair<OpGraph, String>(graph, id));
-					
+
 					if(activeContext.getCurrentNodeOfContext() != null)
 						id = activeContext.getCurrentNodeOfContext().getName();
 					else
 						id = "Unknown";
-					
+
 					activeContext = activeContext.getMacroContext();
 				}
-				
+
 				document.getBreadcrumb().set(path);
 			}
-			
+
 			getSelectionModel().setSelectedNode(context.getCurrentNode());
 		}
-		
+
 		canvasDebugOverlay.repaint();
 	}
-	
+
 	/**
 	 * Updates the fill states of all anchors for a given node.
 	 * 
@@ -470,7 +470,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 			final Map<ContextualItem, CanvasNodeField> fields = canvasNode.getFieldsMap();
 			final NodeMetadata meta = node.getExtension(NodeMetadata.class);
 			final Publishable publishable = document.getGraph().getExtension(Publishable.class);
-			
+
 			for(InputField field : node.getInputFields()) {
 				final CanvasNodeField canvasField = fields.get(field);
 				if(canvasField != null) {
@@ -495,7 +495,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 					}
 				}
 			}
-			
+
 			// Fill for published output fields
 			if(publishable != null) {
 				for(OutputField field : node.getOutputFields()) {
@@ -512,7 +512,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 			}
 		}
 	}
-	
+
 	/**
 	 * Start a drag operation for a given field.
 	 * 
@@ -520,11 +520,11 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 	 */
 	public void startLinkDrag(CanvasNodeField fieldComponent) {
 		if(!isEnabled()) return;
-		
+
 		currentlyDraggedLink = null;
 		currentlyDraggedLinkInputField = null;
 		currentDragLinkLocation = getMousePosition();
-		
+
 		CanvasNode node = (CanvasNode)SwingUtilities.getAncestorOfClass(CanvasNode.class, fieldComponent);
 		if(node != null) {
 			ContextualItem field = fieldComponent.getField();
@@ -536,7 +536,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 						break;
 					}
 				}
-				
+
 				// Found a link, but currentlyDraggedLinkField needs to be on
 				// source end, so use the link we found to update those fields
 				if(currentlyDraggedLink != null) {
@@ -555,7 +555,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 			}
 		}
 	}
-	
+
 	/**
 	 * Called to update link dragging status.
 	 * 
@@ -563,20 +563,20 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 	 */
 	public void updateLinkDrag(Point p) {
 		if(!isEnabled()) return;
-		
+
 		if(currentlyDraggedLinkInputField == null) {
 			dragLinkIsValid = false;
 			return;
 		}
-		
+
 		currentDragLinkLocation = p;
 		dragLinkIsValid = true;
-		
+
 		// Get the source node
 		final CanvasNode source = (CanvasNode)SwingUtilities.getAncestorOfClass(CanvasNode.class, currentlyDraggedLinkInputField);
 		if(source == null)
 			return;
-		
+
 		// Find the destination node
 		for(Component comp : getComponentsInLayer(NODES_LAYER)) {
 			final CanvasNode dest = (CanvasNode)comp;
@@ -593,7 +593,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 							final OutputField out = (OutputField)currentlyDraggedLinkInputField.getField();
 							final InputField in = (InputField)field.getField();
 							final OpLink link = new OpLink(source.getNode(), out, dest.getNode(), in);
-							
+
 							// Now make sure the link can be added, and that it is a valid link
 							dragLinkIsValid = (document.getGraph().canAddEdge(link) && link.isValid());
 						} catch(ItemMissingException exc) {}
@@ -602,10 +602,10 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				break;
 			}
 		}
-		
+
 		repaint();
 	}
-	
+
 	/**
 	 * Called when link dragging should end.
 	 * 
@@ -613,9 +613,9 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 	 */
 	public void endLinkDrag(Point p) {
 		if(!isEnabled()) return; 
-		
+
 		updateLinkDrag(p);
-		
+
 		// If the drag link is valid, check to see which field this link
 		// was fed into and try to add a new link
 		if(currentlyDraggedLinkInputField != null) {
@@ -624,7 +624,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				final CanvasNode sourceNode = (CanvasNode)SwingUtilities.getAncestorOfClass(CanvasNode.class, currentlyDraggedLinkInputField);
 				if(sourceNode == null)
 					return;
-				
+
 				boolean destinationFound = false;
 				for(Component comp : getComponentsInLayer(NODES_LAYER)) {
 					final CanvasNode destinationNode = (CanvasNode)comp;
@@ -636,7 +636,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 							final OpNode destination = destinationNode.getNode();
 							final OutputField sourceField = (OutputField)currentlyDraggedLinkInputField.getField();
 							final InputField destField = (InputField)destinationField.getField();
-							
+
 							// If no link being edited, just add the new link,
 							// otherwise we need to see if any changes made
 							try {
@@ -656,14 +656,14 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 							} catch(CycleDetectedException exc) {
 								ErrorDialog.showError(exc);
 							}
-							
+
 							destinationFound = true;
 						}
-						
+
 						break;
 					}
 				}
-				
+
 				// No destination found, so this means we were dragging over
 				// the canvas area. If we were editing an existing link,
 				// remove it
@@ -677,7 +677,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 					}
 					document.getUndoSupport().postEdit(new RemoveLinkEdit(graph, currentlyDraggedLink));
 				}
-				
+
 			} else if(currentlyDraggedLink != null) {
 				if(!graph.contains(currentlyDraggedLink)) {
 					try {
@@ -690,25 +690,25 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				document.getUndoSupport().postEdit(new RemoveLinkEdit(graph, currentlyDraggedLink));
 			}
 		}
-		
+
 		currentlyDraggedLink = null;
 		currentlyDraggedLinkInputField = null;
 		currentDragLinkLocation = null;
-		
+
 		repaint();
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public void setLayout(LayoutManager mgr) {
 		if(mgr != null && !(mgr instanceof NullLayout))
 			throw new UnsupportedOperationException("GraphCanvas cannot use a custom layout");
 		super.setLayout(mgr);
 	}
-	
+
 	/**
 	 * Gets the selection rectangle.
 	 * 
@@ -722,22 +722,21 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 			int y = selectionRect.y;
 			int w = selectionRect.width;
 			int h = selectionRect.height;
-			
+
 			if(w < 0) {
 				x += w;
 				w = -w;
 			}
-			
+
 			if(h < 0) {
 				y += h;
 				h = -h;
 			}
-			
+
 			ret = new Rectangle(x, y, w, h);
 		}
 		return ret;
 	}
-	
 
 	/**
 	 * Switches the graph this canvas is viewing.
@@ -754,24 +753,24 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 					for(Note note : notes)
 						notesAdapter.elementRemoved(notes, note);
 				}
-				
+
 				for(OpLink link : oldGraph.getEdges())
 					graphAdapter.linkRemoved(oldGraph, link);
-				
+
 				for(OpNode node : oldGraph.getVertices())
 					graphAdapter.nodeRemoved(oldGraph, node);
 			}
-			
+
 			// Add new ones
 			if(graph != null) {
 				graph.addGraphListener(graphAdapter);
-				
+
 				for(OpNode node : document.getGraph().getVertices())
 					graphAdapter.nodeAdded(graph, node);
-				
+
 				for(OpLink link : document.getGraph().getEdges())
 					graphAdapter.linkAdded(graph, link);
-				
+
 				// Add any notes, or if none exist, make sure the extension
 				// exists on the given graph
 				Notes notes = document.getGraph().getExtension(Notes.class);
@@ -782,18 +781,18 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 					for(Note note : notes)
 						notesAdapter.elementAdded(notes, note);
 				}
-				
+
 				notes.addCollectionListener(notesAdapter);
 			}
-			
+
 		}
-		
+
 		// Update selection 
 		for(OpNode node : getSelectionModel().getSelectedNodes()) {
 			if(nodes.containsKey(node))
 				nodes.get(node).setSelected(true);
 		}
-		
+
 		// Update anchor fill states
 		if(graph != null) {
 			for(OpNode node : document.getGraph().getVertices())
@@ -803,17 +802,17 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 		revalidate();
 		repaint();
 	}
-	
+
 	//
 	// MouseAdapter
 	//
-	
+
 	private final MouseAdapter mouseAdapter = new MouseAdapter() {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			selectionRect = new Rectangle(e.getPoint());
 		}
-	
+
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// Find selected nodes, if necessary
@@ -825,10 +824,10 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 					if((comp instanceof CanvasNode) && rect.intersects(compRect))
 						selected.add( ((CanvasNode)comp).getNode() );
 				}
-				
+
 				getSelectionModel().setSelectedNodes(selected);
 			}
-			
+
 			// Reset variables
 			selectionRect = null;
 			repaint();
@@ -844,33 +843,33 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 		public void mouseDragged(MouseEvent e) {
 			final Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), GraphCanvas.this);
 			scrollRectToVisible(new Rectangle(p.x, p.y, 1, 1));
-			
+
 			if(selectionRect != null) {
 				final Point src = selectionRect.getLocation();
 				selectionRect.setSize(p.x - src.x, p.y - src.y);
 			}
-			
+
 			repaint();
 		}
 	};
-	
+
 	//
 	// GraphCanvasModelListener
 	//
-	
+
 	private final GraphCanvasAdapter graphAdapter = new GraphCanvasAdapter();
-	
+
 	private class GraphCanvasAdapter implements OpGraphListener, OpNodeListener {
 		@Override
 		public void nodePropertyChanged(String propertyName, Object oldValue, Object newValue) {}
-		
+
 		@Override
 		public void nodeAdded(final OpGraph graph, final OpNode v) {
 			if(!nodes.containsKey(v)) {
 				final CanvasNode node = new CanvasNode(v);
 				final int cx = (int)getVisibleRect().getCenterX();
 				final int cy = (int)getVisibleRect().getCenterY();
-				
+
 				// Place this node at the center if it has a negative location
 				NodeMetadata meta = v.getExtension(NodeMetadata.class);
 				if(meta == null) {
@@ -880,10 +879,10 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 					if(meta.getX() < 0) meta.setX(cx);
 					if(meta.getY() < 0) meta.setY(cy);
 				}
-				
+
 				node.setLocation(meta.getX(), meta.getY());
 				meta.addPropertyChangeListener(new MetaListener(v));
-				
+
 				// Adjust links when component moves or resizes
 				node.addComponentListener(new ComponentAdapter() {
 					@Override
@@ -892,7 +891,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 						for(OpLink link : document.getGraph().getOutgoingEdges(v)) linksLayer.updateLink(link);
 						GraphCanvas.this.revalidate();
 					}
-					
+
 					@Override
 					public void componentMoved(ComponentEvent e) {
 						for(OpLink link : document.getGraph().getIncomingEdges(v)) linksLayer.updateLink(link);
@@ -900,19 +899,19 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 						GraphCanvas.this.revalidate();		
 					}
 				});
-				
+
 				node.addUndoableEditListener(document.getUndoManager());
 				nodes.put(v, node);
 				add(node, NODES_LAYER, 0);
-				
+
 				v.addNodeListener(this);
 				v.putExtension(JComponent.class, node);
-				
+
 				revalidate();
 				repaint();
 			}
 		}
-	
+
 		@Override
 		public void nodeRemoved(OpGraph graph, OpNode v) {
 			if(nodes.containsKey(v)) {
@@ -920,36 +919,36 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				nodes.get(v).removeUndoableEditListener(document.getUndoManager());
 				nodes.remove(v);
 				getSelectionModel().removeNodeFromSelection(v);
-				
+
 				v.removeNodeListener(this);
 				v.putExtension(JComponent.class, null);
-				
+
 				revalidate();
 				repaint();
 			}
 		}
-	
+
 		@Override
 		public void linkAdded(OpGraph graph, OpLink e) {
 			final CanvasNode src = nodes.get(e.getSource());
 			final CanvasNode dst = nodes.get(e.getDestination());
-			
+
 			final CanvasNodeField srcField = src.getFieldsMap().get(e.getSourceField());
 			final CanvasNodeField dstField = dst.getFieldsMap().get(e.getDestinationField());
-			
+
 			if(srcField != null) srcField.setAnchorFillState(AnchorFillState.LINK);
 			if(dstField != null) dstField.setAnchorFillState(AnchorFillState.LINK);
-			
+
 			linksLayer.updateLink(e);
-			
+
 			repaint();
 		}
-	
+
 		@Override
 		public void linkRemoved(OpGraph graph, OpLink e) {
 			final CanvasNode src = nodes.get(e.getSource());
 			final CanvasNode dst = nodes.get(e.getDestination());
-			
+
 			// Multiple outgoing links can exist, so before removing this link, make
 			// sure there are no more outgoing links
 			if(graph.getOutgoingEdges(src.getNode()).size() == 0) {
@@ -957,7 +956,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				if(field != null)
 					field.setAnchorFillState(AnchorFillState.NONE);
 			}
-			
+
 			// Decide whether the anchor fill state is to be set to NONE or DEFAULT
 			final CanvasNodeField dstField = dst.getFieldsMap().get(e.getDestinationField());
 			if(dstField != null) {
@@ -967,34 +966,34 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				else
 					dstField.setAnchorFillState(AnchorFillState.DEFAULT);
 			}
-			
+
 			linksLayer.removeLink(e);
-			
+
 			// Remove link reference and repaint
 			repaint();
 		}
-		
+
 		@Override
 		public void fieldAdded(OpNode node, InputField field) {
 			final CanvasNode canvasNode = nodes.get(node);
 			if(canvasNode != null)
 				repaint();
 		}
-		
+
 		@Override
 		public void fieldRemoved(OpNode node, InputField field) {
 			final CanvasNode canvasNode = nodes.get(node);
 			if(canvasNode != null)
 				repaint();
 		}
-		
+
 		@Override
 		public void fieldAdded(OpNode node, OutputField field) {
 			final CanvasNode canvasNode = nodes.get(node);
 			if(canvasNode != null)
 				repaint();
 		}
-		
+
 		@Override
 		public void fieldRemoved(OpNode node, OutputField field) {
 			final CanvasNode canvasNode = nodes.get(node);
@@ -1002,11 +1001,11 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				repaint();
 		}
 	}
-	
+
 	//
 	// GraphCanvasSelectionListener
 	//
-	
+
 	private final GraphCanvasSelectionListener canvasSelectionListener = new GraphCanvasSelectionListener() {
 		@Override
 		public void nodeSelectionChanged(Collection<OpNode> old, Collection<OpNode> selected) {
@@ -1019,11 +1018,11 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				if(nodes.containsKey(node))
 					nodes.get(node).setSelected(true);
 			}
-			
+
 			repaint();
 		}
 	};
-	
+
 	//
 	// AWTEventListener
 	//
@@ -1037,7 +1036,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 
 			final Component source = (Component)e.getSource();
 			final MouseEvent me = (MouseEvent)e;
-			
+
 			if(!SwingUtilities.isDescendingFrom(source, GraphCanvas.this))
 				return;
 
@@ -1058,7 +1057,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				// Make sure the component the event was dispatched to is a child
 				clickLocation = me.getLocationOnScreen();
 				componentsToMove.clear();
-				
+
 				// No CanvasNode parent? Select nothing, otherwise select its node
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
@@ -1070,7 +1069,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 							final NoteComponent note = GUIHelper.getAncestorOrSelfOfClass(NoteComponent.class, source);
 							if(note != null) {
 								moveToFront(note);
-								
+
 								final Component comp = (source instanceof ResizeGrip) ? source : note;
 								final Point initialLocation = comp.getLocation();
 								componentsToMove.add(new Pair<Component, Point>(comp, initialLocation));
@@ -1113,7 +1112,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 							// Put the publishing extension in the graph (even if it's null)
 							final Publishable publishable = node.getNode().getExtension(Publishable.class);
 							composite.getGraph().putExtension(Publishable.class, publishable);
-							
+
 							// Set up the breadcrumb 
 							document.getBreadcrumb().addState(composite.getGraph(), node.getNode().getName());
 						}
@@ -1143,15 +1142,15 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				if(clickLocation != null && currentlyDraggedLinkInputField == null && selectionRect == null) {
 					int deltaX = me.getLocationOnScreen().x - clickLocation.x;
 					int deltaY = me.getLocationOnScreen().y - clickLocation.y;
-					
+
 					// Snap to grid if top left corner of selection is close to grid
 					final Point topLeftBound = getBoundingRectOfMoved().getLocation();
 					topLeftBound.translate(deltaX, deltaY);
-					
+
 					final Point snapDelta = gridLayer.snap(topLeftBound);
 					deltaX += snapDelta.x;
 					deltaY += snapDelta.y;
-					
+
 					// First, make sure that one of the components to move is
 					// an ancestor of the source of the drag
 					for(Pair<Component, Point> compLoc : componentsToMove) {
@@ -1201,7 +1200,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 	//
 	// CollectionListener<Notes.Note>
 	//
-	
+
 	// TODO the xxxMouseListener calls below are ugly, so find a nicer way to do this 
 
 	private final CollectionListener<Notes, Note> notesAdapter = new CollectionListener<Notes, Note>() {
@@ -1248,14 +1247,14 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 		@Override
 		public void stateAdded(OpGraph state, String value) {}
 	};
-	
+
 	//
 	// Adapter for creating undoable edits when notes are resized
 	//
-	
+
 	private final MouseAdapter notesMouseAdapter = new MouseAdapter() {
 		@Override
-        public void mouseReleased(MouseEvent e) {
+		public void mouseReleased(MouseEvent e) {
 			if(e.getComponent() instanceof ResizeGrip) {
 				final ResizeGrip grip = (ResizeGrip)e.getComponent();
 				if(grip.getComponent() instanceof NoteComponent) {
@@ -1273,28 +1272,28 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 	//
 
 	private static DataFlavor accepted = new DataFlavor(NodeData.class, "NodeData");
-	
+
 	private final DropTargetAdapter dropTargetAdapter = new DropTargetAdapter() {		
 		@Override
 		public void dragEnter(DropTargetDragEvent dtde) {
 			if(!dtde.isDataFlavorSupported(accepted))
 				dtde.rejectDrag();
 		}
-	
+
 		@Override
 		public void dragOver(DropTargetDragEvent dtde) {
 			scrollRectToVisible(new Rectangle(dtde.getLocation(), new Dimension(1, 1)));
 			if(!dtde.isDataFlavorSupported(accepted))
 				dtde.rejectDrag();
 		}
-	
+
 		@Override
 		public void drop(final DropTargetDropEvent dtde) {
 			if(dtde.isDataFlavorSupported(accepted)) {
 				NodeData info = null;
 				try {
 					info = (NodeData)dtde.getTransferable().getTransferData(accepted);
-					
+
 					// Set up the initial location metadata and post the edit
 					final int x = dtde.getLocation().x;
 					final int y = dtde.getLocation().y;
@@ -1307,7 +1306,7 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				} catch(InstantiationException e) {
 					LOGGER.warning("Could not instantiate node '" + info.name + "' from drop");
 				}
-				
+
 				// Drag complete!
 				dtde.acceptDrop(DnDConstants.ACTION_COPY);
 				dtde.dropComplete(true);
@@ -1315,18 +1314,18 @@ public class GraphCanvas extends JLayeredPane implements ClipboardOwner {
 				dtde.rejectDrop();
 			}
 		}
-	
+
 		@Override
 		public void dropActionChanged(DropTargetDragEvent dtde) {
 			if(!dtde.isDataFlavorSupported(accepted))
 				dtde.rejectDrag();
 		}
 	};
-	
+
 	//
 	// ClipboardOwner
 	//
-	
+
 	@Override
 	public void lostOwnership(Clipboard clipboard, Transferable contents) { }
 }

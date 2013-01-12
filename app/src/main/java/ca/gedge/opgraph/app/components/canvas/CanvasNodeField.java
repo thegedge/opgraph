@@ -58,35 +58,35 @@ public class CanvasNodeField extends JComponent {
 	public static enum AnchorFillState {
 		/** No fill state */
 		NONE,
-		
+
 		/** Link is attached to this field */
 		LINK,
-		
+
 		/** A default value is attached to this field */
 		DEFAULT,
-		
+
 		/** This field is published */
 		PUBLISHED,
 	}
-	
+
 	/** Stroke we use to show an optional input field */
 	private final static BasicStroke optionalFieldStroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 1, new float[]{1}, 0);
-	
+
 	/** The input/output field being displayed */
 	private ContextualItem field;
-	
+
 	/** The field's anchoring point for an link */
 	private Ellipse2D anchor;
-	
+
 	/** The style used for this component */
 	private NodeStyle style;
-	
+
 	/** The color used to fill this anchor */
 	private AnchorFillState anchorFillState;
-	
+
 	/** The field's name */
 	private FieldName name;
-	
+
 	/**
 	 * Extension of {@link DoubleClickableTextField} that modifies the current
 	 * field's key whenever the text changes.
@@ -94,27 +94,27 @@ public class CanvasNodeField extends JComponent {
 	private class FieldName extends JTextField {
 		/** Double-click support */
 		private DoubleClickableTextField doubleClickSupport;
-		
+
 		/** The field this text field displays */
 		private ContextualItem field;
-		
+
 		/** The default font */
 		private final Font defaultFont;
-		
+
 		public FieldName() {
 			this.doubleClickSupport = new DoubleClickableTextField(this);
 			this.defaultFont = getFont();
-			
+
 			setBorder(new EmptyBorder(2, 5, 2, 0));
-			
+
 			this.doubleClickSupport.addPropertyChangeListener(DoubleClickableTextField.TEXT_PROPERTY, textListener);
 		}
-		
+
 		public void setField(ContextualItem field) {
 			this.field = field;
 			super.setText(field == null ? "" : field.getKey());
 			super.setToolTipText(field == null ? "" : field.getDescription());
-			
+
 			if(field instanceof InputField) {
 				setHorizontalAlignment(SwingConstants.LEFT);
 				setEditable( !((InputField)field).isFixed() );
@@ -128,7 +128,7 @@ public class CanvasNodeField extends JComponent {
 				setFont(defaultFont);
 			}
 		}
-		
+
 		private PropertyChangeListener textListener = new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent e) {
@@ -137,7 +137,7 @@ public class CanvasNodeField extends JComponent {
 			}
 		};
 	}
-	
+
 	/**
 	 * Constructs a component that displays the given field.
 	 * 
@@ -149,18 +149,18 @@ public class CanvasNodeField extends JComponent {
 		this.name = new FieldName();
 		this.anchor = new Ellipse2D.Double();
 		this.anchorFillState = AnchorFillState.NONE;
-		
+
 		setLayout(null);
 		setFont(UIManager.getLookAndFeelDefaults().getFont("Label.font"));
 		setField(field);
 		setOpaque(false);
-		
+
 		addMouseListener(mouseAdapter);
 		addMouseMotionListener(mouseMotionAdapter);
-		
+
 		add(name);
 	}
-	
+
 	/**
 	 * Get the link anchoring area for this field.
 	 * 
@@ -169,7 +169,7 @@ public class CanvasNodeField extends JComponent {
 	public Ellipse2D getAnchor() {
 		return (Ellipse2D)anchor.clone();
 	}
-	
+
 	/**
 	 * Sets the state used for the anchor fill.
 	 * 
@@ -184,7 +184,7 @@ public class CanvasNodeField extends JComponent {
 			repaint();
 		}
 	}
-	
+
 	/**
 	 * Sets the anchor fill state to a specified state, but only if the
 	 * current state is not {@link AnchorFillState#LINK}.
@@ -195,7 +195,7 @@ public class CanvasNodeField extends JComponent {
 		if(this.anchorFillState != AnchorFillState.LINK)
 			setAnchorFillState(anchorFillState);
 	}
-	
+
 	/**
 	 * Gets the style used for this node.
 	 * 
@@ -240,34 +240,34 @@ public class CanvasNodeField extends JComponent {
 		if(field == null) throw new NullPointerException("field cannot be null");
 		if(field != this.field) {
 			this.field = field;
-			
+
 			name.setField(field);
 			setToolTipText(field.getDescription());
-			
+
 			revalidate();
 		}
 	}
-	
+
 	//
 	// Overrides
 	//
-	
+
 	@Override
 	public void setBounds(int newX, int newY, int newW, int newH) {
 		super.setBounds(newX, newY, newW, newH);
-		
+
 		// Everything else based off of insets
 		final Insets insets = getInsets();
 		newW -= insets.left + insets.right + 1;
 		newH -= insets.top + insets.bottom + 1;
-		
+
 		// Update anchor based on whether or not this is an input/output field
 		final int pad = newH - 1;
 		double x = insets.left;
 		double y = insets.top + (pad + 5.0) / 6;
 		double w = (2.0*pad) / 3;
 		double h = (2.0*pad) / 3;
-		
+
 		if(field instanceof InputField) {
 			name.setBounds((int)(x + w), insets.top, (int)(newW - 2*x - w), newH);
 		} else if(field instanceof OutputField) {
@@ -277,22 +277,22 @@ public class CanvasNodeField extends JComponent {
 
 		anchor.setFrame(x, y, w, h);
 	}
-	
+
 	@Override
 	public Dimension getPreferredSize() {
 		final Dimension textPref = name.getPreferredSize();
 		final int anchorSize = textPref.height;
 		return new Dimension(textPref.width + anchorSize + 2, textPref.height);
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics gfx) {
 		super.paintComponent(gfx);
-		
+
 		Graphics2D g = (Graphics2D)gfx;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-		
+
 		switch(anchorFillState) {
 		case LINK:
 			g.setColor(style.AnchorLinkFillColor);
@@ -320,7 +320,7 @@ public class CanvasNodeField extends JComponent {
 			g.draw(anchor);
 		}
 	}
-	
+
 	//
 	// MouseAdapter
 	//
@@ -332,7 +332,7 @@ public class CanvasNodeField extends JComponent {
 			if(parentCanvas != null)
 				parentCanvas.setCursor(null);
 		}
-	
+
 		@Override
 		public void mousePressed(MouseEvent e) {
 			GraphCanvas parentCanvas = (GraphCanvas)SwingUtilities.getAncestorOfClass(GraphCanvas.class, CanvasNodeField.this);
@@ -341,7 +341,7 @@ public class CanvasNodeField extends JComponent {
 					parentCanvas.startLinkDrag(CanvasNodeField.this);
 			}
 		}
-	
+
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			GraphCanvas parentCanvas = (GraphCanvas)SwingUtilities.getAncestorOfClass(GraphCanvas.class, CanvasNodeField.this);
@@ -353,7 +353,7 @@ public class CanvasNodeField extends JComponent {
 	//
 	// MouseMotionAdapter
 	//
-	
+
 	private final MouseMotionAdapter mouseMotionAdapter = new MouseMotionAdapter() {
 		@Override
 		public void mouseDragged(MouseEvent e) {
@@ -361,7 +361,7 @@ public class CanvasNodeField extends JComponent {
 			if(parentCanvas != null)
 				parentCanvas.updateLinkDrag(SwingUtilities.convertPoint(CanvasNodeField.this, e.getPoint(), parentCanvas));
 		}
-	
+
 		@Override
 		public void mouseMoved(MouseEvent e) {
 			Component parentCanvas = SwingUtilities.getAncestorOfClass(GraphCanvas.class, CanvasNodeField.this);

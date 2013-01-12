@@ -18,7 +18,6 @@
  */
 package ca.gedge.opgraph.validators;
 
-
 /**
  * A validator which accepts any object in which at least one of its composed
  * validators accepts.
@@ -26,7 +25,7 @@ package ca.gedge.opgraph.validators;
 public class CompositeValidator implements TypeValidator {
 	/** The list of validators this validator uses */
 	private TypeValidator[] validators;
-	
+
 	/**
 	 * Constructs a composite validator from the given validators. Note
 	 * that a <code>null</code> validator accepts all objects, so if such
@@ -40,11 +39,11 @@ public class CompositeValidator implements TypeValidator {
 	public CompositeValidator(TypeValidator... validators) {
 		this.validators = validators;
 	}
-	
+
 	//
 	// TypeValidator
 	//
-	
+
 	@Override
 	public boolean isAcceptable(Object obj) {
 		boolean ret = false;
@@ -61,7 +60,7 @@ public class CompositeValidator implements TypeValidator {
 	public boolean isAcceptable(Class<?> cls) {
 		if(cls == null)
 			throw new NullPointerException("cls cannot be null");
-		
+
 		boolean ret = false;
 		for(TypeValidator validator : validators) {
 			if(validator == null || validator.isAcceptable(cls)) {

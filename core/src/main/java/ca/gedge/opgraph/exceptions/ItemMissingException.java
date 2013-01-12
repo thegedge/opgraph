@@ -27,7 +27,7 @@ import ca.gedge.opgraph.ContextualItem;
 public final class ItemMissingException extends Exception {
 	/** The item that was missing */
 	private ContextualItem item;
-	
+
 	/**
 	 * Constructs exception with the given item that was missing.
 	 * 
@@ -36,7 +36,7 @@ public final class ItemMissingException extends Exception {
 	public ItemMissingException(ContextualItem item) {
 		this(item, "Contextual item with key '" + item.getKey() + "' missing");
 	}
-	
+
 	/**
 	 * Constructs exception with the given item that was missing, and a
 	 * custom detail message for the exception.

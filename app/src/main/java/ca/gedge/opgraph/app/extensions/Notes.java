@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-
 import ca.gedge.opgraph.app.util.CollectionListener;
 import ca.gedge.opgraph.app.util.CollectionListenerSupport;
 
@@ -99,7 +98,7 @@ public class Notes implements Iterable<Note> {
 	public void addCollectionListener(CollectionListener<Notes, Note> listener) {
 		listenerSupport.addCollectionListener(listener);
 	}
-	
+
 	/**
 	 * Removes a collection listener.
 	 * 

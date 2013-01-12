@@ -42,29 +42,29 @@ public class BinaryOperationNode extends OpNode {
 	public static enum Op {
 		/** Addition */
 		ADD,
-		
+
 		/** Subtraction */
 		SUBTRACT,
-		
+
 		/** Multiplication */
 		MULTIPLY,
-		
+
 		/** Division */
 		DIVIDE
 	}
-	
+
 	/** Input field for one of the input values */
 	public final InputField X = new InputField("x", "input value", false, true, Number.class);
-	
+
 	/** Input field for one of the input values */
 	public final InputField Y = new InputField("y", "input value", false, true, Number.class);
-	
+
 	/** Output field for the result */
 	public final OutputField RESULT = new OutputField("result", "result", true, Number.class);
-	
+
 	/** The operation this node performs */
 	private Op op;
-	
+
 	/**
 	 * Constructs a binary operation node that performs a given operation.
 	 * 
@@ -73,24 +73,24 @@ public class BinaryOperationNode extends OpNode {
 	public BinaryOperationNode(Op op) {
 		// Since we've annotated this class with NodeData, we do
 		// not need to call super(name, description)
-	
+
 		this.op = op;
-		
+
 		// Always remember to add the fields this node provides
 		putField(X);
 		putField(Y);
 		putField(RESULT);
 	}
-	
+
 	//
 	// OpNode
 	//
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 	    final double x = ((Number)context.get(X)).doubleValue();
 	    final double y = ((Number)context.get(Y)).doubleValue();
-	    
+
 	    switch(op) {
 		case DIVIDE:
 			context.put(RESULT, x / y);

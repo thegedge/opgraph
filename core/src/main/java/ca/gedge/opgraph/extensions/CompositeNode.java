@@ -31,7 +31,7 @@ public interface CompositeNode {
 	 * @return the graph that composes this node
 	 */
 	public abstract OpGraph getGraph();
-	
+
 	/**
 	 * Sets the graph contained within this node.
 	 * 

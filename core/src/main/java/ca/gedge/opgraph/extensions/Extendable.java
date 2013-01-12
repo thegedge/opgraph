@@ -36,14 +36,14 @@ public interface Extendable {
 	 * @throws NullPointerException  if <code>type</code> is <code>null</code>
 	 */
 	public abstract <T> T getExtension(Class<T> type);
-	
+
 	/**
 	 * Gets an iterable copy of the extensions.
 	 * 
 	 * @return an iterable copy of the extensions
 	 */
 	public abstract Collection<Class<?>> getExtensionClasses();
-	
+
 	/**
 	 * Adds or removes an extension of a specified type to an extendable.
 	 * 

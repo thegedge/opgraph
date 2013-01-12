@@ -46,19 +46,19 @@ public class DefaultLinkXMLSerializer implements XMLSerializer {
 	{
 		if(obj == null)
 			throw new IOException("Null object given to serializer");
-		
+
 		if(!(obj instanceof OpLink))
 			throw new IOException(DefaultLinkXMLSerializer.class.getName() + " cannot write objects of type " + obj.getClass().getName());
-		
+
 		// Create link element
 		final OpLink link = (OpLink)obj;
 		final Element linkElem = doc.createElementNS(LINK_QNAME.getNamespaceURI(), LINK_QNAME.getLocalPart());
-		
+
 		linkElem.setAttribute("source", link.getSource().getId());
 		linkElem.setAttribute("dest", link.getDestination().getId());
 		linkElem.setAttribute("sourceField", link.getSourceField().getKey());
 		linkElem.setAttribute("destField", link.getDestinationField().getKey());
-		
+
 		parentElem.appendChild(linkElem);
 	}
 
@@ -72,19 +72,19 @@ public class DefaultLinkXMLSerializer implements XMLSerializer {
 			final String did = elem.getAttribute("dest");
 			final String sfkey = elem.getAttribute("sourceField");
 			final String dfkey = elem.getAttribute("destField");
-			
+
 			final OpNode source = graph.getNodeById(sid, false);
 			if(source == null)
 				throw new IOException("Unknown source node in link: " + sid);
-			
+
 			final OpNode dest = graph.getNodeById(did, false);
 			if(dest == null)
 				throw new IOException("Unknown source node in link: " + did);
-			
+
 			final OutputField sourceField = source.getOutputFieldWithKey(sfkey);
 			if(sourceField == null)
 				throw new IOException("Unknown source field in link: " + sfkey);
-			
+
 			final InputField destField = dest.getInputFieldWithKey(dfkey);
 			if(destField == null)
 				throw new IOException("Unknown source node in link: " + dfkey);

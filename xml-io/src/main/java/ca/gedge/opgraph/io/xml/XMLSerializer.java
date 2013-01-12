@@ -43,7 +43,7 @@ public interface XMLSerializer {
 	                           Document doc,
 	                           Element parentElem,
 	                           Object obj) throws IOException;
-	
+
 	/**
 	 * Reads an object from an XML event stream.
 	 * 
@@ -63,7 +63,7 @@ public interface XMLSerializer {
 	                            Object parent,
 	                            Document doc,
 	                            Element elem) throws IOException;
-	
+
 	/**
 	 * Gets whether or not this serializer writes the given class.
 	 * 
@@ -73,7 +73,7 @@ public interface XMLSerializer {
 	 *         <code>false</code> otherwise
 	 */
 	public abstract boolean handles(Class<?> cls);
-	
+
 	/**
 	 * Gets whether or not this serializer can read a given qualified name.
 	 * 

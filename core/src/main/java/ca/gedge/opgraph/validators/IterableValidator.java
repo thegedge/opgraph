@@ -25,7 +25,7 @@ package ca.gedge.opgraph.validators;
 public class IterableValidator implements TypeValidator {
 	/** The validator used for iterated elements */
 	private TypeValidator elementValidator;
-	
+
 	/**
 	 * Constructs this validator with an element validator which accepts
 	 * the given list of classes.
@@ -37,7 +37,7 @@ public class IterableValidator implements TypeValidator {
 	public IterableValidator(Class<?>... acceptedTypes) {
 		this(new ClassValidator(acceptedTypes));
 	}
-	
+
 	/**
 	 * Constructs this validator with the given validator to use against
 	 * iterated elements.
@@ -47,11 +47,11 @@ public class IterableValidator implements TypeValidator {
 	public IterableValidator(TypeValidator elementValidator) {
 		this.elementValidator = elementValidator;
 	}
-	
+
 	//
 	// TypeValidator
 	//
-	
+
 	@Override
 	public boolean isAcceptable(Object obj) {
 		boolean ret = true;
@@ -65,7 +65,7 @@ public class IterableValidator implements TypeValidator {
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public boolean isAcceptable(Class<?> cls) {
 		if(cls == null)

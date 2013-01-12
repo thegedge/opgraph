@@ -82,28 +82,28 @@ import ca.gedge.opgraph.util.ServiceDiscovery;
 public class NodeLibraryViewer extends JPanel {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(NodeLibraryViewer.class.getName());
-	
+
 	/** The library this panel is viewing */
 	private NodeLibrary library;
-	
+
 	/** The search field */
 	private SearchField filterField;
-	
+
 	/** The list of nodes in the library */
 	private JTree libraryTree;
-	
+
 	/** The tree model being used */
 	private NodeLibraryTreeModel model;
-	
+
 	/** Tree renderer being used */
 	private DefaultTreeCellRenderer renderer;
-	
+
 	/** A component showing information on the selected item */
 	private JEditorPane infoPane;
-	
+
 	/** A list of the rows that are expanded */
 	private HashSet<String> expandedCategories;
-	
+
 	/**
 	 * An action and action listener that updates the filter of this node
 	 * library viewer.
@@ -137,13 +137,13 @@ public class NodeLibraryViewer extends JPanel {
 				} else if("filter".equals(e.getActionCommand())) {
 					this.filter.setFilter(filterField.getText());
 				}
-				
+
 				// Update model
 				final NodeLibrary library = NodeLibraryViewer.this.library;
-				
+
 				model = new NodeLibraryTreeModel(library, filter);
 				libraryTree.setModel(model);
-				
+
 				final int count = model.getChildCount(model.getRoot());
 				for(int index = 0; index < count; ++index) {
 					final Object obj = model.getChild(model.getRoot(), index);
@@ -154,10 +154,10 @@ public class NodeLibraryViewer extends JPanel {
 			}
 		}
 	}
-	
+
 	/** */
 	private UpdateFilterAction updateFilterAction = new UpdateFilterAction(); 
-	
+
 	/**
 	 * Constructs a viewer for the node library.
 	 */
@@ -165,7 +165,7 @@ public class NodeLibraryViewer extends JPanel {
 		// Grab all OpNode providers and add to library
 		final NodeLibrary library = new NodeLibrary();
 		library.addURIHandler(new ClassHandler());
-		
+
 		final List<Class<? extends OpNode>> providers = ServiceDiscovery.getInstance().findProviders(OpNode.class);
 		for(Class<? extends OpNode> provider : providers) {
 			try {
@@ -174,11 +174,11 @@ public class NodeLibraryViewer extends JPanel {
 				LOGGER.warning("Could not register OpNode provider: " + provider);
 			}
 		}
-		
+
 		// Initialize component
 		initializeComponents(library);
 	}
-	
+
 	/**
 	 * Constructs a viewer for a specified node library.
 	 * 
@@ -187,15 +187,15 @@ public class NodeLibraryViewer extends JPanel {
 	public NodeLibraryViewer(NodeLibrary library) {
 		initializeComponents(library);
 	}
-	
+
 	private void initializeComponents(NodeLibrary library) {
 		setLayout(new BorderLayout());
-		
+
 		this.renderer = new DefaultTreeCellRenderer();
 		this.renderer.setOpenIcon(null);
 		this.renderer.setLeafIcon(null);
 		this.renderer.setClosedIcon(null);
-		
+
 		this.expandedCategories = new HashSet<String>();
 		this.libraryTree = new JTree();
 		this.infoPane = new JEditorPane();
@@ -208,7 +208,7 @@ public class NodeLibraryViewer extends JPanel {
 		libraryTree.setRowHeight(-1);
 		libraryTree.setCellRenderer(renderer);
 		libraryTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		
+
 		libraryTree.addTreeExpansionListener(new TreeExpansionListener() {
 			@Override
 			public void treeExpanded(TreeExpansionEvent e) {
@@ -218,7 +218,7 @@ public class NodeLibraryViewer extends JPanel {
 						expandedCategories.add((String)node.getUserObject());
 				}
 			}
-			
+
 			@Override
 			public void treeCollapsed(TreeExpansionEvent e) {
 				if(e.getPath().getPathCount() >= 2) {
@@ -228,7 +228,7 @@ public class NodeLibraryViewer extends JPanel {
 				}
 			}
 		});
-		
+
 		libraryTree.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
@@ -242,7 +242,7 @@ public class NodeLibraryViewer extends JPanel {
 				}
 			}
 		});
-		
+
 		libraryTree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -268,15 +268,15 @@ public class NodeLibraryViewer extends JPanel {
 				}
 			}
 		});
-		
+
 		setLibrary(library);
-		
+
 		// Create the filter field context menu
 		final JRadioButtonMenuItem fullTextItem = new JRadioButtonMenuItem("Full Text");
 		final JRadioButtonMenuItem nameItem = new JRadioButtonMenuItem("Name");
 		final JRadioButtonMenuItem descriptionItem = new JRadioButtonMenuItem("Description");
 		final JRadioButtonMenuItem categoryItem = new JRadioButtonMenuItem("Category");
-		
+
 		fullTextItem.setActionCommand("fulltext");
 		fullTextItem.addActionListener(updateFilterAction);
 		fullTextItem.setSelected(true);
@@ -286,22 +286,22 @@ public class NodeLibraryViewer extends JPanel {
 		descriptionItem.addActionListener(updateFilterAction);
 		categoryItem.setActionCommand("category");
 		categoryItem.addActionListener(updateFilterAction);
-		
+
 		final ButtonGroup group = new ButtonGroup();
 		group.add(fullTextItem);
 		group.add(nameItem);
 		group.add(descriptionItem);
 		group.add(categoryItem);
-		
+
 		final JPopupMenu filterPopup = new JPopupMenu();
 		filterPopup.add(fullTextItem);
 		filterPopup.addSeparator();
 		filterPopup.add(nameItem);
 		filterPopup.add(descriptionItem);
 		filterPopup.add(categoryItem);
-		
+
 		filterField.setContextPopup(filterPopup);
-		
+
 		// Filter field initialization
 		filterField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
@@ -315,55 +315,55 @@ public class NodeLibraryViewer extends JPanel {
 				final ActionEvent ae = new ActionEvent(filterField.getDocument(), 0, "filter");
 				updateFilterAction.actionPerformed(ae);
 			}
-			
+
 			@Override
 			public void changedUpdate(DocumentEvent e) {}
 		});
-		
+
 		// Node information pane
 		final StyleSheet style = new StyleSheet();
 		style.addRule("body { background: white; font: 12pt sans-serif; }");
 		style.addRule("h1 { font: bold 16pt; margin: 5px; }");
 		style.addRule("p { margin: 5px 10px; }");
-		
+
 		final HTMLEditorKit htmlKit = new HTMLEditorKit();
 		htmlKit.setStyleSheet(style);
-		
+
 		infoPane.setEditable(false);
 		infoPane.setEditorKit(htmlKit);
-		
+
 		// Drag support for creation of nodes
 		DragSource.getDefaultDragSource()
 		          .createDefaultDragGestureRecognizer(libraryTree,
 		                                              DnDConstants.ACTION_COPY,
 		                                              gestureListener);
-		
+
 		// Search field and library tree on the left
 		final JPanel searchFieldPanel = new JPanel(new BorderLayout());
 		searchFieldPanel.setOpaque(false);
 		searchFieldPanel.add(filterField);
 		searchFieldPanel.setBorder(new EmptyBorder(5, 2, 5, 2));
-		
+
 		final JScrollPane libraryScrollPane = new JScrollPane(libraryTree);
 		libraryScrollPane.setBorder(null);
-		
+
 		final JPanel libraryPanel = new JPanel(new BorderLayout());
 		libraryPanel.setBackground(Color.WHITE);
 		libraryPanel.add(searchFieldPanel, BorderLayout.NORTH);
 		libraryPanel.add(libraryScrollPane, BorderLayout.CENTER);
-		
+
 		// Split pane between tree and description
-		
+
 		final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setBorder(null);
 		splitPane.setLeftComponent(libraryPanel);
 		splitPane.setRightComponent(infoPane);
 		splitPane.setDividerSize(3);
 		splitPane.setDividerLocation(libraryTree.getPreferredSize().width + 100);
-		
+
 		add(splitPane, BorderLayout.CENTER);
 	}
-	
+
 	/**
 	 * Gets the node library this viewer references.
 	 *  
@@ -372,7 +372,7 @@ public class NodeLibraryViewer extends JPanel {
 	public NodeLibrary getLibrary() {
 		return library;
 	}
-	
+
 	/**
 	 * Sets the node library this viewer will reference.
 	 * 
@@ -382,14 +382,14 @@ public class NodeLibraryViewer extends JPanel {
 		if(this.library != library) {
 			if(this.library != null)
 				this.library.removeNodeLibraryListener((NodeLibraryTreeModel)libraryTree.getModel());
-			
+
 			this.library = library;
 			this.model = new NodeLibraryTreeModel(library);
-			
+
 			libraryTree.setModel(model);
 			for(int row = libraryTree.getRowCount() - 1; row >= 0; --row)
 				libraryTree.expandRow(row);
-			
+
 			if(this.library != null)
 				this.library.addNodeLibraryListener(model);
 		}
@@ -409,7 +409,7 @@ public class NodeLibraryViewer extends JPanel {
 		builder.append("</html>\n");
 		return builder.toString();
 	}
-	
+
 	//
 	// DragGestureListener
 	//
@@ -419,30 +419,30 @@ public class NodeLibraryViewer extends JPanel {
 		public void dragGestureRecognized(DragGestureEvent dge) {
 			if(libraryTree.getSelectionPath() == null)
 				return;
-			
+
 			final DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)libraryTree.getSelectionPath().getLastPathComponent();
 			if(selectedNode != null) {
 				final Object selectedObject = selectedNode.getUserObject();
 				if(selectedObject != null && selectedObject instanceof NodeData) {
 					final String txt = selectedObject.toString();
-					
+
 					final Font font = getFont().deriveFont(Font.BOLD);
 					final FontRenderContext frc = new FontRenderContext(null, true, true);
 					final Rectangle2D bounds = font.getStringBounds(txt, frc);
 					final int txtw = (int)(bounds.getWidth() + 20);
 					final int txth = (int)(bounds.getHeight() + 10);
-					
+
 					final BufferedImage DRAG_IMG = new BufferedImage(txtw, txth, BufferedImage.TYPE_INT_ARGB);
 					final Graphics2D g = DRAG_IMG.createGraphics();
 					{
 						// Draw background
 						g.setColor(new Color(255, 255, 150, 200));
 						g.fillRect(0, 0, txtw - 1, txth - 1);
-						
+
 						// Draw border
 						g.setColor(Color.BLACK);
 						g.drawRect(0, 0, txtw - 1, txth - 1);
-						
+
 						// Draw text
 						g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 						g.setFont(font);
@@ -453,7 +453,7 @@ public class NodeLibraryViewer extends JPanel {
 						g.drawString(txt, txtx, txty);
 						g.dispose();
 					}
-					
+
 					final Point p = new Point(DRAG_IMG.getWidth() / -2, DRAG_IMG.getHeight() / -2);
 					final ObjectSelection sel = new ObjectSelection(selectedObject);
 					dge.getDragSource().startDrag(dge, DragSource.DefaultCopyDrop, DRAG_IMG, p, sel, null);

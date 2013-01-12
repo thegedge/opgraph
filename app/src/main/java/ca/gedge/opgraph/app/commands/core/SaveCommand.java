@@ -47,17 +47,17 @@ import ca.gedge.opgraph.io.OpGraphSerializerInfo;
  */
 public class SaveCommand extends AbstractAction {
 	private static final Logger LOGGER = Logger.getLogger(SaveCommand.class.getName());
-	
+
 	/** Whether or not to force the save dialog */
 	private boolean forceDialog;
-	
+
 	/**
 	 * Constructs a save command that does not force the dialog.
 	 */
 	public SaveCommand() {
 		this(false);
 	}
-	
+
 	/**
 	 * Constructs a save command.
 	 * 
@@ -67,13 +67,13 @@ public class SaveCommand extends AbstractAction {
 	 */
 	public SaveCommand(boolean forceDialog) {
 		super(forceDialog ? "Save As..." : "Save");
-		
+
 		this.forceDialog = forceDialog;
-		
+
 		int modifiers = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		if(forceDialog)
 			modifiers |= InputEvent.SHIFT_MASK;
-		
+
 		putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, modifiers));
 	}
 
@@ -108,17 +108,17 @@ public class SaveCommand extends AbstractAction {
 			ErrorDialog.showError(message);
 			return false;
 		}
-		
+
 		// Get the serializer's info
 		String description = "Opgraph Files";
 		String extension = "";
-		
+
 		final OpGraphSerializerInfo info = serializer.getClass().getAnnotation(OpGraphSerializerInfo.class);
 		if(info != null) {
 			description = info.description();
 			extension = info.extension();
 		}
-		
+
 		// Find a save file
 		boolean ret = true;
 		if(model != null && model.getGraph() != null && (saveFile == null || model.hasModifications())) {
@@ -128,7 +128,7 @@ public class SaveCommand extends AbstractAction {
 				chooser.setAcceptAllFileFilterUsed(false);
 				chooser.setFileFilter(new FileNameExtensionFilter(description, extension));
 				chooser.setDialogTitle("Save Visual Graph");
-			
+
 				// Loop for picking file
 				boolean running = true;
 				do {
@@ -164,23 +164,23 @@ public class SaveCommand extends AbstractAction {
 				} while(running);
 			}
 		}
-		
+
 		// If a non-null file, save the graph to disk
 		if(saveFile != null) {
 			try {
 				// serialize xml into an in-memory stream
 				final ByteArrayOutputStream bout = new ByteArrayOutputStream();
 				serializer.write(model.getGraph(), bout);
-				
+
 				// assume overwrite warning was issued and accepted...
 				final FileOutputStream stream = new FileOutputStream(saveFile);
 				stream.write(bout.toByteArray());
 				stream.flush();
 				stream.close();
-				
+
 				model.setSource(saveFile);
 				model.markAsUnmodified();
-				
+
 				ret = true;
 			} catch(IOException exc) {
 				final String message = "Could not save graph to file: " + exc.getLocalizedMessage();
@@ -188,7 +188,7 @@ public class SaveCommand extends AbstractAction {
 				ErrorDialog.showError(exc, message);
 			}
 		}
-		
+
 		return ret;
 	}
 }

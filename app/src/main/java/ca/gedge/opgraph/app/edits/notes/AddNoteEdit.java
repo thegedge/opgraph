@@ -35,7 +35,7 @@ import ca.gedge.opgraph.app.extensions.Notes;
 public class AddNoteEdit extends AbstractUndoableEdit {
 	/** The notes to which this edit was applied */
 	private Notes notes;
-	
+
 	/** The note that was added */
 	private Note note;
 
@@ -51,7 +51,7 @@ public class AddNoteEdit extends AbstractUndoableEdit {
 	public AddNoteEdit(Notes notes, String title, String body) {
 		this(notes, title, body, 0, 0);
 	}
-	
+
 	/**
 	 * Constructs an edit that adds a note to a graph.
 	 * 
@@ -66,39 +66,39 @@ public class AddNoteEdit extends AbstractUndoableEdit {
 	public AddNoteEdit(Notes notes, String title, String body, int x, int y) {
 		if(notes == null)
 			throw new NullPointerException();
-		
+
 		this.notes = notes;
 		this.note = new Note(title, body);
-		
+
 		final JComponent noteComp = this.note.getExtension(JComponent.class);
 		if(noteComp != null)
 			noteComp.setLocation(x, y);
-		
+
 		perform();
 	}
-	
+
 	/**
 	 * Performs this edit.
 	 */
 	private void perform() {
 		notes.add(note);
 	}
-	
+
 	//
 	// AbstractUndoableEdit
 	//
-	
+
 	@Override
 	public String getPresentationName() {
 		return "Add Note";
 	}
-	
+
 	@Override
 	public void redo() throws CannotRedoException {
 		super.redo();
 		perform();
 	}
-	
+
 	@Override
 	public void undo() throws CannotUndoException {
 		super.undo();

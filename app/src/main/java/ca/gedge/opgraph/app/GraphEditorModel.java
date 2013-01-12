@@ -48,10 +48,10 @@ import ca.gedge.opgraph.util.ServiceDiscovery;
 public class GraphEditorModel {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(GraphEditorModel.class.getName());
-	
+
 	/** The active editor model */
 	private static GraphEditorModel activeModel;
-	
+
 	/**
 	 * Gets the {@link GraphEditorModel} that is currently active.
 	 * 
@@ -60,7 +60,7 @@ public class GraphEditorModel {
 	public static GraphEditorModel getActiveEditorModel() {
 		return activeModel;
 	}
-	
+
 	/**
 	 * Sets a given model as the active model for the application.
 	 * 
@@ -69,7 +69,7 @@ public class GraphEditorModel {
 	public static void setActiveEditorModel(GraphEditorModel model) {
 		activeModel = model;
 	}
-	
+
 	/**
 	 * Gets the {@link GraphDocument} that is currently active.
 	 * 
@@ -79,28 +79,28 @@ public class GraphEditorModel {
 		final GraphEditorModel model = getActiveEditorModel();
 		return (model == null ? null : model.getDocument());
 	}
-	
+
 	/** The breadcrumb attached to the canvas */
 	private BreadcrumbViewer<OpGraph, ?> breadcrumb;
-	
+
 	/** The canvas this window is viewing */
 	private GraphCanvas canvas;
 
 	/** The console panel */
 	private ConsolePanel console;
-	
+
 	/** The panel that allows one to edit default values for node input fields */
 	private NodeDefaultsPanel nodeDefaults;
 
 	/** The panel that allows one to modify node settings */
 	private NodeSettingsPanel nodeSettings;
-	
+
 	/** The viewer component for the node library */
 	private NodeLibraryViewer nodeLibrary;
-	
+
 	/** The viewer component for the node library */
 	private ContextViewerPanel debugPanel;
-	
+
 	/** List of menu providers */
 	private ArrayList<MenuProvider> menuProviders;
 
@@ -118,16 +118,16 @@ public class GraphEditorModel {
 		nodeSettings = new NodeSettingsPanel();
 		nodeLibrary = new NodeLibraryViewer();
 		debugPanel = new ContextViewerPanel();
-		
+
 		// Property change listeners
 		canvas.getDocument().addPropertyChangeListener(GraphDocument.PROCESSING_CONTEXT, new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				final Processor context = (Processor)evt.getNewValue();
-				
+
 				// Let canvas redraw itself based on the given context
 				canvas.updateDebugState(context);
-				
+
 				// Update debug panel information
 				if(debugPanel.getProcessingContext() != context)
 					debugPanel.setProcessingContext(context);
@@ -229,7 +229,7 @@ public class GraphEditorModel {
 			OpNode node = null;
 			if(selected.size() == 1)
 				node = selected.iterator().next();
-			
+
 			nodeDefaults.setNode(node);
 			nodeSettings.setNode(node);
 			debugPanel.setNode(node);

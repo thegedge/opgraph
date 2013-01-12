@@ -35,7 +35,7 @@ public interface CollectionListener<P, E> {
 	 * @param element  the element that was added
 	 */
 	public abstract void elementAdded(P source, E element);
-	
+
 	/**
 	 * Called when an element was removed from a collection.
 	 * 

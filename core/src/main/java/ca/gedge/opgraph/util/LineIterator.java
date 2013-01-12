@@ -32,13 +32,13 @@ import java.util.logging.Logger;
 public class LineIterator implements Iterator<String> {
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(LineIterator.class.getName());
-	
+
 	/** Buffered reader from which lines will come from */
 	private BufferedReader br;
-	
+
 	/** Current line */
 	private String line;
-	
+
 	/**
 	 * Constructs an iterator that will iterate over the lines in a given
 	 * input stream.
@@ -48,7 +48,7 @@ public class LineIterator implements Iterator<String> {
 	public LineIterator(InputStream is) {
 		this.br = new BufferedReader(new InputStreamReader(is));
 	}
-	
+
 	/**
 	 * Constructs an iterator that will iterate over the lines in a given
 	 * buffered reader.
@@ -58,7 +58,7 @@ public class LineIterator implements Iterator<String> {
 	public LineIterator(BufferedReader br) {
 		this.br = br;
 	}
-	
+
 	/**
 	 * Constructs an iterator that will iterate over the lines in a given URL.
 	 *  
@@ -71,11 +71,11 @@ public class LineIterator implements Iterator<String> {
 			LOGGER.warning("Could not open line iterator stream for url: " + url);
 		}
 	}
-	
+
 	//
 	// Iterator
 	//
-	
+
 	@Override
 	public boolean hasNext() {
 		if(br != null && line == null) {
@@ -86,7 +86,7 @@ public class LineIterator implements Iterator<String> {
 				LOGGER.warning("IOException when attempting to read line. Closing reader...");
 			}
 		}
-		
+
 		return (line != null);
 	}
 

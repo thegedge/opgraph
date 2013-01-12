@@ -42,26 +42,26 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 {
 	/** The vertices in this DAG */
 	private ArrayList<V> vertices;
-	
+
 	/** The edges in this DAG */
 	private TreeSet<E> edges;
-	
+
 	/**
 	 * A mapping from vertex to its level.
 	 * 
 	 * @see #getLevel(Object)
 	 */
 	private WeakHashMap<V, Integer> vertexLevels;
-	
+
 	/** A cache of incoming edges */
 	private WeakHashMap<V, SoftReference<Set<E>>> incomingEdgesCache;
-	
+
 	/** A cache of outgoing edges */
 	private WeakHashMap<V, SoftReference<Set<E>>> outgoingEdgesCache;
-	
+
 	/** Whether or not the topological sorting needs to be performed */
 	private boolean shouldSort;
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -73,7 +73,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 		this.outgoingEdgesCache = new WeakHashMap<V, SoftReference<Set<E>>>();
 		this.shouldSort = false;
 	}
-	
+
 	/**
 	 * Adds a vertex to this DAG.
 	 * 
@@ -85,7 +85,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 			shouldSort = true;
 		}
 	}
-	
+
 	/**
 	 * Removes a vertex from this DAG. Any {@link DirectedEdge}s in this DAG that
 	 * reference this vertex will also be removed.
@@ -99,7 +99,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 		final boolean removed = vertices.remove(vertex);
 		if(removed) {
 			shouldSort = true;
-			
+
 			// Remove edges which reference this vertex
 			final ArrayList<E> edgesCopy = new ArrayList<E>(edges);
 			for(E edge : edgesCopy) {
@@ -109,7 +109,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 		}
 		return removed;
 	}
-	
+
 	/**
 	 * Gets whether or not this graph contains a specified vertex.
 	 * 
@@ -121,7 +121,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 	public boolean contains(V vertex) {
 		return vertices.contains(vertex);
 	}
-	
+
 	/**
 	 * Gets whether or not this graph contains a specified edge.
 	 * 
@@ -133,7 +133,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 	public boolean contains(E edge) {
 		return edges.contains(edge);
 	}
-	
+
 	/**
 	 * Adds an edge to this DAG.
 	 * 
@@ -147,16 +147,16 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 	public void add(E edge) throws VertexNotFoundException, CycleDetectedException {
 		if(!vertices.contains(edge.getSource()))
 			throw new VertexNotFoundException(edge.getSource());
-		
+
 		if(!vertices.contains(edge.getDestination()))
 			throw new VertexNotFoundException(edge.getDestination());
-		
+
 		edges.add(edge);
-		
+
 		// Clear out appropriate cache entries
 		outgoingEdgesCache.remove(edge.getSource());
 		incomingEdgesCache.remove(edge.getDestination());
-		
+
 		// Check if adding this edge created a cycle, and if so, remove it
 		boolean oldShouldSort = shouldSort;
 		shouldSort = true;
@@ -166,7 +166,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 			throw new CycleDetectedException("adding edge creates a cycle");
 		}
 	}
-	
+
 	/**
 	 * Gets whether or not an edge can be added to this graph without raising
 	 * any exception defined in {@link #add(DirectedEdge)}.
@@ -181,13 +181,13 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 		if(vertices.contains(edge.getSource()) && vertices.contains(edge.getDestination())) {
 			try {
 				edges.add(edge);
-				
+
 				// XXX It'd be nice to not have to do this, but instead either directly
 				//     add this edge to the cached values of each, or maybe pass this
 				//     edge to toplogicalSort directly
 				outgoingEdgesCache.remove(edge.getSource());
 				incomingEdgesCache.remove(edge.getDestination());
-				
+
 				// Check if adding this edge created a cycle, and if so, remove it
 				boolean oldShouldSort = shouldSort;
 				shouldSort = true;
@@ -201,7 +201,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 		}
 		return canAdd;
 	}
-	
+
 	/**
 	 * Removes an edge from this DAG.
 	 * 
@@ -218,12 +218,12 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 			// Clear out appropriate cache entries
 			outgoingEdgesCache.remove(edge.getSource());
 			incomingEdgesCache.remove(edge.getDestination());
-			
+
 			shouldSort = true;
 		}
 		return removed;
 	}
-	
+
 	/**
 	 * Gets the set of vertices in this DAG. The list of vertices will be
 	 * ordered according to their topological ordering.
@@ -234,7 +234,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 		topologicalSort();
 		return Collections.unmodifiableList(vertices);
 	}
-	
+
 	/**
 	 * Gets the set of edges in this DAG.
 	 * 
@@ -243,7 +243,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 	public Set<E> getEdges() {
 		return Collections.unmodifiableSet(edges);
 	}
-	
+
 	/**
 	 * Gets the level of a vertex. The level of a vertex <code>v</code> is
 	 * defined as:
@@ -259,15 +259,15 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 	public int getLevel(V vertex) {
 		if(!vertices.contains(vertex))
 			return -1;
-		
+
 		topologicalSort();
-		
+
 		int ret = -1;
 		if(vertexLevels.get(vertex) != null)
 			ret = vertexLevels.get(vertex);
 		return ret;
 	}
-	
+
 	/**
 	 * Gets the incoming {@link DirectedEdge}s for a {@link Vertex}.
 	 * 
@@ -287,10 +287,10 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 				if(edge.getDestination() == vertex)
 					cachedValue.add(edge);
 			}
-			
+
 			incomingEdgesCache.put(vertex, new SoftReference<Set<E>>(cachedValue));
 		}
-		
+
 		return new TreeSet<E>(incomingEdgesCache.get(vertex).get());
 	}
 
@@ -313,20 +313,20 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 				if(edge.getSource() == vertex)
 					cachedValue.add(edge);
 			}
-			
+
 			outgoingEdgesCache.put(vertex, new SoftReference<Set<E>>(cachedValue));
 		}
-		
+
 		return new TreeSet<E>(outgoingEdgesCache.get(vertex).get());
 	}
 
 	@Override
 	public Iterator<V> iterator() {
 		topologicalSort();
-		
+
 		return new Iterator<V>() {
 			private Iterator<V> iter = vertices.iterator();
-			
+
 			@Override
 			public boolean hasNext() {
 				return iter.hasNext();
@@ -344,7 +344,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 			}
 		};
 	}
-	
+
 	/**
 	 * Topologically orders the vertices in this DAG. A topological ordering
 	 * is an ordering of a DAG's vertices such that for any edge
@@ -364,17 +364,17 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 			final ArrayList<V> orderedVertices = new ArrayList<V>();
 			final WeakHashMap<V, Integer> newLevels = new WeakHashMap<V, Integer>();
 			final HashMap<V, Integer> incomingEdgeCount = new HashMap<V, Integer>();
-			
+
 			//
 			for(V vertex : vertices)
 				incomingEdgeCount.put(vertex, 0);
-			
+
 			// Gather initial incoming edge count
 			for(E edge : edges) {
 				int count = incomingEdgeCount.get(edge.getDestination());
 				incomingEdgeCount.put(edge.getDestination(), count + 1);
 			}
-			
+
 			// Ordering
 			for(int level = 0; orderedVertices.size() < vertices.size(); ++level) {
 				// Find a vertex with zero incoming edges
@@ -383,16 +383,16 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 					if(entry.getValue() == 0)
 						verticesToProcess.add(entry.getKey());
 				}
-				
+
 				if(verticesToProcess.size() == 0)
 					break;
-				
+
 				for(V vertex : verticesToProcess) {
 					// Prevent reuse of this vertex
 					orderedVertices.add(vertex);
 					newLevels.put(vertex, level);
 					incomingEdgeCount.put(vertex, -1);
-					
+
 					// Reduce incoming edge count after removing vertex
 					for(E edge : getOutgoingEdges(vertex)) {
 						V out = edge.getDestination();
@@ -400,7 +400,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 					}
 				}
 			}
-			
+
 			boolean cycleExists = false;
 			for(Integer value : incomingEdgeCount.values()) {
 				if(value > 0) {
@@ -408,7 +408,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 					break;
 				}
 			}
-			
+
 			// If no cycle, we want to update the vertices to the new
 			// ordered list and flag them as not needing sorting.
 			if(cycleExists) {
@@ -419,7 +419,7 @@ public class DirectedAcyclicGraph<V extends Vertex, E extends DirectedEdge<V>>
 				shouldSort = false;
 			}
 		}
-		
+
 		return ret;
 	}
 }

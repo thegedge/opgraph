@@ -9,15 +9,15 @@ public class StringSplitter extends OpNode {
 		putField(new InputField("delimeter", "split delimeter", true, true, String.class));
 		putField(new OutputField("split", "split string list", true, List.class))
 	}
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 		final String str = (String)context.get("string");
-		
+
 		String delim = "\\s";
 		if(context.containsKey("delimeter")
 			delim = (String)context.get("delimeter");
-		
+
 		context.put("split", Arrays.asList(str.split(delim)))
 	}
 }

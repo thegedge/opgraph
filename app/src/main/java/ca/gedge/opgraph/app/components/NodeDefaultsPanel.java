@@ -52,10 +52,10 @@ import ca.gedge.opgraph.validators.ClassValidator;
 public class NodeDefaultsPanel extends JPanel {
 	/** Logger */
 	private final Logger LOGGER = Logger.getLogger(NodeDefaultsPanel.class.getName());
-	
+
 	/** The node currently being viewed */
 	private OpNode node;
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -81,7 +81,7 @@ public class NodeDefaultsPanel extends JPanel {
 	public void setNode(OpNode node) {
 		if(this.node != node || getComponentCount() == 0) {
 			this.node = node;
-			
+
 			// Clear all current components and add in new ones
 			removeAll();
 			if(node == null) {
@@ -92,12 +92,12 @@ public class NodeDefaultsPanel extends JPanel {
 			} else {
 				final GridBagConstraints gbc = new GridBagConstraints();
 				gbc.gridy = 0;
-				
+
 				final NodeMetadata meta = node.getExtension(NodeMetadata.class);
 				if(meta != null) {
 					gbc.insets.set(2, 5, 2, 2);
 					gbc.gridwidth = 1;
-					
+
 					for(InputField field : node.getInputFields()) {
 						final Object value = meta.getDefault(field);
 						final JComponent editComp = getEditComponentForField(field, value);
@@ -105,25 +105,25 @@ public class NodeDefaultsPanel extends JPanel {
 							final JLabel fieldNameLabel = new JLabel(field.getKey() + ":");
 							fieldNameLabel.setFont(fieldNameLabel.getFont().deriveFont(Font.BOLD));
 							fieldNameLabel.setToolTipText(field.getDescription());
-							
+
 							gbc.gridx = 0;
 							gbc.anchor = GridBagConstraints.EAST;
 							gbc.fill = GridBagConstraints.NONE;
 							gbc.weightx = 0;
 							add(fieldNameLabel, gbc);
-							
+
 							editComp.setToolTipText(field.getDescription());
-							
+
 							gbc.gridx = 1;
 							gbc.anchor = GridBagConstraints.WEST;
 							gbc.fill = GridBagConstraints.BOTH;
 							gbc.weightx = 1;
 							add(editComp, gbc);
-							
+
 							++gbc.gridy;
 						}
 					}
-					
+
 					if(getComponentCount() > 0) {
 						gbc.weighty = 1;
 						gbc.gridwidth = 2;
@@ -139,7 +139,7 @@ public class NodeDefaultsPanel extends JPanel {
 					add(label, gbc);
 				}
 			}
-			
+
 			revalidate();
 			repaint();
 		}
@@ -161,7 +161,7 @@ public class NodeDefaultsPanel extends JPanel {
 		// XXX allow enabled field here?
 		if(field.getKey() == OpNode.ENABLED_FIELD.getKey())
 			return null;
-		
+
 		// Editable component returned is currently based on a fixed set of
 		// classes, and only if the validator of the field is a class-based
 		// validator which accepts a single class
@@ -170,7 +170,7 @@ public class NodeDefaultsPanel extends JPanel {
 			final ClassValidator validator = (ClassValidator)field.getValidator();
 			if(validator.getClasses().size() == 1) {
 				Class<?> cls = validator.getClasses().get(0);
-				
+
 				// Check default value against this class
 				if(defaultValue != null) {
 					if(!cls.isAssignableFrom(defaultValue.getClass())) {
@@ -178,13 +178,13 @@ public class NodeDefaultsPanel extends JPanel {
 						defaultValue = null;
 					}
 				}
-				
+
 				if(cls == String.class) {
 					// JTextArea for java.lang.String
 					String initialText = "";
 					if(defaultValue != null)
 						initialText = (String)defaultValue;
-					
+
 					final JTextArea stringEditable = new JTextArea(initialText);
 					stringEditable.setBorder(BorderFactory.createEtchedBorder());
 					stringEditable.setLineWrap(true);
@@ -198,7 +198,7 @@ public class NodeDefaultsPanel extends JPanel {
 									meta.setDefault(field, stringEditable.getText());
 							}
 						}
-						
+
 						@Override
 						public void insertUpdate(DocumentEvent e) {
 							if(node != null) {
@@ -207,7 +207,7 @@ public class NodeDefaultsPanel extends JPanel {
 									meta.setDefault(field, stringEditable.getText());
 							}
 						}
-						
+
 						@Override
 						public void changedUpdate(DocumentEvent e) {
 							if(node != null) {
@@ -217,14 +217,14 @@ public class NodeDefaultsPanel extends JPanel {
 							}
 						}
 					});
-					
+
 					ret = stringEditable;
 				} else if(cls == Boolean.class) {
 					// JTextBox for java.lang.Boolean
 					boolean initial = false;
 					if(defaultValue != null)
 						initial = (Boolean)defaultValue;
-					
+
 					final JCheckBox booleanEditable = new JCheckBox();
 					booleanEditable.setSelected(initial);
 					booleanEditable.addItemListener(new ItemListener() {
@@ -237,13 +237,13 @@ public class NodeDefaultsPanel extends JPanel {
 							}
 						}
 					});
-					
+
 					ret = booleanEditable;
 				} else if(Number.class.isAssignableFrom(cls)) {
 					Number initial = null;
 					if(defaultValue != null)
 						initial = (Number)defaultValue;
-					
+
 					final NumberFormat formatter = NumberFormat.getInstance();
 					final JFormattedTextField numberEditable = new JFormattedTextField(formatter);
 					numberEditable.setValue(initial);
@@ -257,12 +257,12 @@ public class NodeDefaultsPanel extends JPanel {
 							}
 						}
 					});
-					
+
 					ret = numberEditable;
 				}
 			}
 		}
-		
+
 		return ret;
 	}
 }

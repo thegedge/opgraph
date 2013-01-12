@@ -26,10 +26,10 @@ package ca.gedge.opgraph.dag;
 public class SimpleDirectedEdge<V> implements DirectedEdge<V> {
 	/** The source vertex of this edge */
 	protected final V source;
-	
+
 	/** The destination vertex of this edge */
 	protected final V destination;
-	
+
 	/**
 	 * Constructs an edge with a specified source/destination vertex.
 	 * 
@@ -41,15 +41,15 @@ public class SimpleDirectedEdge<V> implements DirectedEdge<V> {
 	public SimpleDirectedEdge(V source, V destination) {
 		if(source == null || destination == null)
 			throw new NullPointerException("source/destination cannot be null");
-		
+
 		this.source = source;
 		this.destination = destination;
 	}
-	
+
 	//
 	// DirectedEdge
 	//
-	
+
 	@Override
 	public V getSource() {
 		return source;
@@ -59,7 +59,7 @@ public class SimpleDirectedEdge<V> implements DirectedEdge<V> {
 	public V getDestination() {
 		return destination;
 	}
-	
+
 	@Override
 	public int compareTo(DirectedEdge<V> o) {
 		if(o == null)

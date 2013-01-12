@@ -46,32 +46,32 @@ import ca.gedge.opgraph.io.xml.XMLSerializerFactory;
 public class NotesXMLSerializer implements XMLSerializer {
 	static final String NAMESPACE = "http://www.gedge.ca/ns/opgraph-app";
 	static final String PREFIX = "oga";
-	
+
 	static final QName NOTES_QNAME = new QName(NAMESPACE, "notes", PREFIX);
 	static final QName NOTE_QNAME = new QName(NAMESPACE, "note", PREFIX);
-	
+
 	@Override
 	public void write(XMLSerializerFactory serializerFactory, Document doc, Element parentElem, Object obj)
 		throws IOException
 	{
 		if(obj == null)
 			throw new IOException("Null object given to serializer");
-		
+
 		// setup namespace for document
 		final Element rootEle = doc.getDocumentElement();
 		rootEle.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, 
 				XMLConstants.XMLNS_ATTRIBUTE + ":" + PREFIX, NAMESPACE);
-		
+
 		if(obj instanceof Notes) {
 			// Create notes element, if any exist
 			final Notes notes = (Notes)obj;
 			if(notes.size() > 0) {
 				final Element notesElem = doc.createElementNS(NAMESPACE, PREFIX + ":notes");
-	
+
 				// Create elements for each note
 				for(Note note : notes)
 					write(serializerFactory, doc, notesElem, note);
-				
+
 				parentElem.appendChild(notesElem);
 			}
 		} else if(obj instanceof Note) {
@@ -79,18 +79,18 @@ public class NotesXMLSerializer implements XMLSerializer {
 			final Element noteElem = doc.createElementNS(NAMESPACE, PREFIX + ":note");
 			noteElem.setAttribute("title", note.getTitle());
 			noteElem.setTextContent(note.getBody());
-			
+
 			final JComponent noteComp = note.getExtension(JComponent.class);
 			if(noteComp != null) {
 				final String colorString = Integer.toHexString(noteComp.getBackground().getRGB() & 0xFFFFFF);
-				
+
 				noteElem.setAttribute("x", "" + noteComp.getX());
 				noteElem.setAttribute("y", "" + noteComp.getY());
 				noteElem.setAttribute("width", "" + noteComp.getWidth());
 				noteElem.setAttribute("height", "" + noteComp.getHeight());
 				noteElem.setAttribute("color", "0x" + colorString);
 			}
-			
+
 			parentElem.appendChild(noteElem);
 		} else {
 			throw new IOException(NotesXMLSerializer.class.getName() + " cannot write objects of type " + obj.getClass().getName());
@@ -138,13 +138,13 @@ public class NotesXMLSerializer implements XMLSerializer {
 					final int y = Integer.parseInt(elem.getAttribute("y"));
 					noteComp.setLocation(x, y);
 				}
-	
+
 				if(elem.hasAttribute("width") && elem.hasAttribute("height")) {
 					final int w = Integer.parseInt(elem.getAttribute("width"));
 					final int h = Integer.parseInt(elem.getAttribute("height"));
 					noteComp.setPreferredSize(new Dimension(w, h));
 				}
-				
+
 				if(elem.hasAttribute("color")) {
 					noteComp.setBackground(Color.decode(elem.getAttribute("color")));
 				}

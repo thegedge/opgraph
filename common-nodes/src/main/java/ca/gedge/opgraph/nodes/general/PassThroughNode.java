@@ -39,7 +39,7 @@ import ca.gedge.opgraph.exceptions.ProcessingException;
 public class PassThroughNode extends OpNode {
 	/** Input field for the value */
 	public final static InputField INPUT = new InputField("input", "input value", true, true);
-	
+
 	/** Output field for the value*/
 	public final static OutputField OUTPUT = new OutputField("output", "output value", true, Object.class);
 
@@ -50,7 +50,7 @@ public class PassThroughNode extends OpNode {
 		putField(INPUT);
 		putField(OUTPUT);
 	}
-	
+
 	@Override
 	public void operate(OpContext context) throws ProcessingException {
 		context.put(OUTPUT, context.get(INPUT));

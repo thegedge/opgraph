@@ -39,14 +39,14 @@ public class CoreMenuProvider implements MenuProvider {
 	@Override
 	public void installItems(final GraphEditorModel model, PathAddressableMenu menu) {
 		menu.addMenu("file", "File");
-		
+
 		menu.addMenuItem("file/new", new NewCommand());
 		menu.addMenuItem("file/open", new OpenCommand());
 		final JMenuItem save = menu.addMenuItem("file/save", new SaveCommand(false));
 		menu.addMenuItem("file/save as", new SaveCommand(true));
 		menu.addSeparator("file");
 		menu.addMenuItem("file/quit", new QuitCommand());
-		
+
 		model.getDocument().addPropertyChangeListener(GraphDocument.UNDO_STATE, new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {

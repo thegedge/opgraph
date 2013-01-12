@@ -49,13 +49,13 @@ import java.util.logging.Logger;
 public class DefaultServiceDiscovery extends ServiceDiscovery {
 	/** The resource prefix to search through */
 	private static final String SERVICE_PREFIX = "META-INF/services/";
-	
+
 	/** Logger */
 	private static final Logger LOGGER = Logger.getLogger(DefaultServiceDiscovery.class.getName());
-	
+
 	/** An additional set of classloaders to search through */
 	private final static Set<ClassLoader> classloaders = new HashSet<ClassLoader>();
-	
+
 	/**
 	 * Adds a custom classloader to search through for service providers.
 	 * 
@@ -64,7 +64,7 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 	public static void addClassLoader(ClassLoader classloader) {
 		classloaders.add(classloader);
 	}
-	
+
 	/**
 	 * Removes a custom classloader from the searchable classloaders.
 	 * 
@@ -73,14 +73,14 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 	public static void removeClassLoader(ClassLoader classloader) {
 		classloaders.remove(classloader);
 	}
-	
+
 	@Override
 	public <T> List<Class<? extends T>> findProviders(final Class<T> service) {
 		final Set<ClassLoader> classloaders = new HashSet<ClassLoader>();
 		classloaders.addAll(DefaultServiceDiscovery.classloaders);
 		classloaders.add(service.getClassLoader());
 		classloaders.add(ClassLoader.getSystemClassLoader());
-		
+
 		// Get the resource URL and iterate through them
 		final List<DiscoveryData> dataList = getResourceURLs(classloaders, service, false);
 		final List<Class<? extends T>> providersList = new ArrayList<Class<? extends T>>();
@@ -105,23 +105,23 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 				LOGGER.warning("Could not open service provider file " + data.url);
 			}
 		}
-		
+
 		return providersList;
 	}
-	
+
 	/**
 	 * Data pertaining to provider discovery.
 	 */
 	private static class DiscoveryData {
 		/** The classloader that discovered the URL */
 		public final ClassLoader classloader;
-		
+
 		/** URL to the resource */ 
 		public final URL url;
-		
+
 		/** A key associated with this resource */
 		@SuppressWarnings("unused")
-        public final String key;
+		public final String key;
 		
 		/**
 		 * Default constructor.
@@ -149,7 +149,7 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 		final ArrayList<DiscoveryData> data = new ArrayList<DiscoveryData>();
 		for(ClassLoader classloader : classloaders) {
 			String basePath = SERVICE_PREFIX + service.getName();
-			
+
 			Enumeration<URL> baseURLs = null;
 			try {
 				baseURLs = classloader.getResources(basePath);
@@ -166,13 +166,13 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 							// Make sure there's a path separator at the end
 							if(!basePath.endsWith("/"))
 								basePath += '/';
-							
+
 							// Jar file, look inside for entries
 							final URLConnection connection = baseURL.openConnection();
 							if(connection instanceof JarURLConnection) {
 								final JarURLConnection jarConnection = (JarURLConnection)connection;
 								final JarFile jarFile = jarConnection.getJarFile();
-								
+
 								// Iterate through entries
 								final Enumeration<JarEntry> entries = jarFile.entries();
 								while(entries.hasMoreElements()) {
@@ -181,7 +181,7 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 									final JarEntry jarEntry = entries.nextElement();
 									if(jarEntry.isDirectory() || !jarEntry.getName().startsWith(basePath))
 										continue;
-									
+
 									final String key = jarEntry.getName().substring(basePath.length());
 									data.add(new DiscoveryData(classloader, new URL(baseURL, key), key));
 								}
@@ -206,7 +206,7 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 				}
 			}
 		}
-		
+
 		return data;
 	}
 }

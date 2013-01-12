@@ -28,7 +28,7 @@ public interface ContextualItem {
 	 * @return the reference key
 	 */
 	public abstract String getKey();
-	
+
 	/**
 	 * Sets the reference key for the field that this descriptor describes.
 	 * 
@@ -42,7 +42,7 @@ public interface ContextualItem {
 	 * @return the description
 	 */
 	public abstract String getDescription();
-	
+
 	/**
 	 * Sets the description for the field that this descriptor describes.
 	 * 

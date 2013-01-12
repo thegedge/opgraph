@@ -51,7 +51,7 @@ public class GUIHelper {
 	public static Point centerTextInRectangle(Graphics g, String txt, Rectangle rect) {
 		return placeTextInRectangle(g, txt, rect, SwingConstants.CENTER, SwingConstants.CENTER);
 	}
-	
+
 	/**
 	 * Returns the point at which to draw a string so that it appears aligned
 	 * within a given rectangle.
@@ -80,10 +80,10 @@ public class GUIHelper {
 		final FontMetrics fm = g.getFontMetrics();
 		final LineMetrics lm = fm.getLineMetrics(txt, g);
 		final Rectangle2D r = fm.getStringBounds(txt, g);
-		
+
 		int x = rect.x;
 		int y = rect.y;
-		
+
 		switch(horizontalAlignment) {
 		case SwingConstants.CENTER:
 			x += (rect.width - r.getWidth()) * 0.5;
@@ -92,7 +92,7 @@ public class GUIHelper {
 			x += rect.width - r.getWidth();
 			break;
 		}
-		
+
 		switch(verticalAlignment) {
 		case SwingConstants.TOP:
 			y += lm.getAscent();
@@ -104,10 +104,10 @@ public class GUIHelper {
 			y += rect.height - lm.getDescent();
 			break;
 		}
-		
+
 		return new Point(x, y);
 	}
-	
+
 	/**
 	 * Gets the interior drawing region of a component. That is, the drawing
 	 * area inside of its border.
@@ -125,7 +125,7 @@ public class GUIHelper {
 		rect.height -= insets.top + insets.bottom;
 		return rect;
 	}
-	
+
 	/**
 	 * Gets a color that "highlights" a given color. If the given color is dark,
 	 * the returned color is brighter, otherwise the returned color is darker.
@@ -138,7 +138,7 @@ public class GUIHelper {
 		final int brightness = (int)(0.3*c.getRed() + 0.59*c.getGreen() + 0.11*c.getBlue());
 		return (brightness > 127 ? c.darker() : c.brighter());
 	}
-	
+
 	/**
 	 * Returns the first ancestor of a given component that is of a specified
 	 * class, or the component itself if it is an instance of the given class.

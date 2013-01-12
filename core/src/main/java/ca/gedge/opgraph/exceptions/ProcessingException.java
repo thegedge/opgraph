@@ -35,7 +35,7 @@ public class ProcessingException extends Exception {
 	public ProcessingException(String message) {
 		super(message);
 	}
-	
+
 	/**
 	 * Constructs a processing exception with a given cause.
 	 * 
@@ -44,7 +44,7 @@ public class ProcessingException extends Exception {
 	public ProcessingException(Throwable cause) {
 		super("An error occured during the processing of a graph", cause);
 	}
-	
+
 	/**
 	 * Constructs a processing exception with a given detail message and cause.
 	 * 

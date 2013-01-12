@@ -25,7 +25,7 @@ package ca.gedge.opgraph.dag;
 public class VertexNotFoundException extends Exception {
 	/** The {@link Vertex} that wasn't in the DAG */
 	private Vertex vertex;
-	
+
 	/**
 	 * Construct exception with the given vertex that could not be found and
 	 * a default detail message.
@@ -35,7 +35,7 @@ public class VertexNotFoundException extends Exception {
 	public VertexNotFoundException(Vertex vertex) {
 		this(vertex, "Vertex not found");
 	}
-	
+
 	/**
 	 * Construct exception with the given vertex that could not be found and
 	 * a custom detail message.
@@ -47,7 +47,7 @@ public class VertexNotFoundException extends Exception {
 		super(message);
 		this.vertex = vertex;
 	}
-	
+
 	/**
 	 * Gets the {@link Vertex} that was not found in the {@link DirectedAcyclicGraph}.
 	 * 
