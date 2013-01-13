@@ -2,17 +2,17 @@
  * Copyright (C) 2012 Jason Gedge <http://www.gedge.ca>
  *
  * This file is part of the OpGraph project.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -37,13 +37,13 @@ import java.util.logging.Logger;
 /**
  * A default service discovery class which mimics the standard library's
  * {@link java.util.ServiceLoader} for service discovery.
- * 
+ *
  * Static methods are provided ({@link #addClassLoader(ClassLoader)} and
  * {@link #removeClassLoader(ClassLoader)}) to provide additional, custom
  * class loaders to search through for service providers. Note that the
  * system class loader will always be used, along with the class loader used
  * to load the class given to {@link #findProviders(Class)}.
- * 
+ *
  * TODO caching
  */
 public class DefaultServiceDiscovery extends ServiceDiscovery {
@@ -58,7 +58,7 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 
 	/**
 	 * Adds a custom classloader to search through for service providers.
-	 * 
+	 *
 	 * @param classloader  the classloader to add
 	 */
 	public static void addClassLoader(ClassLoader classloader) {
@@ -67,7 +67,7 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 
 	/**
 	 * Removes a custom classloader from the searchable classloaders.
-	 * 
+	 *
 	 * @param classloader  the classloader to remove
 	 */
 	public static void removeClassLoader(ClassLoader classloader) {
@@ -82,7 +82,7 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 		classloaders.add(ClassLoader.getSystemClassLoader());
 
 		// Get the resource URL and iterate through them
-		final List<DiscoveryData> dataList = getResourceURLs(classloaders, service, false);
+		final List<DiscoveryData> dataList = getResourceURLs(classloaders, SERVICE_PREFIX + service.getName(), false);
 		final List<Class<? extends T>> providersList = new ArrayList<Class<? extends T>>();
 		for(DiscoveryData data : dataList) {
 			try {
@@ -109,6 +109,20 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 		return providersList;
 	}
 
+	@Override
+	public List<URL> findResources(String path) {
+		final Set<ClassLoader> classloaders = new HashSet<ClassLoader>();
+		classloaders.addAll(DefaultServiceDiscovery.classloaders);
+		classloaders.add(ClassLoader.getSystemClassLoader());
+
+		final List<URL> resourceURLs = new ArrayList<URL>();
+		final List<DiscoveryData> dataList = getResourceURLs(classloaders, path, false);
+		for(DiscoveryData data : dataList)
+			resourceURLs.add(data.url);
+
+		return resourceURLs;
+	}
+
 	/**
 	 * Data pertaining to provider discovery.
 	 */
@@ -116,16 +130,16 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 		/** The classloader that discovered the URL */
 		public final ClassLoader classloader;
 
-		/** URL to the resource */ 
+		/** URL to the resource */
 		public final URL url;
 
 		/** A key associated with this resource */
 		@SuppressWarnings("unused")
 		public final String key;
-		
+
 		/**
 		 * Default constructor.
-		 * 
+		 *
 		 * @param classloader  the classloader used to find the class/resournce
 		 * @param url  URL to the resource
 		 * @param key  key associated with the resource
@@ -139,16 +153,16 @@ public class DefaultServiceDiscovery extends ServiceDiscovery {
 
 	/**
 	 * Gets a list resource URLs for a service.
-	 * 
-	 * @param service  the service wanted
+	 *
+	 * @param path  the path to look for
 	 * @param mapped  if <code>true</code>, the service acts as a prefix for
 	 *                a directory containing files where the filename is the
-	 *                key. Otherwise, the service itself is the file. 
+	 *                key. Otherwise, the service itself is the file.
 	 */
-	private List<DiscoveryData> getResourceURLs(Iterable<ClassLoader> classloaders, Class<?> service, boolean mapped) {
+	private List<DiscoveryData> getResourceURLs(Iterable<ClassLoader> classloaders, String path, boolean mapped) {
 		final ArrayList<DiscoveryData> data = new ArrayList<DiscoveryData>();
 		for(ClassLoader classloader : classloaders) {
-			String basePath = SERVICE_PREFIX + service.getName();
+			String basePath = path;
 
 			Enumeration<URL> baseURLs = null;
 			try {
