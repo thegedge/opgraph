@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (C) 2012 Jason Gedge <http://www.gedge.ca>
+	
+	This file is part of the OpGraph project.
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<xs:schema 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://gedge.ca/ns/opgraph-common-nodes" 
+	xmlns:og="http://gedge.ca/ns/opgraph" 
+	targetNamespace="http://gedge.ca/ns/opgraph-common-nodes" 
+	elementFormDefault="qualified">
+
+	<xs:annotation>
+		<xs:documentation>Specification of opgraph-common-nodes extensions.</xs:documentation>
+	</xs:annotation>
+
+	<xs:import namespace="http://gedge.ca/ns/opgraph"/>
+
+	<!-- Definition of a macro -->
+
+	<xs:complexType name="MacroType">
+		<xs:annotation>
+			<xs:documentation>
+				Type definition for the macro element. Textual content in this element
+				will be used as a description for the macro.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="og:AbstractNodeType">
+				<xs:sequence>
+					<xs:element ref="og:graph" minOccurs="1" maxOccurs="1"/>
+					<xs:element ref="published_input" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="published_output" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="og:extensions" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Definition of a published input/output field of a macro -->
+
+	<xs:complexType name="PublishedFieldType" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Type definition for a macro's published fields</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="og:FieldType">
+				<xs:attribute name="ref" type="og:nonEmptyString" use="required">
+					<xs:annotation>
+						<xs:documentation>Referenced node for a published input/output field</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="field" type="og:nonEmptyString" use="required">
+					<xs:annotation>
+						<xs:documentation>Referenced field for a published input/output field</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!-- Document level elements -->
+
+	<xs:element name="macro" type="MacroType" substitutionGroup="og:abstract_node">
+		<xs:unique name="macroId">
+			<xs:selector xpath="."/>
+			<xs:field xpath="@id"/>
+		</xs:unique>
+		<xs:key name="macroNodeId">
+			<xs:selector xpath="./node"/>
+			<xs:field xpath="@id"/>
+		</xs:key>
+		<xs:keyref refer="macroNodeId" name="macroLinkSourceRef">
+			<xs:selector xpath="./link"/>
+			<xs:field xpath="@source"/>
+		</xs:keyref>
+		<xs:keyref refer="macroNodeId" name="macroLinkDestRef">
+			<xs:selector xpath="./link"/>
+			<xs:field xpath="@dest"/>
+		</xs:keyref>
+		<xs:keyref refer="macroNodeId" name="publishedInputDestNode">
+			<xs:selector xpath="./node"/>
+			<xs:field xpath="@ref"/>
+		</xs:keyref>
+		<xs:keyref refer="macroNodeId" name="publishedOutputSourceNode">
+			<xs:selector xpath="./node"/>
+			<xs:field xpath="@ref"/>
+		</xs:keyref>
+	</xs:element>
+
+	<xs:element name="published_input" type="PublishedFieldType"/>
+	<xs:element name="published_output" type="PublishedFieldType"/>
+</xs:schema>

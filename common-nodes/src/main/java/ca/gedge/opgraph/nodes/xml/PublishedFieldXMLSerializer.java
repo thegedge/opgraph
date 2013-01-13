@@ -2,17 +2,17 @@
  * Copyright (C) 2012 Jason Gedge <http://www.gedge.ca>
  *
  * This file is part of the OpGraph project.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -43,7 +44,7 @@ import ca.gedge.opgraph.nodes.general.MacroNode;
  * {@link OutputField}s to/from XML.
  */
 public class PublishedFieldXMLSerializer implements XMLSerializer {
-	static final String NAMESPACE = "http://www.gedge.ca/ns/common-nodes";
+	static final String NAMESPACE = "http://gedge.ca/ns/opgraph-common-nodes";
 	static final String PREFIX = "ogcn";
 
 	// qualified names
@@ -51,15 +52,15 @@ public class PublishedFieldXMLSerializer implements XMLSerializer {
 	static final QName OUTPUT_QNAME = new QName(NAMESPACE, "published_output", PREFIX);
 
 	@Override
-	public void write(XMLSerializerFactory serializerFactory, Document doc, Element parentElem, Object obj) 
-		throws IOException 
+	public void write(XMLSerializerFactory serializerFactory, Document doc, Element parentElem, Object obj)
+		throws IOException
 	{
 		if(obj == null)
 			throw new IOException("Null object given to serializer");
 
 		// setup namespace for document
 		final Element rootEle = doc.getDocumentElement();
-		rootEle.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, 
+		rootEle.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI,
 				XMLConstants.XMLNS_ATTRIBUTE + ":" + PREFIX, NAMESPACE);
 
 		if(obj instanceof PublishedInput) {
@@ -67,9 +68,9 @@ public class PublishedFieldXMLSerializer implements XMLSerializer {
 
 			// Only write if field is non-fixed, or fixed but with extensions
 			final Element fieldElem = doc.createElementNS(NAMESPACE, PREFIX + ":" + INPUT_QNAME.getLocalPart());
-			fieldElem.setAttribute("key", field.getKey());
-			fieldElem.setAttribute("dest", field.destinationNode.getId());
-			fieldElem.setAttribute("destField", field.nodeInputField.getKey());
+			fieldElem.setAttribute("name", field.getKey());
+			fieldElem.setAttribute("ref", field.destinationNode.getId());
+			fieldElem.setAttribute("field", field.nodeInputField.getKey());
 
 			// Extensions
 			if(field.getExtensionClasses().size() > 0) {
@@ -86,9 +87,9 @@ public class PublishedFieldXMLSerializer implements XMLSerializer {
 
 			// Only write if field is non-fixed, or fixed but with extensions
 			final Element fieldElem = doc.createElementNS(NAMESPACE, PREFIX + ":" + INPUT_QNAME.getLocalPart());
-			fieldElem.setAttribute("key", field.getKey());
-			fieldElem.setAttribute("source", field.sourceNode.getId());
-			fieldElem.setAttribute("sourceField", field.nodeOutputField.getKey());
+			fieldElem.setAttribute("name", field.getKey());
+			fieldElem.setAttribute("ref", field.sourceNode.getId());
+			fieldElem.setAttribute("field", field.nodeOutputField.getKey());
 
 			// Extensions
 			if(field.getExtensionClasses().size() > 0) {
@@ -107,16 +108,16 @@ public class PublishedFieldXMLSerializer implements XMLSerializer {
 
 	@Override
 	public Object read(XMLSerializerFactory serializerFactory, OpGraph graph, Object parent, Document doc, Element elem)
-		throws IOException 
+		throws IOException
 	{
 		if(INPUT_QNAME.equals(XMLSerializerFactory.getQName(elem))) {
 			if(!(parent instanceof MacroNode))
 				throw new IOException("Trying to read published field, but parent object is not a macro");
 
 			// Find published info
-			final String key = elem.getAttribute("key");
-			final String destNodeId = elem.getAttribute("dest");
-			final String destFieldKey = elem.getAttribute("destField");
+			final String key = elem.getAttribute("name");
+			final String destNodeId = elem.getAttribute("ref");
+			final String destFieldKey = elem.getAttribute("field");
 
 			final MacroNode macro = (MacroNode)parent;
 			final OpNode destNode = macro.getGraph().getNodeById(destNodeId, true);
@@ -146,9 +147,9 @@ public class PublishedFieldXMLSerializer implements XMLSerializer {
 				throw new IOException("Trying to read published field, but parent object is not a macro");
 
 			// Find published info
-			final String key = elem.getAttribute("key");
-			final String sourceNodeId = elem.getAttribute("source");
-			final String sourceFieldKey = elem.getAttribute("sourceField");
+			final String key = elem.getAttribute("name");
+			final String sourceNodeId = elem.getAttribute("ref");
+			final String sourceFieldKey = elem.getAttribute("field");
 
 			final MacroNode macro = (MacroNode)parent;
 			final OpNode sourceNode = macro.getGraph().getNodeById(sourceNodeId, true);

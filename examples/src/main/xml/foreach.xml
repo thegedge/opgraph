@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<opgraph xmlns="http://www.gedge.ca/ns/opgraph" xmlns:oga="http://www.gedge.ca/ns/opgraph-app" xmlns:ogcn="http://www.gedge.ca/ns/common-nodes">
+<opgraph xmlns="http://gedge.ca/ns/opgraph" xmlns:oga="http://gedge.ca/ns/opgraph-app" xmlns:ogcn="http://gedge.ca/ns/opgraph-common-nodes">
     <graph id="root">
         <node id="12feba21" name="Range Length" type="class:ca.gedge.opgraph.nodes.random.RandomIntegerNode">
             <extensions>
@@ -52,8 +52,8 @@
                 </node>
                 <link dest="405084c6" destField="y" source="1e4ad14c" sourceField="value"/>
             </graph>
-            <ogcn:published_input dest="405084c6" destField="x" key="x"/>
-            <ogcn:published_output key="result" source="405084c6" sourceField="result"/>
+            <ogcn:published_input ref="405084c6" field="x" name="x"/>
+            <ogcn:published_output name="result" ref="405084c6" field="result"/>
             <extensions>
                 <oga:meta x="666" y="9"/>
             </extensions>

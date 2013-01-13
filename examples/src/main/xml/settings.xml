@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<opgraph xmlns="http://www.gedge.ca/ns/opgraph" xmlns:oga="http://www.gedge.ca/ns/opgraph-app">
+<opgraph xmlns="http://gedge.ca/ns/opgraph" xmlns:oga="http://gedge.ca/ns/opgraph-app">
     <graph id="root">
         <node id="1ad997f9" type="class:ca.gedge.opgraph.nodes.random.RandomIntegerNode">
             <extensions>

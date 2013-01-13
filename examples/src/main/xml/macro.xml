@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<opgraph xmlns="http://www.gedge.ca/ns/opgraph" xmlns:oga="http://www.gedge.ca/ns/opgraph-app" xmlns:ogcn="http://www.gedge.ca/ns/common-nodes">
+<opgraph xmlns="http://gedge.ca/ns/opgraph" xmlns:oga="http://gedge.ca/ns/opgraph-app" xmlns:ogcn="http://gedge.ca/ns/opgraph-common-nodes">
     <graph id="root">
         <node id="62a34b91" type="class:ca.gedge.opgraph.nodes.random.RandomBooleanNode">
             <extensions>
@@ -20,7 +20,7 @@
                 </node>
                 <link dest="17510d96" destField="y" source="10439d3b" sourceField="value"/>
             </graph>
-            <ogcn:published_input dest="17510d96" destField="x" key="x"/>
+            <ogcn:published_input ref="17510d96" field="x" name="x"/>
             <extensions>
                 <oga:meta x="405" y="183"/>
             </extensions>

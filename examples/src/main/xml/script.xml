@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<og:opgraph xmlns:og="http://www.gedge.ca/ns/opgraph">
+<og:opgraph xmlns:og="http://gedge.ca/ns/opgraph">
     <og:graph id="root">
         <og:node id="927e4be" type="class:ca.gedge.opgraph.nodes.random.RandomDecimalNode">
             <og:extensions>
-                <oga:meta xmlns:oga="http://www.gedge.ca/ns/opgraph-app" x="153" y="235">
+                <oga:meta xmlns:oga="http://gedge.ca/ns/opgraph-app" x="153" y="235">
                     <oga:default for="min" type="java.lang.Long">1</oga:default>
                     <oga:default for="max" type="java.lang.Long">10</oga:default>
                 </oga:meta>
@@ -11,7 +11,7 @@
         </og:node>
         <og:node id="1652d654" type="class:ca.gedge.opgraph.nodes.random.RandomIntegerNode">
             <og:extensions>
-                <oga:meta xmlns:oga="http://www.gedge.ca/ns/opgraph-app" x="115" y="100">
+                <oga:meta xmlns:oga="http://gedge.ca/ns/opgraph-app" x="115" y="100">
                     <oga:default for="min" type="java.lang.Long">1</oga:default>
                     <oga:default for="max" type="java.lang.Long">10</oga:default>
                 </oga:meta>
@@ -19,7 +19,7 @@
         </og:node>
         <og:node id="52ec1f9e" name="x + y" type="class:ca.gedge.opgraph.nodes.general.ScriptNode">
             <og:extensions>
-                <oga:settings xmlns:oga="http://www.gedge.ca/ns/opgraph-app">
+                <oga:settings xmlns:oga="http://gedge.ca/ns/opgraph-app">
                     <oga:property key="scriptLanguage"><![CDATA[ECMAScript]]></oga:property>
                     <oga:property key="scriptSource"><![CDATA[//
 // Comments!
@@ -42,7 +42,7 @@ function run() {
 	Logging.out.format("%f plus %f%n", [x, y]);
 }]]></oga:property>
                 </oga:settings>
-                <oga:meta xmlns:oga="http://www.gedge.ca/ns/opgraph-app" x="492" y="161"/>
+                <oga:meta xmlns:oga="http://gedge.ca/ns/opgraph-app" x="492" y="161"/>
             </og:extensions>
         </og:node>
         <og:link dest="52ec1f9e" destField="y" source="927e4be" sourceField="value"/>

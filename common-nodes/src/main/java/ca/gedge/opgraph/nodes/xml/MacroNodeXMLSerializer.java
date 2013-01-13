@@ -2,17 +2,17 @@
  * Copyright (C) 2012 Jason Gedge <http://www.gedge.ca>
  *
  * This file is part of the OpGraph project.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,6 +21,7 @@ package ca.gedge.opgraph.nodes.xml;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
@@ -43,15 +44,15 @@ import ca.gedge.opgraph.nodes.iteration.ForEachNode;
  * A default serializer for reading/writing {@link OpNode} to/from XML.
  */
 public class MacroNodeXMLSerializer implements XMLSerializer {
-	static final String NAMESPACE = "http://www.gedge.ca/ns/common-nodes";
+	static final String NAMESPACE = "http://gedge.ca/ns/opgraph-common-nodes";
 	static final String PREFIX = "ogcn";
 
 	// qualified names
 	static final QName MACRO_QNAME = new QName(NAMESPACE, "macro", PREFIX);
 
 	@Override
-	public void write(XMLSerializerFactory serializerFactory, Document doc, Element parentElem, Object obj) 
-		throws IOException 
+	public void write(XMLSerializerFactory serializerFactory, Document doc, Element parentElem, Object obj)
+		throws IOException
 	{
 		if(obj == null)
 			throw new IOException("Null object given to serializer");
@@ -61,7 +62,7 @@ public class MacroNodeXMLSerializer implements XMLSerializer {
 
 		// setup namespace for document
 		final Element rootEle = doc.getDocumentElement();
-		rootEle.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, 
+		rootEle.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI,
 				XMLConstants.XMLNS_ATTRIBUTE + ":" + PREFIX, NAMESPACE);
 
 		// Create node element
@@ -120,7 +121,7 @@ public class MacroNodeXMLSerializer implements XMLSerializer {
 
 	@Override
 	public Object read(XMLSerializerFactory serializerFactory, OpGraph graph, Object parent, Document doc, Element elem)
-		throws IOException 
+		throws IOException
 	{
 		MacroNode macro = null;
 		if(MACRO_QNAME.equals(XMLSerializerFactory.getQName(elem))) {

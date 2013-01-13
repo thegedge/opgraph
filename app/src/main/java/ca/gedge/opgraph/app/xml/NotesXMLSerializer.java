@@ -2,22 +2,22 @@
  * Copyright (C) 2012 Jason Gedge <http://www.gedge.ca>
  *
  * This file is part of the OpGraph project.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * 
+ *
  */
 package ca.gedge.opgraph.app.xml;
 
@@ -44,7 +44,7 @@ import ca.gedge.opgraph.io.xml.XMLSerializerFactory;
 /**
  */
 public class NotesXMLSerializer implements XMLSerializer {
-	static final String NAMESPACE = "http://www.gedge.ca/ns/opgraph-app";
+	static final String NAMESPACE = "http://gedge.ca/ns/opgraph-app";
 	static final String PREFIX = "oga";
 
 	static final QName NOTES_QNAME = new QName(NAMESPACE, "notes", PREFIX);
@@ -59,7 +59,7 @@ public class NotesXMLSerializer implements XMLSerializer {
 
 		// setup namespace for document
 		final Element rootEle = doc.getDocumentElement();
-		rootEle.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, 
+		rootEle.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI,
 				XMLConstants.XMLNS_ATTRIBUTE + ":" + PREFIX, NAMESPACE);
 
 		if(obj instanceof Notes) {
@@ -98,7 +98,7 @@ public class NotesXMLSerializer implements XMLSerializer {
 	}
 
 	@Override
-	public Object read(XMLSerializerFactory serializerFactory, OpGraph graph, Object parent, Document doc, Element elem) 
+	public Object read(XMLSerializerFactory serializerFactory, OpGraph graph, Object parent, Document doc, Element elem)
 		throws IOException
 		{
 		Object ret = null;

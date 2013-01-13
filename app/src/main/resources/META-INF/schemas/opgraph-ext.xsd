@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (C) 2012 Jason Gedge <http://www.gedge.ca>
+	
+	This file is part of the OpGraph project.
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<xs:schema 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://gedge.ca/ns/opgraph-app" 
+	xmlns:og="http://gedge.ca/ns/opgraph" 
+	targetNamespace="http://gedge.ca/ns/opgraph-app" 
+	elementFormDefault="qualified">
+	
+	<xs:annotation>
+		<xs:documentation>Specification of opgraph-app extensions.</xs:documentation>
+	</xs:annotation>
+	
+	<xs:import namespace="http://gedge.ca/ns/opgraph"/>
+	
+	<!-- Color type, specified using hex notation -->
+	
+	<xs:simpleType name="hex">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="0x[a-fA-F0-9]{6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- Vertex meta data extension -->
+	
+	<xs:complexType name="MetaType">
+		<xs:annotation>
+			<xs:documentation>Type definition for node meta data.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="og:AbstractExtensionType">
+				<xs:sequence>
+					<xs:element ref="default" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="x" type="xs:int" use="optional" default="0"/>
+				<xs:attribute name="y" type="xs:int" use="optional" default="0"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+		
+	<!--  Input field default value type definition  -->
+	
+	<xs:complexType name="DefaultValueType">
+		<xs:annotation>
+			<xs:documentation>Type definition for default input values of a node.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="for" type="og:nonEmptyString" use="required"/>
+				<xs:attribute name="type" type="og:nonEmptyString" use="optional" default="java.lang.String">
+					<xs:annotation>
+						<xs:documentation>
+							The classpath to the Java class that handles parsing this value. If not
+							specified, defaults to string.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="func" type="og:nonEmptyString" use="optional" default="valueOf">
+					<xs:annotation>
+						<xs:documentation>
+							A static function of the Java class specified by the 'type' attribute that
+							takes a single String argument and returns an appropriately parsed value.
+							If not specified, defaults to valueOf, which is intended to be used when
+							'type' attribute also not specified.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<!--  Node settings type definitions -->
+	
+	<xs:complexType name="SettingsType">
+		<xs:annotation>
+			<xs:documentation>Type definition for node settings</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="og:AbstractExtensionType">
+				<xs:sequence>
+					<xs:element ref="property" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="SettingsPropertyType">
+		<xs:annotation>
+			<xs:documentation>Type definition for properties in a node's settings.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="key" type="og:nonEmptyString" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<!--  Note type definitions  -->
+
+	<xs:complexType name="NotesType">
+		<xs:annotation>
+			<xs:documentation>Type definition for a notes collection.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="og:AbstractExtensionType">
+				<xs:sequence>
+					<xs:element ref="note" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="NoteType">
+		<xs:annotation>
+			<xs:documentation>Type definition for a note.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="x" type="xs:int" default="0"/>
+				<xs:attribute name="y" type="xs:int" default="0"/>
+				<xs:attribute name="width" type="xs:int" use="optional" default="0"/>
+				<xs:attribute name="height" type="xs:int" use="optional" default="0"/>
+				<xs:attribute name="title" type="xs:string" use="optional"/>
+				<xs:attribute name="color" type="hex" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<!-- Document level elements -->
+	
+	<xs:element name="meta" type="MetaType" substitutionGroup="og:extension"/>
+	<xs:element name="default" type="DefaultValueType"/>
+	<xs:element name="settings" type="SettingsType" substitutionGroup="og:extension"/>
+	<xs:element name="property" type="SettingsPropertyType"/>
+	<xs:element name="notes" type="NotesType" substitutionGroup="og:extension"/>
+	<xs:element name="note" type="NoteType"/>
+</xs:schema>
