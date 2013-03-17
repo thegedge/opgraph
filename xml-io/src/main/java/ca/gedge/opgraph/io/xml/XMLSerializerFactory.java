@@ -18,8 +18,10 @@
  */
 package ca.gedge.opgraph.io.xml;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -106,8 +108,17 @@ public final class XMLSerializerFactory implements OpGraphSerializer {
 		// XXX perhaps just do this once in a static block/function?
 		validator = null;
 		try {
+			// Find a list of all schemas
+			final List<URL> schemaLists = ServiceDiscovery.getInstance().findResources("META-INF/schemas/list");
+			final List<URL> schemas = new ArrayList<URL>();
+			for(URL schemaListURL : schemaLists) {
+				final BufferedReader br = new BufferedReader(new InputStreamReader(schemaListURL.openStream()));
+				String line = null;
+				while((line = br.readLine()) != null)
+					schemas.addAll( ServiceDiscovery.getInstance().findResources("META-INF/schemas/" + line) );
+			}
+
 			// Load up extension schemas
-			final List<URL> schemas = ServiceDiscovery.getInstance().findResources("META-INF/schemas/opgraph-ext.xsd");
 			final Source [] schemaSource = new Source[schemas.size() + 1];
 			for(int index = 0; index < schemas.size(); ++index)
 				schemaSource[index + 1] = new StreamSource(schemas.get(index).openStream());
